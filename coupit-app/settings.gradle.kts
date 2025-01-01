@@ -1,4 +1,4 @@
-rootProject.name = "coupit-app"
+rootProject.name = "Coupit"
 
 pluginManagement {
     repositories {
@@ -29,4 +29,3 @@ dependencyResolutionManagement {
     }
 }
 include(":composeApp")
-

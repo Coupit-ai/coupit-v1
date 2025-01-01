@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - pg-network
+
+  adminer:
+    image: 'adminer:latest'
+    ports:
+      - '7676:8080'
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_USER: ${POSTGRES_USER}
+      ADMINER_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - pg-network
+
+networks:
+  pg-network: # Consistent network name
+
+volumes:
+  postgres_data:

@@ -2,9 +2,9 @@
 
 kotlin = "2.1.0"
 compose = "1.7.3"
-agp = "8.6.1"
+agp = "8.7.3"
 androidx-activityCompose = "1.9.3"
-androidx-uiTest = "1.7.4"
+androidx-uiTest = "1.7.6"
 kermit = "2.0.5"
 kotlinx-coroutines = "1.10.1"
 ktor = "3.0.3"
