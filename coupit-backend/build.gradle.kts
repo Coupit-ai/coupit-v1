@@ -32,6 +32,7 @@ dependencies {
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.5.0")
 }
 
 kotlin {
