@@ -1,0 +1,34 @@
+package com.webxela.backend.coupit.domain.usecase
+
+import com.webxela.backend.coupit.domain.model.Session
+import com.webxela.backend.coupit.domain.repo.SessionRepo
+import org.springframework.stereotype.Component
+import java.util.*
+
+
+@Component
+class SessionUseCase(
+    private val sessionRepo: SessionRepo
+) {
+
+    fun createSession(merchantId: String, transactionId: String): Session {
+        return sessionRepo.createSession(merchantId, transactionId)
+    }
+
+    fun getSessionByTransactionId(transactionId: String): Session? {
+        return sessionRepo.getSessionByTransactionId(transactionId)
+    }
+
+    fun getSessionBySessionId(sessionId: UUID): Session? {
+        return sessionRepo.getSessionBySessionId(sessionId)
+    }
+
+    fun markSessionAsUsed(sessionId: UUID): Int {
+        return sessionRepo.markSessionAsUsed(sessionId)
+    }
+
+    fun deleteSessionByTransactionId(transactionId: String): Boolean {
+        return sessionRepo.deleteSessionByTransactionId(transactionId)
+    }
+
+}
