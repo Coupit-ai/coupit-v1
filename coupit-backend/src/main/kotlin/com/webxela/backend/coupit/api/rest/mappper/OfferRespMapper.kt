@@ -1,6 +1,6 @@
 package com.webxela.backend.coupit.api.rest.model.mapper
 
-import com.webxela.backend.coupit.api.rest.model.dto.OfferResponse
+import com.webxela.backend.coupit.api.rest.dto.OfferResponse
 import com.webxela.backend.coupit.domain.model.Offer
 
 object OfferRespMapper {

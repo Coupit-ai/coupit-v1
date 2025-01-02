@@ -1,4 +1,4 @@
-package com.webxela.backend.coupit.api.rest.model.dto
+package com.webxela.backend.coupit.api.rest.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

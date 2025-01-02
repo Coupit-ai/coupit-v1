@@ -1,7 +1,7 @@
-package com.webxela.backend.coupit.api.rest.model.dto
+package com.webxela.backend.coupit.api.rest.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.webxela.backend.coupit.api.rest.model.dto.OfferResponse
+import com.webxela.backend.coupit.api.rest.dto.OfferResponse
 import java.time.Instant
 import java.util.*
 

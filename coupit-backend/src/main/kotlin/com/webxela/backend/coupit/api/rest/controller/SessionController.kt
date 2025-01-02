@@ -1,7 +1,7 @@
 package com.webxela.backend.coupit.api.rest.controller
 
-import com.webxela.backend.coupit.api.rest.model.dto.SessionRequest
-import com.webxela.backend.coupit.api.rest.model.dto.SessionResponse
+import com.webxela.backend.coupit.api.rest.dto.SessionRequest
+import com.webxela.backend.coupit.api.rest.dto.SessionResponse
 import com.webxela.backend.coupit.application.service.SessionManager
 import com.webxela.backend.coupit.common.exception.ApiResponse
 import org.springframework.http.ResponseEntity
