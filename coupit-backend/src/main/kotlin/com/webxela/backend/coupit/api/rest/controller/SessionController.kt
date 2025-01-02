@@ -5,19 +5,17 @@ import com.webxela.backend.coupit.api.rest.dto.SessionResponse
 import com.webxela.backend.coupit.application.service.SessionManager
 import com.webxela.backend.coupit.common.exception.ApiResponse
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import java.util.UUID
 
 
 @RestController
-@RequestMapping("/api/v1/session")
+@RequestMapping("/api/v1")
 class SessionController(
     private val sessionManager: SessionManager
 ) {
 
-    @PostMapping("/create")
+    @PostMapping("/session")
     fun createSession(
         @RequestBody sessionReq: SessionRequest
     ): ResponseEntity<ApiResponse<SessionResponse>> {
@@ -29,5 +27,14 @@ class SessionController(
         return ResponseEntity.ok(ApiResponse.success(session))
     }
 
+    @GetMapping("/session/{sessionId}")
+    fun getSession(
+        @PathVariable sessionId: UUID
+    ): ResponseEntity<ApiResponse<SessionResponse>> {
+
+        val session = sessionManager.getSession(sessionId)
+
+        return ResponseEntity.ok(ApiResponse.success(session))
+    }
 
 }

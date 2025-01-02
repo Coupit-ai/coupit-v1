@@ -6,8 +6,6 @@ import java.time.Instant
 import java.util.*
 
 data class SessionResponse(
-    val id: Long,
-    @JsonProperty("session_id")
     val sessionId: UUID,
     @JsonProperty("merchant_id")
     val merchantId: String,

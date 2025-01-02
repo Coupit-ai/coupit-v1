@@ -1,4 +1,4 @@
-package com.webxela.backend.coupit.api.rest.model.mapper
+package com.webxela.backend.coupit.api.rest.mappper
 
 import com.webxela.backend.coupit.api.rest.dto.OfferResponse
 import com.webxela.backend.coupit.domain.model.Offer
