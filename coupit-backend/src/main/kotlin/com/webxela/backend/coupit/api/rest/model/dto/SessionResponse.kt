@@ -15,6 +15,8 @@ data class SessionResponse(
     val transactionId: String,
     @JsonProperty("expires_at")
     val expiresAt: Instant,
+    @JsonProperty("used")
     val used: Boolean,
+    @JsonProperty("offers")
     val offers: List<OfferResponse>
 )

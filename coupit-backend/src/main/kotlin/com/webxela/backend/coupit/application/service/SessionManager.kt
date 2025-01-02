@@ -10,12 +10,12 @@ import org.apache.logging.log4j.LogManager
 import org.springframework.stereotype.Service
 
 @Service
-class SessionManagementService(
+class SessionManager(
     private val sessionUseCase: SessionUseCase,
     private val offerUseCase: OfferUseCase
 ) {
 
-    private val logger = LogManager.getLogger(SessionManagementService::class.java)
+    private val logger = LogManager.getLogger(SessionManager::class.java)
 
     fun createSession(merchantId: String, transactionId: String): SessionResponse {
         try {
