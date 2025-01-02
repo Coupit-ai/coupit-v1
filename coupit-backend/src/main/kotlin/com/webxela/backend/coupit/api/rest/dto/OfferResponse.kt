@@ -1,10 +1,11 @@
 package com.webxela.backend.coupit.api.rest.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.UUID
 
 data class OfferResponse(
-    @JsonProperty("id")
-    val id: Long,
+    @JsonProperty("offer_id")
+    val offerId: UUID,
     @JsonProperty("title")
     val title: String,
     @JsonProperty("description")

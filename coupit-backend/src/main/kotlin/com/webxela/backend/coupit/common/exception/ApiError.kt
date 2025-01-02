@@ -4,12 +4,12 @@ import org.springframework.http.HttpStatus
 
 sealed class ApiError(
     val status: HttpStatus,
-    val exception: String?,
+    val exception: String? = null,
     override val message: String? = null
 ) : RuntimeException(exception) {
 
     class ResourceNotFound(
-        exception: Exception?,
+        exception: Exception? = null,
         message: String? = null
     ) : ApiError(
         status = HttpStatus.NOT_FOUND,
@@ -18,7 +18,7 @@ sealed class ApiError(
     )
 
     class BadRequest(
-        exception: Exception?,
+        exception: Exception? = null,
         message: String? = null
     ) : ApiError(
         status = HttpStatus.BAD_REQUEST,
@@ -27,7 +27,7 @@ sealed class ApiError(
     )
 
     class Unauthorized(
-        exception: Exception?,
+        exception: Exception? = null,
         message: String? = null,
     ) : ApiError(
         status = HttpStatus.UNAUTHORIZED,
@@ -36,7 +36,7 @@ sealed class ApiError(
     )
 
     class TooManyRequests(
-        exception: Exception?,
+        exception: Exception? = null,
         message: String? = null,
     ) : ApiError(
         status = HttpStatus.TOO_MANY_REQUESTS,
@@ -45,7 +45,7 @@ sealed class ApiError(
     )
 
     class InternalError(
-        exception: Exception?,
+        exception: Exception? = null,
         message: String? = null,
     ) : ApiError(
         status = HttpStatus.INTERNAL_SERVER_ERROR,
@@ -54,7 +54,7 @@ sealed class ApiError(
     )
 
     class DataIntegrityError(
-        exception: Exception?,
+        exception: Exception? = null,
         message: String? = null,
     ) : ApiError(
         status = HttpStatus.BAD_REQUEST,

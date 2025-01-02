@@ -8,6 +8,7 @@ object OfferEntityMapper {
     fun OfferEntity.toOffer(): Offer {
         return Offer(
             id = this.id,
+            offerId = this.offerId,
             title = this.title,
             description = this.description
         )

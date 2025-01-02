@@ -7,7 +7,7 @@ object OfferRespMapper {
 
     fun Offer.toOfferResponse(): OfferResponse {
         return OfferResponse(
-            id = this.id,
+            offerId = this.offerId,
             description = this.description,
             title = this.title
         )

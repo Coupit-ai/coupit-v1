@@ -33,7 +33,6 @@ class SessionController(
     ): ResponseEntity<ApiResponse<SessionResponse>> {
 
         val session = sessionManager.getSession(sessionId)
-
         return ResponseEntity.ok(ApiResponse.success(session))
     }
 
