@@ -19,8 +19,14 @@ class SessionManager(
     private val logger = LogManager.getLogger(SessionManager::class.java)
 
     fun createSession(merchantId: String, transactionId: String): SessionResponse {
-        try {
+        if (merchantId.isBlank()) {
+            throw ApiError.InvalidRequest(message = "Merchant ID cannot be empty.")
+        }
+        if (transactionId.isBlank()) {
+            throw ApiError.InvalidRequest(message = "Transaction ID cannot be empty.")
+        }
 
+        try {
             val sessionData = sessionUseCase.getSessionByTransactionId(transactionId) ?: run {
                 return@run sessionUseCase.createSession(merchantId, transactionId)
             }

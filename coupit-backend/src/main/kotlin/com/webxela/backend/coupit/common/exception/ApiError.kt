@@ -61,4 +61,13 @@ sealed class ApiError(
         message = message,
         exception = exception?.message
     )
+
+    class InvalidRequest(
+        exception: Exception? = null,
+        message: String? = null,
+    ) : ApiError(
+        status = HttpStatus.BAD_REQUEST,
+        message = message,
+        exception = exception?.message
+    )
 }
