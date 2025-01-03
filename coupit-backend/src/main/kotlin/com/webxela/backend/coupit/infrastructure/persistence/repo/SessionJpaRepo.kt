@@ -11,7 +11,6 @@ import java.util.*
 interface SessionJpaRepo : JpaRepository<SessionEntity, Long> {
 
     fun findByTransactionId(transactionId: String): SessionEntity?
-
     fun findBySessionId(sessionId: UUID): SessionEntity?
 
     @Modifying
@@ -20,7 +19,6 @@ interface SessionJpaRepo : JpaRepository<SessionEntity, Long> {
                 "WHERE s.sessionId = :sessionId AND s.used = false"
     )
     fun markSessionAsUsed(sessionId: UUID): Int
-
     fun deleteByTransactionId(transactionId: String): Int
 
 }

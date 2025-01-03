@@ -17,7 +17,7 @@ class SessionRepoAdapter(
 ) : SessionRepo {
 
     override fun createSession(merchantId: String, transactionId: String): Session {
-        val sessionEntity = SessionEntity (
+        val sessionEntity = SessionEntity(
             merchantId = merchantId,
             transactionId = transactionId
         )
@@ -28,15 +28,23 @@ class SessionRepoAdapter(
         return sessionJpaRepo.findByTransactionId(transactionId)?.toSession()
     }
 
-    override fun markSessionAsUsed(sessionId: UUID): Int {
-        return sessionJpaRepo.markSessionAsUsed(sessionId)
+    override fun markSessionAsUsed(sessionId: UUID): Boolean {
+        return when (sessionJpaRepo.markSessionAsUsed(sessionId)) {
+            0 -> false
+            1 -> true
+            else -> throw IllegalStateException("Unexpected state: Multiple rows marked as used")
+        }
     }
 
     override fun getSessionBySessionId(sessionId: UUID): Session? {
         return sessionJpaRepo.findBySessionId(sessionId)?.toSession()
     }
 
-    override fun deleteSessionByTransactionId(transactionId: String): Boolean {
-        return sessionJpaRepo.deleteByTransactionId(transactionId) > 0
+    override fun deleteSession(transactionId: String): Boolean {
+        return when (sessionJpaRepo.deleteByTransactionId(transactionId)) {
+            0 -> false
+            1 -> true
+            else -> throw IllegalStateException("Unexpected state: Multiple rows marked as deleted")
+        }
     }
 }

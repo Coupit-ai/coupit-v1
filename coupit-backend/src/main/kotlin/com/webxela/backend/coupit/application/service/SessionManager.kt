@@ -16,17 +16,21 @@ class SessionManager(
     private val offerUseCase: OfferUseCase
 ) {
 
-    private val logger = LogManager.getLogger(SessionManager::class.java)
+    private val logger = LogManager.getLogger(this.javaClass)
 
     fun createSession(merchantId: String, transactionId: String): SessionResponse {
+        // Merchant id should not be blank
         if (merchantId.isBlank()) {
             throw ApiError.InvalidRequest(message = "Merchant ID cannot be empty.")
         }
+
+        // Transaction id should not be blank
         if (transactionId.isBlank()) {
             throw ApiError.InvalidRequest(message = "Transaction ID cannot be empty.")
         }
 
         try {
+            // Early return session data if already exists otherwise create new one
             val sessionData = sessionUseCase.getSessionByTransactionId(transactionId) ?: run {
                 return@run sessionUseCase.createSession(merchantId, transactionId)
             }
@@ -34,18 +38,18 @@ class SessionManager(
             return sessionData.toSessionResponse(offers)
 
         } catch (ex: Exception) {
-            logger.error("Internal error while creating session: ", ex)
-            if (sessionUseCase.deleteSessionByTransactionId(transactionId))
-                logger.error("Rollback Session")
+            logger.error("Error while creating session for merchant $merchantId, and transaction $transactionId: ", ex)
+            if (sessionUseCase.deleteSession(transactionId)) logger.error("Rollback Session")
             throw ApiError.InternalError(ex, message = "Failed to create session.")
         }
     }
 
     fun getSession(sessionId: UUID): SessionResponse {
-        try {
+        // Session should not be null
+        val sessionData = sessionUseCase.getSessionBySessionId(sessionId)
+            ?: throw ApiError.ResourceNotFound(message = "Session with id $sessionId does not exist.")
 
-            val sessionData = sessionUseCase.getSessionBySessionId(sessionId)
-                ?: throw ApiError.ResourceNotFound(message = "Session with id $sessionId does not exist.")
+        try {
             val offers = offerUseCase.getAllOffers(sessionData.merchantId).map { it.toOfferResponse() }
             return sessionData.toSessionResponse(offers)
 

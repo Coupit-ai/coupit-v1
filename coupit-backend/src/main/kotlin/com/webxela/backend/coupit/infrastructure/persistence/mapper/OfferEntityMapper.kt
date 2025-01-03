@@ -9,6 +9,14 @@ object OfferEntityMapper {
         return Offer(
             id = this.id,
             offerId = this.offerId,
+            timeStamp = this.timeStamp,
+            title = this.title,
+            description = this.description
+        )
+    }
+
+    fun Offer.toOfferEntity(): OfferEntity {
+        return OfferEntity(
             title = this.title,
             description = this.description
         )

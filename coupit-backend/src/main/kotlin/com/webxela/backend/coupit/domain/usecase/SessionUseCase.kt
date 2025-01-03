@@ -23,12 +23,12 @@ class SessionUseCase(
         return sessionRepo.getSessionBySessionId(sessionId)
     }
 
-    fun markSessionAsUsed(sessionId: UUID): Int {
+    fun markSessionAsUsed(sessionId: UUID): Boolean {
         return sessionRepo.markSessionAsUsed(sessionId)
     }
 
-    fun deleteSessionByTransactionId(transactionId: String): Boolean {
-        return sessionRepo.deleteSessionByTransactionId(transactionId)
+    fun deleteSession(transactionId: String): Boolean {
+        return sessionRepo.deleteSession(transactionId)
     }
 
 }

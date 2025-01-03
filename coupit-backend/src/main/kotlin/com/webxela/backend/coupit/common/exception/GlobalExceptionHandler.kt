@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.reactive.resource.NoResourceFoundException
 import org.springframework.web.server.MethodNotAllowedException
+import org.springframework.web.server.ServerWebInputException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -28,7 +29,7 @@ class GlobalExceptionHandler {
     fun handleJsonEncodingException(ex: EncodingException): ResponseEntity<ApiResponse<Nothing>> {
         val response = ApiResponse.error<Nothing>(
             status = HttpStatus.INTERNAL_SERVER_ERROR,
-            message = "Error while parsing json",
+            message = "Error while parsing json.",
             exception = ex.message
         )
         return ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR)
@@ -38,7 +39,7 @@ class GlobalExceptionHandler {
     fun handleMethodNotAllowedException(ex: MethodNotAllowedException): ResponseEntity<ApiResponse<Nothing>> {
         val response = ApiResponse.error<Nothing>(
             status = HttpStatus.METHOD_NOT_ALLOWED,
-            message = "Method not allowed",
+            message = "Method not allowed.",
             exception = ex.message
         )
         return ResponseEntity(response, HttpStatus.METHOD_NOT_ALLOWED)
@@ -48,7 +49,7 @@ class GlobalExceptionHandler {
     fun handleResourceNotFoundException(ex: NoResourceFoundException): ResponseEntity<ApiResponse<Nothing>> {
         val response = ApiResponse.error<Nothing>(
             status = HttpStatus.NOT_FOUND,
-            message = "No such resource found",
+            message = "No such resource found.",
             exception = ex.message
         )
         return ResponseEntity(response, HttpStatus.NOT_FOUND)
@@ -59,7 +60,18 @@ class GlobalExceptionHandler {
         logger.error(ex.message, ex)
         val response = ApiResponse.error<Nothing>(
             status = HttpStatus.INTERNAL_SERVER_ERROR,
-            message = "An unexpected error occurred",
+            message = "An unexpected error occurred.",
+            exception = ex.message
+        )
+        return ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @ExceptionHandler(ServerWebInputException::class)
+    fun handleServerWebInputException(ex: ServerWebInputException): ResponseEntity<ApiResponse<Nothing>> {
+        logger.error(ex.message, ex)
+        val response = ApiResponse.error<Nothing>(
+            status = HttpStatus.INTERNAL_SERVER_ERROR,
+            message = "Malformed input.",
             exception = ex.message
         )
         return ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR)

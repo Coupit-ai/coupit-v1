@@ -10,6 +10,7 @@ object SessionRespMapper {
         return SessionResponse(
             merchantId = this.merchantId,
             transactionId = this.transactionId,
+            timeStamp = this.timeStamp,
             used = this.used,
             sessionId = this.sessionId,
             expiresAt = this.expiresAt,

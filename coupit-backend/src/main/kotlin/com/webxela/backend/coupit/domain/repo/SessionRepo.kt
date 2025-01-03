@@ -7,8 +7,8 @@ interface SessionRepo {
 
     fun createSession(merchantId: String, transactionId: String): Session
     fun getSessionByTransactionId(transactionId: String): Session?
-    fun markSessionAsUsed(sessionId: UUID): Int
+    fun markSessionAsUsed(sessionId: UUID): Boolean
     fun getSessionBySessionId(sessionId: UUID): Session?
-    fun deleteSessionByTransactionId(transactionId: String): Boolean
+    fun deleteSession(transactionId: String): Boolean
 
 }

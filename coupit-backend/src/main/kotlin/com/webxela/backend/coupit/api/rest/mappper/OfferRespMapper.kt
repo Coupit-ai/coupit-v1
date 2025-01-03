@@ -8,6 +8,7 @@ object OfferRespMapper {
     fun Offer.toOfferResponse(): OfferResponse {
         return OfferResponse(
             offerId = this.offerId,
+            timeStamp = this.timeStamp,
             description = this.description,
             title = this.title
         )

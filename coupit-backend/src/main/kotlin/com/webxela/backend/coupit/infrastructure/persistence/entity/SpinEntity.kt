@@ -1,37 +1,44 @@
 package com.webxela.backend.coupit.infrastructure.persistence.entity
 
-import com.webxela.backend.coupit.common.utils.Constants.SESSION_EXPIRY
+import com.webxela.backend.coupit.common.utils.Constants.OFFER_EXPIRY
 import jakarta.persistence.*
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.UUID
-
+import java.util.*
 
 @Entity
-@Table(name = "session")
-data class SessionEntity(
+@Table(name = "spins")
+data class SpinEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
     @Column(nullable = false, unique = true)
-    val sessionId: UUID = UUID.randomUUID(),
+    val spinId: UUID = UUID.randomUUID(),
+
+    @Column(nullable = false)
+    val merchantId: String,
 
     @Column(nullable = false)
     val timeStamp: Instant = Instant.now()
         .truncatedTo(ChronoUnit.SECONDS),
 
-    @Column(nullable = false)
-    val merchantId: String,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "offer_id")
+    val offer: OfferEntity,
 
     @Column(nullable = false, unique = true)
-    val transactionId: String,
+    val sessionId: UUID,
+
+    @Column(nullable = false, unique = true)
+    val qrCode: String,
 
     @Column(nullable = false)
     val expiresAt: Instant = Instant.now()
-        .plus(SESSION_EXPIRY, ChronoUnit.MINUTES)
+        .plus(OFFER_EXPIRY, ChronoUnit.DAYS)
         .truncatedTo(ChronoUnit.SECONDS),
 
     @Column(nullable = false)
-    val used: Boolean = false
+    val claimed: Boolean = false
+
 )
