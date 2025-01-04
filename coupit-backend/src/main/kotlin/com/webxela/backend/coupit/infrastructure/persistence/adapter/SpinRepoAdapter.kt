@@ -1,12 +1,9 @@
 package com.webxela.backend.coupit.infrastructure.persistence.adapter
 
-import com.webxela.backend.coupit.domain.model.Offer
 import com.webxela.backend.coupit.domain.model.SpinResult
 import com.webxela.backend.coupit.domain.repo.SpinRepo
 import com.webxela.backend.coupit.infrastructure.persistence.entity.SpinEntity
-import com.webxela.backend.coupit.infrastructure.persistence.mapper.OfferEntityMapper.toOfferEntity
 import com.webxela.backend.coupit.infrastructure.persistence.mapper.SpinEntityMapper.toSpinResult
-import com.webxela.backend.coupit.infrastructure.persistence.mapper.SpinEntityMapper.toSpinEntity
 import com.webxela.backend.coupit.infrastructure.persistence.repo.OfferJpaRepo
 import com.webxela.backend.coupit.infrastructure.persistence.repo.SpinJpaRepo
 import jakarta.transaction.Transactional

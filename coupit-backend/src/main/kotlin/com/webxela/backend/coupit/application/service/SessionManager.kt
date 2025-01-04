@@ -6,11 +6,13 @@ import com.webxela.backend.coupit.api.rest.mappper.SessionRespMapper.toSessionRe
 import com.webxela.backend.coupit.common.exception.ApiError
 import com.webxela.backend.coupit.domain.usecase.OfferUseCase
 import com.webxela.backend.coupit.domain.usecase.SessionUseCase
+import jakarta.transaction.Transactional
 import org.apache.logging.log4j.LogManager
 import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
+@Transactional
 class SessionManager(
     private val sessionUseCase: SessionUseCase,
     private val offerUseCase: OfferUseCase
@@ -39,7 +41,6 @@ class SessionManager(
 
         } catch (ex: Exception) {
             logger.error("Error while creating session for merchant $merchantId, and transaction $transactionId: ", ex)
-            if (sessionUseCase.deleteSession(transactionId)) logger.error("Rollback Session")
             throw ApiError.InternalError(ex, message = "Failed to create session.")
         }
     }

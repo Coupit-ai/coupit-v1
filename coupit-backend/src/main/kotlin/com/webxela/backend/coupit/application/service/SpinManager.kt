@@ -8,6 +8,7 @@ import com.webxela.backend.coupit.domain.model.Session
 import com.webxela.backend.coupit.domain.usecase.OfferUseCase
 import com.webxela.backend.coupit.domain.usecase.SessionUseCase
 import com.webxela.backend.coupit.domain.usecase.SpinUseCase
+import jakarta.transaction.Transactional
 import org.apache.logging.log4j.LogManager
 import org.springframework.stereotype.Service
 import java.time.Instant
@@ -15,6 +16,7 @@ import java.time.temporal.ChronoUnit
 import java.util.*
 
 @Service
+@Transactional
 class SpinManager(
     private val spinUseCase: SpinUseCase,
     private val sessionUseCase: SessionUseCase,
@@ -69,7 +71,6 @@ class SpinManager(
 
         } catch (ex: Exception) {
             logger.error("Error while saving spin result for merchant $merchantId and session $sessionId", ex)
-            if (spinUseCase.deleteSpinResult(sessionId)) logger.error("Rollback spin result")
             throw ApiError.InternalError(message = "Failed to perform spin.")
         }
     }
