@@ -71,7 +71,7 @@ class GlobalExceptionHandler {
         logger.error(ex.message, ex)
         val response = ApiResponse.error<Nothing>(
             status = HttpStatus.INTERNAL_SERVER_ERROR,
-            message = "Malformed input.",
+            message = "Malformed or invalid input provided.",
             exception = ex.message
         )
         return ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR)

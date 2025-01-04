@@ -51,7 +51,7 @@ class SessionManager(
     fun getSession(sessionId: UUID): SessionResponse {
         // Session should not be null
         val sessionData = sessionUseCase.getSessionBySessionId(sessionId)
-            ?: throw ApiError.ResourceNotFound(message = "Session with id $sessionId does not exist.")
+            ?: throw ApiError.ResourceNotFound(message = "Session with session_id $sessionId does not exist.")
 
         try {
             val offers = offerUseCase.getAllOffers(sessionData.merchantId).map { it.toOfferResponse() }

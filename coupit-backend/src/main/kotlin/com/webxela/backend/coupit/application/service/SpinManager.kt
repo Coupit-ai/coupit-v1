@@ -33,7 +33,7 @@ class SpinManager(
 
         // Session should not be null
         val session = sessionUseCase.getSessionBySessionId(sessionId)
-            ?: throw ApiError.InvalidRequest(message = "Session not found.")
+            ?: throw ApiError.InvalidRequest(message = "Session with session_id $sessionId not found.")
 
         // Early return spin result if exists
         spinUseCase.getSpinResultBySessionId(sessionId)?.let {
@@ -42,12 +42,12 @@ class SpinManager(
 
         // Session should not be invalid
         if (!isValidSession(session, merchantId)) {
-            throw ApiError.Unauthorized(message = "Session is expired or invalid.")
+            throw ApiError.Unauthorized(message = "Session with session_id $sessionId is expired or invalid.")
         }
 
         // Session should not be already used
         if (session.used) {
-            throw ApiError.Unauthorized(message = "Session is already used.")
+            throw ApiError.Unauthorized(message = "Session with session_id $sessionId is already used.")
         }
 
         val offers = offerUseCase.getAllOffers(merchantId)
@@ -87,12 +87,12 @@ class SpinManager(
 
     private fun isValidSession(session: Session, merchantId: String): Boolean {
         if (session.merchantId != merchantId) {
-            throw ApiError.InvalidRequest(message = "Merchant ID does not match the session.")
+            throw ApiError.InvalidRequest(message = "Merchant Id $merchantId does not match with provided session.")
         }
 
         val currentTime = Instant.now().truncatedTo(ChronoUnit.SECONDS)
         if (session.expiresAt.isBefore(currentTime)) {
-            throw ApiError.Unauthorized(message = "Session has expired.")
+            throw ApiError.Unauthorized(message = "Session with session_id ${session.sessionId} has been expired.")
         }
         return true
     }
