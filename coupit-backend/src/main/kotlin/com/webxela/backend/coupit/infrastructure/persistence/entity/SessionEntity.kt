@@ -24,7 +24,7 @@ data class SessionEntity(
     @Column(nullable = false)
     val merchantId: String,
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     val transactionId: String,
 
     @Column(nullable = false)

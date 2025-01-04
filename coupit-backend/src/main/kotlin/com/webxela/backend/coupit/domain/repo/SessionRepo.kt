@@ -9,6 +9,6 @@ interface SessionRepo {
     fun getSessionByTransactionId(transactionId: String): Session?
     fun markSessionAsUsed(sessionId: UUID): Boolean
     fun getSessionBySessionId(sessionId: UUID): Session?
-    fun deleteSession(transactionId: String): Boolean
+    fun deleteSession(transactionId: String, merchantId: String): Boolean
 
 }

@@ -27,8 +27,8 @@ class SessionUseCase(
         return sessionRepo.markSessionAsUsed(sessionId)
     }
 
-    fun deleteSession(transactionId: String): Boolean {
-        return sessionRepo.deleteSession(transactionId)
+    fun deleteSession(transactionId: String, merchantId: String): Boolean {
+        return sessionRepo.deleteSession(transactionId, merchantId)
     }
 
 }

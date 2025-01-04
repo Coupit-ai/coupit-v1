@@ -32,10 +32,13 @@ class SessionManager(
         }
 
         try {
-            // Early return session data if already exists otherwise create new one
-            val sessionData = sessionUseCase.getSessionByTransactionId(transactionId) ?: run {
+            // Early return session data if it already exists otherwise create new one
+            val sessionData = sessionUseCase.getSessionByTransactionId(transactionId)?.takeIf {
+                it.merchantId == merchantId
+            } ?: run {
                 return@run sessionUseCase.createSession(merchantId, transactionId)
             }
+
             val offers = offerUseCase.getAllOffers(merchantId).map { it.toOfferResponse() }
             return sessionData.toSessionResponse(offers)
 

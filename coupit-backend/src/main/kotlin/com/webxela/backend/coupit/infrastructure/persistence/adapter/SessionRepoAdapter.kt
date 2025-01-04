@@ -40,8 +40,8 @@ class SessionRepoAdapter(
         return sessionJpaRepo.findBySessionId(sessionId)?.toSession()
     }
 
-    override fun deleteSession(transactionId: String): Boolean {
-        return when (sessionJpaRepo.deleteByTransactionId(transactionId)) {
+    override fun deleteSession(transactionId: String, merchantId: String): Boolean {
+        return when (sessionJpaRepo.deleteByTransactionIdAndMerchantId(transactionId, merchantId)) {
             0 -> false
             1 -> true
             else -> throw IllegalStateException("Unexpected state: Multiple rows marked as deleted")

@@ -19,6 +19,6 @@ interface SessionJpaRepo : JpaRepository<SessionEntity, Long> {
                 "WHERE s.sessionId = :sessionId AND s.used = false"
     )
     fun markSessionAsUsed(sessionId: UUID): Int
-    fun deleteByTransactionId(transactionId: String): Int
+    fun deleteByTransactionIdAndMerchantId(transactionId: String, merchantId: String): Int
 
 }
