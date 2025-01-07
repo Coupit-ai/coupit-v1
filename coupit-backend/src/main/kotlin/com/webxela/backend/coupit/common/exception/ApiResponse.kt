@@ -8,10 +8,10 @@ import java.time.LocalDateTime
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class ApiResponse<T>(
-    @JsonProperty("status_code") val statusCode: Int,
+    val statusCode: Int,
     val message: String? = null,
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    val timestamp: LocalDateTime = LocalDateTime.now(),
+    val timeStamp: LocalDateTime = LocalDateTime.now(),
     val data: T? = null,
     val error: String? = null
 ) {
