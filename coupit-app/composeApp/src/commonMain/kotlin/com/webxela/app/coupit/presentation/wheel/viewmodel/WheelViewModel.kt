@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.webxela.app.coupit.core.domain.onError
 import com.webxela.app.coupit.core.domain.onSuccess
+import com.webxela.app.coupit.core.presentation.toErrorMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import com.webxela.app.coupit.domain.usecase.SessionUseCase
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,9 +27,7 @@ class WheelViewModel(
     private val _wheelUiState = MutableStateFlow(WheelUiState())
     val wheelUiState = _wheelUiState.asStateFlow()
 
-    init {
-        createSession("12345", "0987654321")
-    }
+    init { createSession("12345678", "0987654321") }
 
     fun onEvent(event: WheelUiEvent) {
         when (event) {
@@ -56,11 +55,12 @@ class WheelViewModel(
             .onError { error ->
                 _wheelUiState.update {
                     it.copy(
-                        errorMessage = error.toString(),
+                        errorMessage = error.toErrorMessage(),
                         isLoading = false
                     )
                 }
             }
+
     }
 
 }

@@ -50,11 +50,13 @@ private fun WheelScreen(
     ) {
 
         if (uiState.isLoading) CircularProgressIndicator()
-
-        val response = uiState.sessionResponse
-        Text(
-            text = response.toString(),
-            modifier = modifier
-        )
+        if (uiState.errorMessage != null) Text(uiState.errorMessage)
+        if (uiState.sessionResponse != null) {
+            val response = uiState.sessionResponse
+            Text(
+                text = response.toString(),
+                modifier = modifier
+            )
+        }
     }
 }

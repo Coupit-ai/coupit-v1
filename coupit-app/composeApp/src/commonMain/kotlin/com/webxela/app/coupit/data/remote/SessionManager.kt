@@ -22,7 +22,6 @@ class SessionManager(private val httpClient: HttpClient) {
     ): ApiResponse<SessionDto, DataError.Remote> {
 
         return safeCall<SessionDto> {
-            delay(3000)
             httpClient.post("$BASE_URL/session") {
                 contentType(ContentType.Application.Json)
                 setBody(

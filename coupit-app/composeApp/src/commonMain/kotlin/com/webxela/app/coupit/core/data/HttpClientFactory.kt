@@ -34,7 +34,7 @@ internal object HttpClientFactory {
                         println(message)
                     }
                 }
-                level = LogLevel.INFO
+                level = LogLevel.ALL
             }
             install(HttpCookies) {
                 storage = AcceptAllCookiesStorage()

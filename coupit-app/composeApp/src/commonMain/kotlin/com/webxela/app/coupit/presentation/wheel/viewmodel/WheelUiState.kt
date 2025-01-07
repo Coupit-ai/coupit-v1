@@ -1,6 +1,5 @@
 package com.webxela.app.coupit.presentation.wheel.viewmodel
 
-import com.webxela.app.coupit.core.presentation.UiText
 import com.webxela.app.coupit.domain.model.Session
 import com.webxela.app.coupit.domain.model.SpinResult
 
