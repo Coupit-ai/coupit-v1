@@ -15,8 +15,8 @@ class SessionUseCase(
         return sessionRepo.createSession(merchantId, transactionId)
     }
 
-    fun getSessionByTransactionId(transactionId: String): Session? {
-        return sessionRepo.getSessionByTransactionId(transactionId)
+    fun getSessionByTransactionId(transactionId: String, merchantId: String): Session? {
+        return sessionRepo.getSession(transactionId, merchantId)
     }
 
     fun getSessionBySessionId(sessionId: UUID): Session? {

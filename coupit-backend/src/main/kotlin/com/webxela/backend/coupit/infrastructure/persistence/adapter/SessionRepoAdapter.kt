@@ -24,8 +24,8 @@ class SessionRepoAdapter(
         return sessionJpaRepo.save(sessionEntity).toSession()
     }
 
-    override fun getSessionByTransactionId(transactionId: String): Session? {
-        return sessionJpaRepo.findByTransactionId(transactionId)?.toSession()
+    override fun getSession(transactionId: String, merchantId: String): Session? {
+        return sessionJpaRepo.findByTransactionIdAndMerchantId(transactionId, merchantId)?.toSession()
     }
 
     override fun markSessionAsUsed(sessionId: UUID): Boolean {

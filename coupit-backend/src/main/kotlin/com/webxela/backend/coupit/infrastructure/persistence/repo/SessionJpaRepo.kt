@@ -10,7 +10,7 @@ import java.util.*
 @Repository
 interface SessionJpaRepo : JpaRepository<SessionEntity, Long> {
 
-    fun findByTransactionId(transactionId: String): SessionEntity?
+    fun findByTransactionIdAndMerchantId(transactionId: String, merchantId: String): SessionEntity?
     fun findBySessionId(sessionId: UUID): SessionEntity?
 
     @Modifying
