@@ -7,8 +7,8 @@ data class SessionDto(
     val message: String,
     val statusCode: Int,
     val timeStamp: String,
-    val error: String?,
-    val data: Data?
+    val error: String? = null,
+    val data: Data? = null
 ) {
     @Serializable
     data class Data(
