@@ -6,43 +6,40 @@ import com.webxela.app.coupit.core.domain.DataError
 import com.webxela.app.coupit.core.utils.AppConstant.BASE_URL
 import com.webxela.app.coupit.data.model.dto.SessionDto
 import com.webxela.app.coupit.data.model.dto.SessionRequest
+import com.webxela.app.coupit.data.model.dto.SpinRequest
+import com.webxela.app.coupit.data.model.dto.SpinResultDto
 import io.ktor.client.HttpClient
-import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import kotlinx.coroutines.delay
 
-class SessionManager(private val httpClient: HttpClient) {
+class SpinManager(private val httpClient: HttpClient) {
 
-    suspend fun createSession(
+    suspend fun performSpin(
         merchantId: String,
-        transactionId: String
-    ): ApiResponse<SessionDto, DataError.Remote> {
+        sessionId: String
+    ): ApiResponse<SpinResultDto, DataError.Remote> {
 
-        return safeCall<SessionDto> {
-            httpClient.post("$BASE_URL/session") {
+        return safeCall<SpinResultDto> {
+            httpClient.post("$BASE_URL/spin") {
                 contentType(ContentType.Application.Json)
                 setBody(
-                    SessionRequest(
+                    SpinRequest(
                         merchantId = merchantId,
-                        transactionId = transactionId
+                        sessionId = sessionId
                     )
                 )
             }
         }
     }
 
-    suspend fun getSession(
-        sessionId: String
-    ): ApiResponse<SessionDto, DataError.Remote> {
+    suspend fun getSpinResult(spinId: String): ApiResponse<SpinResultDto, DataError.Remote> {
 
-        return safeCall<SessionDto> {
-            httpClient.get("$BASE_URL/session/$sessionId") {
+        return safeCall<SpinResultDto> {
+            httpClient.post("$BASE_URL/spin/$spinId") {
                 contentType(ContentType.Application.Json)
             }
         }
     }
-
 }

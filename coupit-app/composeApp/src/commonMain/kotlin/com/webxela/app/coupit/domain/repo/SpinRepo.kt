@@ -6,7 +6,7 @@ import com.webxela.app.coupit.domain.model.SpinResult
 
 interface SpinRepo {
 
-    fun performSpin(merchantId: String, sessionId: String): ApiResponse<SpinResult, DataError.Remote>
+    suspend fun performSpin(merchantId: String, sessionId: String): ApiResponse<SpinResult, DataError.Remote>
 
-    fun getSpinResult(spinId: String): ApiResponse<SpinResult, DataError.Remote>
+    suspend fun getSpinResult(spinId: String): ApiResponse<SpinResult, DataError.Remote>
 }

@@ -1,5 +1,6 @@
 package com.webxela.app.coupit.core.data
 
+import co.touchlab.kermit.Logger
 import com.webxela.app.coupit.core.domain.ApiResponse
 import com.webxela.app.coupit.core.domain.DataError
 import com.webxela.app.coupit.core.domain.Error
@@ -16,7 +17,12 @@ import kotlinx.serialization.json.Json
 import kotlin.coroutines.coroutineContext
 
 @Serializable
-data class ErrorResponse(val statusCode: Int, val message: String, val timeStamp: String)
+data class ErrorResponse(
+    val statusCode: Int,
+    val message: String,
+    val timeStamp: String,
+    val error: String
+)
 
 internal suspend inline fun <reified T> safeCall(
     execute: () -> HttpResponse

@@ -32,7 +32,9 @@ internal fun WheelSlice(
                 useCenter = true,
             )
         }
-        Box(modifier = Modifier.align(Alignment.TopCenter).padding(top = 20.dp)) {
+        Box(
+            modifier = Modifier.align(Alignment.TopCenter).padding(top = 50.dp),
+        ) {
             content()
         }
     }

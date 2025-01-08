@@ -38,6 +38,7 @@ data class SpinWheelState(
                     easing = EaseOutCubic
                 )
             )
+            onSpinningFinished?.invoke()
         }
     }
 }

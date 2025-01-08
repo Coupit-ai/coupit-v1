@@ -10,8 +10,7 @@ object SessionMapper {
             message = this.message,
             statusCode = this.statusCode,
             timeStamp = this.timeStamp,
-            error = this.error,
-            data = this.data?.toSessionData()
+            data = this.data.toSessionData()
         )
     }
 

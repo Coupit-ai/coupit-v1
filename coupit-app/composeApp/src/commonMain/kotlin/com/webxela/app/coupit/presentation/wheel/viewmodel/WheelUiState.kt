@@ -5,7 +5,7 @@ import com.webxela.app.coupit.domain.model.SpinResult
 
 data class WheelUiState(
     val sessionResponse: Session? = null,
-    val spinResult: SpinResult? = null,
+    val spinResponse: SpinResult? = null,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )

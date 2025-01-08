@@ -10,8 +10,7 @@ object SpinResultMapper {
             message = this.message,
             statusCode = this.statusCode,
             timeStamp = this.timeStamp,
-            error = this.error,
-            data = this.data?.toSpinData()
+            data = this.data.toSpinData()
         )
     }
 

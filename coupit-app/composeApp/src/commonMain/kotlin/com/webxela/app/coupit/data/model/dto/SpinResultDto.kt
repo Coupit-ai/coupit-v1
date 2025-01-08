@@ -7,8 +7,7 @@ data class SpinResultDto(
     val message: String,
     val statusCode: Int,
     val timeStamp: String,
-    val error: String? = null,
-    val data: Data? = null
+    val data: Data
 ) {
     @Serializable
     data class Data(
