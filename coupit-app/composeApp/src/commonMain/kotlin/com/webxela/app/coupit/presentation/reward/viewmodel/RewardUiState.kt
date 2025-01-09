@@ -1,6 +1,5 @@
 package com.webxela.app.coupit.presentation.reward.viewmodel
 
-import com.webxela.app.coupit.domain.model.Session
 import com.webxela.app.coupit.domain.model.SpinResult
 
 data class RewardUiState(

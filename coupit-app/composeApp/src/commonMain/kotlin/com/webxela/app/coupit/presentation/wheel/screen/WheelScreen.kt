@@ -114,7 +114,7 @@ private fun WheelScreen(
 
                 Box(
                     modifier = modifier
-                        .fillMaxSize(.7f)
+                        .fillMaxSize(.5f)
                         .aspectRatio(1f)
                 ) {
                     SpinWheel(spinWheelState = spinState) {
