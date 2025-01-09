@@ -52,6 +52,7 @@ kotlin {
             implementation(libs.multiplatformSettings)
             implementation(libs.kotlinx.datetime)
             implementation(libs.composeIcons.featherIcons)
+            implementation(libs.androidx.compose.navigation)
         }
 
         commonTest.dependencies {

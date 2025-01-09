@@ -11,10 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 class WheelViewModel(
     private val sessionUseCase: SessionUseCase,
     private val spinUseCase: SpinUseCase
@@ -22,11 +19,6 @@ class WheelViewModel(
 
     private val _wheelUiState = MutableStateFlow(WheelUiState())
     val wheelUiState = _wheelUiState.asStateFlow()
-
-    init {
-        val newMerchantId = Uuid.random()
-        createSession(newMerchantId.toString(), "0987654321")
-    }
 
     fun onEvent(event: WheelUiEvent) {
         when (event) {
@@ -84,7 +76,6 @@ class WheelViewModel(
                     )
                 }
             }
-
     }
 
 }

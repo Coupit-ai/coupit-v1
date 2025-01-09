@@ -30,7 +30,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import co.touchlab.kermit.Logger
 import com.webxela.app.coupit.presentation.wheel.viewmodel.WheelUiEvent
 import com.webxela.app.coupit.presentation.wheel.viewmodel.WheelUiState
 import com.webxela.app.coupit.presentation.wheel.viewmodel.WheelViewModel
@@ -44,6 +43,8 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun WheelScreenRoot(
     modifier: Modifier = Modifier,
+    merchantId: String,
+    transactionId: String,
     viewModel: WheelViewModel = koinViewModel()
 ) {
 
@@ -51,7 +52,9 @@ fun WheelScreenRoot(
     WheelScreen(
         modifier = modifier,
         uiState = uiState,
-        uiEvent = viewModel::onEvent
+        uiEvent = viewModel::onEvent,
+        merchantId = merchantId,
+        transactionId = transactionId
     )
 
 }
@@ -61,8 +64,14 @@ fun WheelScreenRoot(
 private fun WheelScreen(
     modifier: Modifier = Modifier,
     uiState: WheelUiState,
-    uiEvent: (WheelUiEvent) -> Unit
+    uiEvent: (WheelUiEvent) -> Unit,
+    merchantId: String,
+    transactionId: String,
 ) {
+
+    LaunchedEffect(Unit) {
+        uiEvent(WheelUiEvent.CreateSession(merchantId, transactionId))
+    }
 
     var dialogData by remember { mutableStateOf(OfferData()) }
     var dialogVisible by remember { mutableStateOf(false) }
