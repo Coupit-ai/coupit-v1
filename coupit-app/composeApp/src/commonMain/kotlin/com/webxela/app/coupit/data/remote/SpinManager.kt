@@ -9,6 +9,7 @@ import com.webxela.app.coupit.data.model.dto.SessionRequest
 import com.webxela.app.coupit.data.model.dto.SpinRequest
 import com.webxela.app.coupit.data.model.dto.SpinResultDto
 import io.ktor.client.HttpClient
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -37,7 +38,7 @@ class SpinManager(private val httpClient: HttpClient) {
     suspend fun getSpinResult(spinId: String): ApiResponse<SpinResultDto, DataError.Remote> {
 
         return safeCall<SpinResultDto> {
-            httpClient.post("$BASE_URL/spin/$spinId") {
+            httpClient.get("$BASE_URL/spin/$spinId") {
                 contentType(ContentType.Application.Json)
             }
         }

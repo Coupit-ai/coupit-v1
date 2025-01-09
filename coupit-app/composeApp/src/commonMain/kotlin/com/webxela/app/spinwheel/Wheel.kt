@@ -20,7 +20,7 @@ internal fun Wheel(
             WheelSlice(
                 modifier = Modifier.rotate(degrees = degreesPerItems * index),
                 size = size,
-                brush = item.color,
+                brush = item.brush,
                 degree = degreesPerItems,
                 content = item.content
             )

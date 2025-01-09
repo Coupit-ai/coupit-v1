@@ -8,12 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.webxela.app.coupit.domain.model.Session
 import com.webxela.app.coupit.presentation.wheel.viewmodel.WheelUiEvent
 import com.webxela.app.coupit.presentation.wheel.viewmodel.WheelUiState
 import com.webxela.app.coupit.presentation.wheel.viewmodel.WheelViewModel
@@ -45,7 +44,8 @@ fun WheelScreenRoot(
     modifier: Modifier = Modifier,
     merchantId: String,
     transactionId: String,
-    viewModel: WheelViewModel = koinViewModel()
+    viewModel: WheelViewModel = koinViewModel(),
+    navigateToRewardScreen: (spinId: String) -> Unit
 ) {
 
     val uiState by viewModel.wheelUiState.collectAsStateWithLifecycle()
@@ -54,7 +54,8 @@ fun WheelScreenRoot(
         uiState = uiState,
         uiEvent = viewModel::onEvent,
         merchantId = merchantId,
-        transactionId = transactionId
+        transactionId = transactionId,
+        navigateToRewardScreen = navigateToRewardScreen
     )
 
 }
@@ -67,18 +68,19 @@ private fun WheelScreen(
     uiEvent: (WheelUiEvent) -> Unit,
     merchantId: String,
     transactionId: String,
+    navigateToRewardScreen: (spinId: String) -> Unit
 ) {
 
     LaunchedEffect(Unit) {
         uiEvent(WheelUiEvent.CreateSession(merchantId, transactionId))
     }
 
-    var dialogData by remember { mutableStateOf(OfferData()) }
-    var dialogVisible by remember { mutableStateOf(false) }
-    var spinItemTo by remember { mutableStateOf("") }
+    var spinItemToId by remember { mutableStateOf("") }
+    var spinId by remember { mutableStateOf("") }
     LaunchedEffect(uiState.spinResponse) {
         if (uiState.spinResponse != null) {
-            spinItemTo = uiState.spinResponse.data.offer.offerId
+            spinItemToId = uiState.spinResponse.data.offer.offerId
+            spinId = uiState.spinResponse.data.spinId
         }
     }
 
@@ -93,53 +95,26 @@ private fun WheelScreen(
             if (uiState.isLoading) CircularProgressIndicator()
             if (uiState.errorMessage != null) Text(uiState.errorMessage)
             if (uiState.sessionResponse != null) {
-                val wheelItems = uiState.sessionResponse.data.offers.mapIndexed { index, offer ->
-                    val colors = listOf(
-                        Color(0xFF3357FF),
-                        Color(0xFFFF5733)
-                    )
-                    SpinWheelItem(
-                        offerId = offer.offerId,
-                        title = offer.title,
-                        description = offer.description,
-                        color = Brush.verticalGradient(
-                            listOf(colors[index % colors.size], Color.White)
-                        ),
-                        content = {
-                            Text(
-                                text = offer.title,
-                                style = MaterialTheme.typography.displaySmall,
-                                color = Color.White,
-                                textAlign = TextAlign.Center,
-                                overflow = TextOverflow.Clip,
-                                modifier = Modifier.width(120.dp)
-                            )
-                        }
-                    )
-                }
-
+                val wheelItems = uiState.sessionResponse.data.toSpinWheelItems()
                 val spinState = rememberSpinWheelState(
                     items = wheelItems,
                     onSpinningFinished = {
-                        dialogVisible = true
-                        val item = wheelItems.first { it.offerId == spinItemTo }
-                        dialogData = OfferData(
-                            offerId = item.offerId,
-                            description = item.description,
-                            title = item.title
-                        )
+                        navigateToRewardScreen(spinId)
+                        spinItemToId = ""
                     },
-                    stopNbTurn = 12f,
+                    stopNbTurn = 15f,
                     stopDuration = 10.seconds
                 )
 
-                LaunchedEffect(spinItemTo) {
-                    if (spinItemTo.isNotBlank()) spinState.stopWheelAt(wheelItems.first { it.offerId == spinItemTo })
+                LaunchedEffect(spinItemToId) {
+                    if (spinItemToId.isNotEmpty()) {
+                        spinState.stopWheelAt(spinItemToId)
+                    }
                 }
 
                 Box(
                     modifier = modifier
-                        .fillMaxSize(.5f)
+                        .fillMaxSize(.7f)
                         .aspectRatio(1f)
                 ) {
                     SpinWheel(spinWheelState = spinState) {
@@ -167,40 +142,32 @@ private fun WheelScreen(
                     }
                 }
             }
-            if (dialogVisible && dialogData.title != null) {
-                AlertDialog(
-                    onDismissRequest = {
-                        dialogVisible = false
-                        spinItemTo = ""
-                    },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            dialogVisible = false
-                            spinItemTo = ""
-                        }) {
-                            Text("OK")
-                        }
-                    },
-                    title = {
-                        Text(
-                            text = dialogData.title ?: "Spin Result",
-                            style = MaterialTheme.typography.headlineLarge
-                        )
-                    },
-                    text = {
-                        Text(
-                            text = dialogData.description ?: "",
-                            style = MaterialTheme.typography.headlineMedium
-                        )
-                    },
-                )
-            }
         }
     }
 }
 
-private data class OfferData(
-    val offerId: String? = null,
-    val title: String? = null,
-    val description: String? = null
-)
+
+fun Session.Data.toSpinWheelItems(): List<SpinWheelItem> {
+    val colors = listOf(
+        Color(0xFF3357FF),
+        Color(0xFFFF5733)
+    )
+    return this.offers.mapIndexed { index, offer ->
+        SpinWheelItem(
+            identifier = offer.offerId,
+            brush = Brush.verticalGradient(
+                listOf(colors[index % colors.size], Color.White)
+            ),
+            content = {
+                Text(
+                    text = offer.title,
+                    style = MaterialTheme.typography.displaySmall,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    overflow = TextOverflow.Clip,
+                    modifier = Modifier.width(120.dp)
+                )
+            }
+        )
+    }
+}

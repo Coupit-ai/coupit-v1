@@ -9,6 +9,7 @@ import com.webxela.app.coupit.domain.repo.SessionRepo
 import com.webxela.app.coupit.domain.repo.SpinRepo
 import com.webxela.app.coupit.domain.usecase.SessionUseCase
 import com.webxela.app.coupit.domain.usecase.SpinUseCase
+import com.webxela.app.coupit.presentation.reward.viewmodel.RewardViewModel
 import com.webxela.app.coupit.presentation.wheel.viewmodel.WheelViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -33,5 +34,6 @@ val sharedModule = module {
     singleOf(::SpinUseCase)
 
     viewModelOf(::WheelViewModel)
+    viewModelOf(::RewardViewModel)
 
 }

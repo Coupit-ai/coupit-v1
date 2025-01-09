@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.composeIcons.featherIcons)
             implementation(libs.androidx.compose.navigation)
+            implementation(libs.alexzhirkevich.qrose)
         }
 
         commonTest.dependencies {

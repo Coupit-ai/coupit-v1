@@ -36,10 +36,15 @@ fun HomeScreenRoot(
     onNavigateToWheelScreen: (
         merchantId: String,
         transactionId: String
-    ) -> Unit
+    ) -> Unit,
+    onNavigateToScannerScreen: () -> Unit
 ) {
 
-    HomeScreen(onNavigateToWheelScreen = onNavigateToWheelScreen)
+    HomeScreen(
+        modifier = modifier,
+        onNavigateToWheelScreen = onNavigateToWheelScreen,
+        onNavigateToScannerScreen = onNavigateToScannerScreen
+    )
 }
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalMaterial3Api::class)
@@ -49,7 +54,8 @@ private fun HomeScreen(
     onNavigateToWheelScreen: (
         merchantId: String,
         transactionId: String
-    ) -> Unit
+    ) -> Unit,
+    onNavigateToScannerScreen: () -> Unit
 ) {
 
     // HardCoding Merchant and Transaction Id for now
@@ -71,7 +77,7 @@ private fun HomeScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = onNavigateToScannerScreen) {
                         Icon(
                             painter = painterResource(Res.drawable.ic_qrcode_scanner),
                             contentDescription = "Qr Code Scanner"

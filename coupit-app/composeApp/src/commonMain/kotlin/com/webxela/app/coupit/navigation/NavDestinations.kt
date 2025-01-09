@@ -18,5 +18,5 @@ sealed interface NavDestinations {
     data object Scanner: NavDestinations
 
     @Serializable
-    data object Reward: NavDestinations
+    data class Reward(val spinId: String): NavDestinations
 }

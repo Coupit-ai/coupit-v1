@@ -7,9 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import co.touchlab.kermit.Logger
 import com.webxela.app.spinwheel.util.getDegreeFromSectionWithRandom
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.JsonNull.content
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -24,9 +26,11 @@ data class SpinWheelState(
 ) {
     internal val rotation = Animatable(0f)
 
-    fun stopWheelAt(itemToStop: SpinWheelItem) {
-        val sectionToStop = wheelItems.indexOf(itemToStop).takeIf { it != -1 }
-            ?: throw IndexOutOfBoundsException("Section ${itemToStop.content} does not exist.")
+    fun stopWheelAt(identifier: String) {
+
+        val identifiers = wheelItems.map { it.identifier }
+        val sectionToStop = identifiers.indexOf(identifier).takeIf { it != -1 }
+            ?: throw IndexOutOfBoundsException("Section $identifiers does not exist.")
 
         scope.launch {
             val destinationDegree = getDegreeFromSectionWithRandom(wheelItems, sectionToStop)

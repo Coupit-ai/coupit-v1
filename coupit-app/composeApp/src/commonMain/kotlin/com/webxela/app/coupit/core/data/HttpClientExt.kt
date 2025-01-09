@@ -21,7 +21,7 @@ data class ErrorResponse(
     val statusCode: Int,
     val message: String,
     val timeStamp: String,
-    val error: String
+    val error: String? = null
 )
 
 internal suspend inline fun <reified T> safeCall(
