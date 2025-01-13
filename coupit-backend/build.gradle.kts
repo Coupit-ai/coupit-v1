@@ -33,6 +33,9 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("io.github.cdimascio:dotenv-kotlin:6.5.0")
+    implementation("com.squareup:square:42.1.0.20241218")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-security")
 }
 
 kotlin {

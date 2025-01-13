@@ -1,5 +1,7 @@
-package com.webxela.backend.coupit.common.exception
+package com.webxela.backend.coupit.api.rest.advice
 
+import com.webxela.backend.coupit.common.exception.ApiError
+import com.webxela.backend.coupit.common.exception.ApiResponse
 import org.apache.logging.log4j.LogManager
 import org.springframework.core.codec.EncodingException
 import org.springframework.http.HttpStatus
