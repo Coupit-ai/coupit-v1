@@ -1,0 +1,55 @@
+package com.webxela.backend.coupit.api.rest.controller
+
+import com.webxela.backend.coupit.api.rest.dto.auth.LoginRequest
+import com.webxela.backend.coupit.api.rest.dto.auth.LoginResponse
+import com.webxela.backend.coupit.api.rest.dto.auth.SignupRequest
+import com.webxela.backend.coupit.api.rest.dto.auth.SignupResponse
+import com.webxela.backend.coupit.api.rest.mappper.AuthMapper.toUser
+import com.webxela.backend.coupit.application.service.UserAuthManager
+import com.webxela.backend.coupit.common.exception.ApiResponse
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+@RequestMapping("/api/v1/auth")
+class AuthController(private val userAuthManager: UserAuthManager) {
+
+
+    @PostMapping("/signup")
+    fun registerNewUser(
+        @RequestBody signupRequest: SignupRequest
+    ): ResponseEntity<ApiResponse<SignupResponse>> {
+        val signup = userAuthManager.registerNewUser(signupRequest.toUser())
+        return ResponseEntity.ok(ApiResponse.success(signup))
+    }
+
+    @PostMapping("/login")
+    fun performUserLogin(
+        @RequestBody loginRequest: LoginRequest
+    ): ResponseEntity<ApiResponse<LoginResponse>> {
+        val login = userAuthManager.performUserLogin(
+            loginRequest.email, loginRequest.password
+        )
+        return ResponseEntity.ok(ApiResponse.success(login))
+    }
+
+    @GetMapping("/logout/{email}")
+    fun performUserLogout(
+        @PathVariable email: String
+    ) {
+
+    }
+
+    @GetMapping("/reset/{email}")
+    fun resetUserPassword(
+        @PathVariable email: String
+    ) {
+
+    }
+
+}

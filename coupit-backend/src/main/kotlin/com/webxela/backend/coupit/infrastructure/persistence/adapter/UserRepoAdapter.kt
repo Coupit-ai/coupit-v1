@@ -1,0 +1,36 @@
+package com.webxela.backend.coupit.infrastructure.persistence.adapter
+
+import com.webxela.backend.coupit.domain.model.User
+import com.webxela.backend.coupit.domain.repo.UserRepo
+import com.webxela.backend.coupit.infrastructure.persistence.mapper.UserEntityMapper.toUser
+import com.webxela.backend.coupit.infrastructure.persistence.mapper.UserEntityMapper.toUserEntity
+import com.webxela.backend.coupit.infrastructure.persistence.repo.UserJpaRepo
+import jakarta.transaction.Transactional
+import org.springframework.stereotype.Component
+
+@Component
+class UserRepoAdapter(private val userJpaRepo: UserJpaRepo): UserRepo {
+
+    @Transactional
+    override fun createNewUser(user: User): User {
+        return userJpaRepo.save(user.toUserEntity()).toUser()
+    }
+
+    override fun getUserById(id: Long): User? {
+        return userJpaRepo.findUserById(id)?.toUser()
+    }
+
+    override fun getUserByEmail(email: String): User? {
+        return userJpaRepo.findUserByEmail(email)?.toUser()
+    }
+
+    @Transactional
+    override fun updateUserPassword(email: String, password: String): Boolean {
+        return userJpaRepo.updatePasswordByEmail(email, password) == 0
+    }
+
+    @Transactional
+    override fun deleteUser(email: String): Boolean {
+        return userJpaRepo.deleteByEmail(email) == 0
+    }
+}

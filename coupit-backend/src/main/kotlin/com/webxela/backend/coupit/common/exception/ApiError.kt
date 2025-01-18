@@ -5,12 +5,12 @@ import org.springframework.http.HttpStatus
 sealed class ApiError(
     val status: HttpStatus,
     val exception: String? = null,
-    override val message: String? = null
+    override val message: String
 ) : RuntimeException(exception) {
 
     class ResourceNotFound(
-        exception: Exception? = null,
-        message: String? = null
+        message: String,
+        exception: Exception? = null
     ) : ApiError(
         status = HttpStatus.NOT_FOUND,
         message = message,
@@ -18,8 +18,8 @@ sealed class ApiError(
     )
 
     class BadRequest(
-        exception: Exception? = null,
-        message: String? = null
+        message: String,
+        exception: Exception? = null
     ) : ApiError(
         status = HttpStatus.BAD_REQUEST,
         message = message,
@@ -27,8 +27,8 @@ sealed class ApiError(
     )
 
     class Unauthorized(
-        exception: Exception? = null,
-        message: String? = null,
+        message: String,
+        exception: Exception? = null
     ) : ApiError(
         status = HttpStatus.UNAUTHORIZED,
         message = message,
@@ -36,8 +36,8 @@ sealed class ApiError(
     )
 
     class TooManyRequests(
-        exception: Exception? = null,
-        message: String? = null,
+        message: String,
+        exception: Exception? = null
     ) : ApiError(
         status = HttpStatus.TOO_MANY_REQUESTS,
         message = message,
@@ -45,26 +45,17 @@ sealed class ApiError(
     )
 
     class InternalError(
-        exception: Exception? = null,
-        message: String? = null,
+        message: String,
+        exception: Exception? = null
     ) : ApiError(
         status = HttpStatus.INTERNAL_SERVER_ERROR,
-        message = message ?: "An unexpected exception occurred",
-        exception = exception?.message
-    )
-
-    class DataIntegrityError(
-        exception: Exception? = null,
-        message: String? = null,
-    ) : ApiError(
-        status = HttpStatus.BAD_REQUEST,
         message = message,
         exception = exception?.message
     )
 
-    class InvalidRequest(
-        exception: Exception? = null,
-        message: String? = null,
+    class DataIntegrityError(
+        message: String,
+        exception: Exception? = null
     ) : ApiError(
         status = HttpStatus.BAD_REQUEST,
         message = message,
