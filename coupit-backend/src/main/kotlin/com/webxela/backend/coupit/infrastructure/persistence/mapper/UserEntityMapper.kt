@@ -11,7 +11,8 @@ object UserEntityMapper {
             firstName = this.firstName,
             lastName = this.lastName,
             email = this.email,
-            password = this.password
+            password = this.password,
+            jwtToken = this.jwtToken
         )
     }
 }

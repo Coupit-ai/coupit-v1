@@ -1,17 +1,18 @@
 package com.webxela.backend.coupit.application.service
 
 import com.webxela.backend.coupit.api.rest.mappper.MerchantMapper.toSquareMerchant
+import com.webxela.backend.coupit.common.exception.ApiError
 import com.webxela.backend.coupit.common.utils.JwtUtils
 import com.webxela.backend.coupit.domain.usecase.MerchantUseCase
 import com.webxela.backend.coupit.domain.usecase.OauthUseCase
 import com.webxela.backend.coupit.domain.usecase.UserUseCase
 import com.webxela.backend.coupit.infrastructure.config.SquareConfig
-import jakarta.servlet.http.HttpSession
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.transaction.Transactional
 import org.apache.logging.log4j.LogManager
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
-import java.security.SecureRandom
-import java.util.*
 
 @Service
 class SquareOauthManager(
@@ -19,7 +20,6 @@ class SquareOauthManager(
     private val oauthUseCase: OauthUseCase,
     private val merchantUseCase: MerchantUseCase,
     private val userAuthManager: UserAuthManager,
-    private val session: HttpSession,
     private val userUseCase: UserUseCase,
     private val jwtUtils: JwtUtils
 ) {
@@ -29,26 +29,16 @@ class SquareOauthManager(
     }
 
     fun buildSquareAuthUrl(): String {
-        val state = Base64.getUrlEncoder().withoutPadding()
-            .encodeToString(SecureRandom.getSeed(32))
-        session.setAttribute("oauth_state", state)
         return "${squareConfig.authorisationUri}?" +
                 "client_id=${squareConfig.clientId}&" +
                 "response_type=code&" +
                 "scope=${squareConfig.scopes.joinToString(",")}&" +
                 "redirect_uri=${squareConfig.redirectUri}&" +
-                "state=$state&" +
-                "session=false"
+                "session=true"
     }
 
     @Transactional
-    fun processSquareOauthCallback(code: String, state: String): String? {
-        val savedState = session.getAttribute("oauth_state")
-        if (savedState != state) {
-            logger.error("State mismatch during oauth")
-            throw Exception("CSRF detected")
-        }
-        session.removeAttribute("oauth_state")
+    fun processSquareOauthCallback(code: String): String? {
         val oauthToken = oauthUseCase.processOauthCallback(code)
         if (oauthToken == null) {
             logger.error("Failed to get oauth token")
@@ -73,8 +63,10 @@ class SquareOauthManager(
                     lastName = "",
                 ).token
             } else {
+                val jwtToken = jwtUtils.generateToken(merchantInfo.id)
+                userUseCase.updateJwtToken(merchantInfo.id, jwtToken)
                 merchantUseCase.updateMerchant(merchantInfo.toSquareMerchant(oauthToken))
-                jwtUtils.generateToken(merchantInfo.id)
+                jwtToken
             }
             return data
         } catch (ex: Exception) {
@@ -83,4 +75,19 @@ class SquareOauthManager(
         }
     }
 
+    @Transactional
+    fun revokeSquareOauth(): String {
+        try {
+            val authState = SecurityContextHolder.getContext().authentication
+            userAuthManager.performUserLogout()
+            // Temporarily delete the merchant entirely for logout flow
+            val user = authState.principal as UserDetails
+            if(merchantUseCase.deleteMerchant(user.username))
+                return "Successfully disconnected from Square"
+            else throw RuntimeException("Failed to disconnect from Square")
+        } catch (ex: Exception) {
+            logger.error("Failed to revoke oauth token", ex)
+            throw ApiError.InternalError("Failed to disconnect from square", ex)
+        }
+    }
 }

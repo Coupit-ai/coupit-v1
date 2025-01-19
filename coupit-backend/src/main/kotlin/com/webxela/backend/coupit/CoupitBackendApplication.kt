@@ -8,7 +8,6 @@ import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 
 @SpringBootApplication
-@EnableJpaAuditing
 class CoupitBackendApplication
 
 fun main(args: Array<String>) {

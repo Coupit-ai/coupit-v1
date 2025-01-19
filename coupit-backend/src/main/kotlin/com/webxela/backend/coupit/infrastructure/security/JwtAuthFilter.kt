@@ -1,6 +1,7 @@
 package com.webxela.backend.coupit.infrastructure.security
 
 import com.webxela.backend.coupit.common.utils.JwtUtils
+import com.webxela.backend.coupit.domain.usecase.UserUseCase
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -16,7 +17,8 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 class JwtAuthFilter(
     private val jwtUtils: JwtUtils,
-    private val userDetailsService: UserDetailsService
+    private val userDetailsService: UserDetailsService,
+    private val userUseCase: UserUseCase
 ) : OncePerRequestFilter() {
 
     companion object {
@@ -28,17 +30,24 @@ class JwtAuthFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val authHeader = request.getHeader("Authorization")
-        if (authHeader.isNullOrEmpty() || authHeader.startsWith("Bearer").not()) {
+
+        val jwtToken = jwtUtils.extractJwtFromRequest(request)
+        if (jwtToken.isNullOrBlank()) {
             filterChain.doFilter(request, response)
             return
         }
-
-        val jwtToken = authHeader.substring(7)
         val subject = jwtUtils.getSubjectFromJWT(jwtToken)
         val authState = SecurityContextHolder.getContext().authentication
 
         if (subject.isNullOrBlank().not() && authState == null) {
+
+            val dbUserData = userUseCase.getUserByEmail(subject!!)
+            if (dbUserData == null || dbUserData.jwtToken != jwtToken) {
+                myLogger.error("Mismatch between provided JWT token and the one stored in the database")
+                filterChain.doFilter(request, response)
+                return
+            }
+
             val userDetails = userDetailsService.loadUserByUsername(subject)
 
             if (jwtUtils.validateToken(jwtToken, userDetails.username)) {

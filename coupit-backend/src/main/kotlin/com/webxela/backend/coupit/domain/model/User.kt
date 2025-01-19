@@ -8,5 +8,6 @@ data class User(
     val lastName: String,
     val email: String,
     val password: String,
-    val createdAt: Instant? = null
+    val createdAt: Instant? = null,
+    val jwtToken: String? = null
 )

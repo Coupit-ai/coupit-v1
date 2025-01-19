@@ -1,12 +1,10 @@
 package com.webxela.backend.coupit.api.rest.controller
 
-import com.webxela.backend.coupit.api.rest.dto.auth.LoginRequest
-import com.webxela.backend.coupit.api.rest.dto.auth.LoginResponse
-import com.webxela.backend.coupit.api.rest.dto.auth.SignupRequest
-import com.webxela.backend.coupit.api.rest.dto.auth.SignupResponse
+import com.webxela.backend.coupit.api.rest.dto.auth.*
 import com.webxela.backend.coupit.api.rest.validator.SignupValidator
 import com.webxela.backend.coupit.application.service.UserAuthManager
 import com.webxela.backend.coupit.common.exception.ApiResponse
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -46,11 +44,12 @@ class AuthController(
         return ResponseEntity.ok(ApiResponse.success(login))
     }
 
-    @GetMapping("/logout/{email}")
-    fun performUserLogout(
-        @PathVariable email: String
-    ) {
-
+    @GetMapping("/logout")
+    fun performUserLogout(): ResponseEntity<ApiResponse<LogOutResponse>> {
+        val response = LogOutResponse(
+            userAuthManager.performUserLogout()
+        )
+        return ResponseEntity.ok(ApiResponse.success(response))
     }
 
     @GetMapping("/reset/{email}")

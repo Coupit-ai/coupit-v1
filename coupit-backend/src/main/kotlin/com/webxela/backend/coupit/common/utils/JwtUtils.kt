@@ -2,6 +2,7 @@ package com.webxela.backend.coupit.common.utils
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import jakarta.servlet.http.HttpServletRequest
 import org.apache.logging.log4j.LogManager
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -57,5 +58,12 @@ class JwtUtils {
             logger.error("Unable to get User from token", ex)
             return null
         }
+    }
+
+    fun extractJwtFromRequest(request: HttpServletRequest): String? {
+        val header = request.getHeader("Authorization")
+        if (header.isNullOrBlank()) return null
+        if (!header.startsWith("Bearer")) return null
+        return header.substring(7)
     }
 }
