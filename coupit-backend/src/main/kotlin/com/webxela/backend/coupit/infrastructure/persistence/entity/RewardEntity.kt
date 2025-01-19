@@ -6,14 +6,14 @@ import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 @Entity
-@Table(name = "offers")
-data class OfferEntity(
+@Table(name = "rewards")
+data class RewardEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
     @Column(nullable = false, unique = true)
-    val offerId: UUID = UUID.randomUUID(),
+    val rewardId: UUID = UUID.randomUUID(),
 
     @Column(nullable = false)
     val timeStamp: Instant = Instant.now()

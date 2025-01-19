@@ -4,7 +4,7 @@ import com.webxela.backend.coupit.api.rest.dto.auth.LoginRequest
 import com.webxela.backend.coupit.api.rest.dto.auth.LoginResponse
 import com.webxela.backend.coupit.api.rest.dto.auth.SignupRequest
 import com.webxela.backend.coupit.api.rest.dto.auth.SignupResponse
-import com.webxela.backend.coupit.api.rest.mappper.AuthMapper.toUser
+import com.webxela.backend.coupit.api.rest.validator.SignupValidator
 import com.webxela.backend.coupit.application.service.UserAuthManager
 import com.webxela.backend.coupit.common.exception.ApiResponse
 import org.springframework.http.ResponseEntity
@@ -17,14 +17,22 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/auth")
-class AuthController(private val userAuthManager: UserAuthManager) {
+class AuthController(
+    private val userAuthManager: UserAuthManager,
+    private val signupValidator: SignupValidator
+) {
 
 
     @PostMapping("/signup")
     fun registerNewUser(
         @RequestBody signupRequest: SignupRequest
     ): ResponseEntity<ApiResponse<SignupResponse>> {
-        val signup = userAuthManager.registerNewUser(signupRequest.toUser())
+
+        signupValidator.validate(signupRequest)
+        val signup = userAuthManager.registerNewUser(
+            signupRequest.email, signupRequest.password,
+            signupRequest.firstName,  signupRequest.lastName
+        )
         return ResponseEntity.ok(ApiResponse.success(signup))
     }
 

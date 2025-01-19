@@ -3,7 +3,7 @@ package com.webxela.backend.coupit.domain.repo
 import com.webxela.backend.coupit.domain.model.Session
 import java.util.UUID
 
-interface SessionRepo {
+interface SessionRepository {
 
     fun createSession(merchantId: String, transactionId: String): Session
     fun getSession(transactionId: String, merchantId: String): Session?

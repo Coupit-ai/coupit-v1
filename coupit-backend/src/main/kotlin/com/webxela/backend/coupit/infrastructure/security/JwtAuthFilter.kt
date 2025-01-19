@@ -1,6 +1,5 @@
 package com.webxela.backend.coupit.infrastructure.security
 
-import com.webxela.backend.coupit.common.exception.ApiError
 import com.webxela.backend.coupit.common.utils.JwtUtils
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest

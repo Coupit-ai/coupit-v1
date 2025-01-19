@@ -4,11 +4,11 @@ import java.time.Instant
 import java.util.*
 
 data class SpinResponse(
-    val spinId: UUID,
+    val id: UUID,
     val merchantId: String,
     val sessionId: UUID,
     val timeStamp: Instant,
-    val offer: OfferResponse,
+    val offer: RewardResponse,
     val qrCode: String,
     val expiresAt: Instant,
     val claimed: Boolean

@@ -9,7 +9,7 @@ data class SpinResult(
     val merchantId: String,
     val sessionId: UUID,
     val timeStamp: Instant,
-    val offer: Offer,
+    val reward: Reward,
     val qrCode: String,
     val expiresAt: Instant,
     val claimed: Boolean

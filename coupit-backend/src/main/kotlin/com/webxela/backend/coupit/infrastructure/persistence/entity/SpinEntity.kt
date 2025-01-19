@@ -2,6 +2,7 @@ package com.webxela.backend.coupit.infrastructure.persistence.entity
 
 import com.webxela.backend.coupit.common.utils.Constants.OFFER_EXPIRY
 import jakarta.persistence.*
+import org.hibernate.engine.internal.Cascade
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -23,9 +24,9 @@ data class SpinEntity(
     val timeStamp: Instant = Instant.now()
         .truncatedTo(ChronoUnit.SECONDS),
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "offer_id")
-    val offer: OfferEntity,
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @JoinColumn(name = "reward_id", referencedColumnName = "id")
+    val offer: RewardEntity,
 
     @Column(nullable = false, unique = true)
     val sessionId: UUID,

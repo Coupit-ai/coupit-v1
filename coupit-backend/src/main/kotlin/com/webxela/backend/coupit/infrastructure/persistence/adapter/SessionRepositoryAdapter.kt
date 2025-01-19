@@ -1,7 +1,7 @@
 package com.webxela.backend.coupit.infrastructure.persistence.adapter
 
 import com.webxela.backend.coupit.domain.model.Session
-import com.webxela.backend.coupit.domain.repo.SessionRepo
+import com.webxela.backend.coupit.domain.repo.SessionRepository
 import com.webxela.backend.coupit.infrastructure.persistence.entity.SessionEntity
 import com.webxela.backend.coupit.infrastructure.persistence.mapper.SessionEntityMapper.toSession
 import com.webxela.backend.coupit.infrastructure.persistence.repo.SessionJpaRepo
@@ -11,11 +11,9 @@ import java.util.*
 
 
 @Component
-@Transactional
-class SessionRepoAdapter(
-    private val sessionJpaRepo: SessionJpaRepo
-) : SessionRepo {
+class SessionRepositoryAdapter(private val sessionJpaRepo: SessionJpaRepo) : SessionRepository {
 
+    @Transactional
     override fun createSession(merchantId: String, transactionId: String): Session {
         val sessionEntity = SessionEntity(
             merchantId = merchantId,
@@ -28,6 +26,7 @@ class SessionRepoAdapter(
         return sessionJpaRepo.findByTransactionIdAndMerchantId(transactionId, merchantId)?.toSession()
     }
 
+    @Transactional
     override fun markSessionAsUsed(sessionId: UUID): Boolean {
         return when (sessionJpaRepo.markSessionAsUsed(sessionId)) {
             0 -> false
@@ -40,6 +39,7 @@ class SessionRepoAdapter(
         return sessionJpaRepo.findBySessionId(sessionId)?.toSession()
     }
 
+    @Transactional
     override fun deleteSession(transactionId: String, merchantId: String): Boolean {
         return when (sessionJpaRepo.deleteByTransactionIdAndMerchantId(transactionId, merchantId)) {
             0 -> false

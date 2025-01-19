@@ -3,9 +3,9 @@ package com.webxela.backend.coupit.application.service
 import com.webxela.backend.coupit.api.rest.dto.SpinResponse
 import com.webxela.backend.coupit.api.rest.mappper.SpinRespMapper.toSpinResponse
 import com.webxela.backend.coupit.common.exception.ApiError
-import com.webxela.backend.coupit.domain.model.Offer
+import com.webxela.backend.coupit.domain.model.Reward
 import com.webxela.backend.coupit.domain.model.Session
-import com.webxela.backend.coupit.domain.usecase.OfferUseCase
+import com.webxela.backend.coupit.domain.usecase.RewardUseCase
 import com.webxela.backend.coupit.domain.usecase.SessionUseCase
 import com.webxela.backend.coupit.domain.usecase.SpinUseCase
 import jakarta.transaction.Transactional
@@ -16,24 +16,26 @@ import java.time.temporal.ChronoUnit
 import java.util.*
 
 @Service
-@Transactional
 class SpinManager(
     private val spinUseCase: SpinUseCase,
     private val sessionUseCase: SessionUseCase,
-    private val offerUseCase: OfferUseCase
+    private val rewardUseCase: RewardUseCase
 ) {
 
-    private val logger = LogManager.getLogger(this.javaClass)
+    companion object {
+        private val logger = LogManager.getLogger(SpinManager::class.java)
+    }
 
+    @Transactional
     fun performSpin(merchantId: String, sessionId: UUID): SpinResponse {
         // Merchant id should not be blank
         if (merchantId.isBlank()) {
-            throw ApiError.InvalidRequest(message = "Merchant ID cannot be empty.")
+            throw ApiError.BadRequest(message = "Merchant ID cannot be empty.")
         }
 
         // Session should not be null
         val session = sessionUseCase.getSessionBySessionId(sessionId)
-            ?: throw ApiError.InvalidRequest(message = "Session with session_id $sessionId not found.")
+            ?: throw ApiError.BadRequest(message = "Session with session_id $sessionId not found.")
 
         // Early return spin result if exists
         spinUseCase.getSpinResultBySessionId(sessionId)?.let {
@@ -50,7 +52,7 @@ class SpinManager(
             throw ApiError.Unauthorized(message = "Session with session_id $sessionId is already used.")
         }
 
-        val offers = offerUseCase.getAllOffers(merchantId)
+        val offers = rewardUseCase.getAllOffers(merchantId)
         // Offers should not be empty
         if (offers.isEmpty()) {
             throw ApiError.ResourceNotFound(message = "No offers available.")
@@ -62,7 +64,7 @@ class SpinManager(
         try {
             val spinResult = spinUseCase.saveSpinResult(
                 merchantId = merchantId,
-                offerId = randomOffer.offerId,
+                rewardId = randomOffer.rewardId,
                 qrCode = qrCode,
                 sessionId = sessionId
             )
@@ -75,19 +77,19 @@ class SpinManager(
         }
     }
 
-    private fun generateQrCode(offer: Offer): String {
+    private fun generateQrCode(reward: Reward): String {
         // QR code generation logic (to be implemented)
-        return "QR code is not implemented yet." + UUID.randomUUID().toString()
+        return "QR code is not implemented yet. > $reward" + UUID.randomUUID().toString()
     }
 
-    private fun getRandomOffer(offers: List<Offer>): Offer {
-        return offers.randomOrNull()
+    private fun getRandomOffer(rewards: List<Reward>): Reward {
+        return rewards.randomOrNull()
             ?: throw ApiError.ResourceNotFound(message = "No offer available.")
     }
 
     private fun isValidSession(session: Session, merchantId: String): Boolean {
         if (session.merchantId != merchantId) {
-            throw ApiError.InvalidRequest(message = "Merchant Id $merchantId does not match with provided session.")
+            throw ApiError.BadRequest(message = "Merchant Id $merchantId does not match with provided session.")
         }
 
         val currentTime = Instant.now().truncatedTo(ChronoUnit.SECONDS)

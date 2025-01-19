@@ -5,8 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 
 @SpringBootApplication
+@EnableJpaAuditing
 class CoupitBackendApplication
 
 fun main(args: Array<String>) {

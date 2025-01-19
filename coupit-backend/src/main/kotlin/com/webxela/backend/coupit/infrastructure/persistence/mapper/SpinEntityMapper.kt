@@ -2,10 +2,8 @@ package com.webxela.backend.coupit.infrastructure.persistence.mapper
 
 import com.webxela.backend.coupit.domain.model.SpinResult
 import com.webxela.backend.coupit.infrastructure.persistence.entity.SpinEntity
-import com.webxela.backend.coupit.infrastructure.persistence.mapper.OfferEntityMapper.toOffer
-import com.webxela.backend.coupit.infrastructure.persistence.mapper.OfferEntityMapper.toOfferEntity
-import com.webxela.backend.coupit.infrastructure.persistence.mapper.SessionEntityMapper.toSession
-import com.webxela.backend.coupit.infrastructure.persistence.mapper.SessionEntityMapper.toSessionEntity
+import com.webxela.backend.coupit.infrastructure.persistence.mapper.RewardEntityMapper.toOffer
+import com.webxela.backend.coupit.infrastructure.persistence.mapper.RewardEntityMapper.toOfferEntity
 
 object SpinEntityMapper {
 
@@ -15,7 +13,7 @@ object SpinEntityMapper {
             spinId = this.spinId,
             merchantId = this.merchantId,
             timeStamp = this.timeStamp,
-            offer = this.offer.toOffer(),
+            reward = this.offer.toOffer(),
             sessionId = this.sessionId,
             qrCode = this.qrCode,
             expiresAt = this.expiresAt,
@@ -26,7 +24,7 @@ object SpinEntityMapper {
     fun SpinResult.toSpinEntity(): SpinEntity {
         return SpinEntity(
             merchantId = this.merchantId,
-            offer = this.offer.toOfferEntity(),
+            offer = this.reward.toOfferEntity(),
             qrCode = this.qrCode,
             sessionId = this.sessionId
         )

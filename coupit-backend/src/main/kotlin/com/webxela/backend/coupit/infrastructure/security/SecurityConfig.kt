@@ -35,7 +35,8 @@ class SecurityConfig(
                     .anyRequest().authenticated()
             }
             .sessionManagement { sessionManager ->
-                sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                sessionManager.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                    .maximumSessions(1)
             }
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
         return httpSecurity.build()

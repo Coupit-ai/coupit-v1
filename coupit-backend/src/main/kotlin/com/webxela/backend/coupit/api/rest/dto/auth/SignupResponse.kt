@@ -6,5 +6,6 @@ data class SignupResponse(
     val firstName: String,
     val lastName: String,
     val email: String,
-    val createdAt: Instant,
+    val createdAt: Instant?,
+    val token: String?
 )

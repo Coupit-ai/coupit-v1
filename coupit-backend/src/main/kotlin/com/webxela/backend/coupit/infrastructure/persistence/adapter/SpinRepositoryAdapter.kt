@@ -1,21 +1,20 @@
 package com.webxela.backend.coupit.infrastructure.persistence.adapter
 
 import com.webxela.backend.coupit.domain.model.SpinResult
-import com.webxela.backend.coupit.domain.repo.SpinRepo
+import com.webxela.backend.coupit.domain.repo.SpinRepository
 import com.webxela.backend.coupit.infrastructure.persistence.entity.SpinEntity
 import com.webxela.backend.coupit.infrastructure.persistence.mapper.SpinEntityMapper.toSpinResult
-import com.webxela.backend.coupit.infrastructure.persistence.repo.OfferJpaRepo
+import com.webxela.backend.coupit.infrastructure.persistence.repo.RewardJpaRepo
 import com.webxela.backend.coupit.infrastructure.persistence.repo.SpinJpaRepo
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-@Transactional
-class SpinRepoAdapter(
+class SpinRepositoryAdapter(
     private val spinJpaRepo: SpinJpaRepo,
-    private val offerJpaRepo: OfferJpaRepo
-) : SpinRepo {
+    private val rewardJpaRepo: RewardJpaRepo
+) : SpinRepository {
 
     override fun getSpinResultBySpinId(spinId: UUID): SpinResult? {
         return spinJpaRepo.findSpinEntityBySpinId(spinId)?.toSpinResult()
@@ -25,8 +24,9 @@ class SpinRepoAdapter(
         return spinJpaRepo.findSpinEntityBySessionId(sessionId)?.toSpinResult()
     }
 
-    override fun saveSpinResult(merchantId: String, offerId: UUID, qrCode: String, sessionId: UUID): SpinResult {
-        val offer = offerJpaRepo.findOfferByOfferId(offerId)
+    @Transactional
+    override fun saveSpinResult(merchantId: String, rewardId: UUID, qrCode: String, sessionId: UUID): SpinResult {
+        val offer = rewardJpaRepo.findByRewardId(rewardId)
             ?: throw IllegalStateException("Offer not found in database")
 
         val spinEntity = SpinEntity(
@@ -39,6 +39,7 @@ class SpinRepoAdapter(
         return spinJpaRepo.save(spinEntity).toSpinResult()
     }
 
+    @Transactional
     override fun markSpinAsClaimed(spinId: UUID): Boolean {
         return when (spinJpaRepo.markSpinAsClaimed(spinId)) {
             0 -> false
@@ -47,6 +48,7 @@ class SpinRepoAdapter(
         }
     }
 
+    @Transactional
     override fun deleteSpinResult(sessionId: UUID): Boolean {
         return when(spinJpaRepo.deleteBySessionId(sessionId)) {
             0 -> false

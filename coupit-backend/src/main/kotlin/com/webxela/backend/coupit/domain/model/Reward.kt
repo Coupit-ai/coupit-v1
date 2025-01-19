@@ -3,9 +3,9 @@ package com.webxela.backend.coupit.domain.model
 import java.time.Instant
 import java.util.UUID
 
-data class Offer(
+data class Reward(
     val id: Long,
-    val offerId: UUID,
+    val rewardId: UUID,
     val timeStamp: Instant,
     val title: String,
     val description: String
