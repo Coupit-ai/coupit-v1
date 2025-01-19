@@ -28,13 +28,13 @@ class MerchantRepositoryAdapter(private val merchantJpaRepo: MerchantJpaRepo) : 
     override fun updateMerchant(merchant: SquareMerchant): SquareMerchant {
         val deleted = merchantJpaRepo.deleteByMerchantId(merchant.merchantId)
         if (deleted == 1) {
-            merchantJpaRepo.flush() // commit delete ops
+            merchantJpaRepo.flush() // commit delete operation
             return merchantJpaRepo.save(merchant.toMerchantEntity()).toSquareMerchant()
         }
         throw RuntimeException("Cant update the merchant with id ${merchant.merchantId}")
     }
 
     override fun deleteMerchant(merchantId: String): Boolean {
-        TODO("Not yet implemented")
+        return merchantJpaRepo.deleteByMerchantId(merchantId) == 1
     }
 }

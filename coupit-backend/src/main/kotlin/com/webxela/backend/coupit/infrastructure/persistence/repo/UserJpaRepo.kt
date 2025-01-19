@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 
 
-interface UserJpaRepo: JpaRepository<UserEntity, Long> {
+interface UserJpaRepo : JpaRepository<UserEntity, Long> {
 
     fun findUserByEmail(email: String): UserEntity?
     fun findUserById(id: Long): UserEntity?
@@ -15,4 +15,8 @@ interface UserJpaRepo: JpaRepository<UserEntity, Long> {
     @Modifying
     @Query("UPDATE UserEntity u SET u.password = :password WHERE u.email = :email")
     fun updatePasswordByEmail(email: String, password: String): Int
+
+    @Modifying
+    @Query("UPDATE UserEntity u SET u.jwtToken = :jwtToken WHERE u.email = :email")
+    fun updateJwtTokenByEmail(email: String, jwtToken: String?): Int
 }

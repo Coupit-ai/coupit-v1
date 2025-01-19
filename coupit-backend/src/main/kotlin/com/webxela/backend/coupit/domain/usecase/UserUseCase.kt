@@ -9,9 +9,14 @@ class UserUseCase(private val userRepository: UserRepository) {
 
     fun createNewUser(
         email: String, password: String,
-        firstName: String, lastName: String
+        firstName: String, lastName: String,
+        jwtToken: String
     ): User {
-        return userRepository.createNewUser(email, password, firstName, lastName)
+        return userRepository.createNewUser(
+            email, password,
+            firstName, lastName,
+            jwtToken
+        )
     }
 
     fun getUserById(id: Long): User? {
@@ -20,6 +25,10 @@ class UserUseCase(private val userRepository: UserRepository) {
 
     fun getUserByEmail(email: String): User? {
         return userRepository.getUserByEmail(email)
+    }
+
+    fun updateJwtToken(email: String, jwtToken: String?): Boolean {
+        return userRepository.updateJwtToken(email, jwtToken)
     }
 
     fun updateUserPassword(email: String, password: String): Boolean {

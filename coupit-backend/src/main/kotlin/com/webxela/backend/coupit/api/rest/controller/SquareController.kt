@@ -1,9 +1,10 @@
 package com.webxela.backend.coupit.api.rest.controller
 
 import com.webxela.backend.coupit.api.rest.dto.RedirectResponse
+import com.webxela.backend.coupit.api.rest.dto.auth.LogOutResponse
 import com.webxela.backend.coupit.application.service.SquareOauthManager
-import com.webxela.backend.coupit.common.exception.ApiError
 import com.webxela.backend.coupit.common.exception.ApiResponse
+import jakarta.servlet.http.HttpServletRequest
 import org.apache.logging.log4j.LogManager
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.servlet.view.RedirectView
 import java.net.URLEncoder
 
 @RestController
@@ -35,7 +35,6 @@ class SquareController(private val squareOauthManager: SquareOauthManager) {
     fun handleLoginCallback(
         @RequestParam("code", required = false) code: String?,
         @RequestParam("error", required = false) error: String?,
-        @RequestParam("state") state: String
     ): ResponseEntity<String> {
 
         var redirectUri = "coupit://callback?"
@@ -43,7 +42,7 @@ class SquareController(private val squareOauthManager: SquareOauthManager) {
             "error=${URLEncoder.encode(error ?: "Authorization failed", "UTF-8")}"
         } else {
             try {
-                val jwtToken = squareOauthManager.processSquareOauthCallback(code, state)
+                val jwtToken = squareOauthManager.processSquareOauthCallback(code)
                 jwtToken?.let {
                     if (redirectUri.contains("?")) {
                         "&token=${URLEncoder.encode(jwtToken, "UTF-8")}"
@@ -67,8 +66,19 @@ class SquareController(private val squareOauthManager: SquareOauthManager) {
     }
 
     @GetMapping("/webhook/revoke")
-    fun handleLogoutWebhook() {
+    fun handleLogoutWebhook(): ResponseEntity<ApiResponse<LogOutResponse>> {
+        val response =  LogOutResponse (
+            squareOauthManager.revokeSquareOauth()
+        )
+        return ResponseEntity.ok(ApiResponse.success(response))
+    }
 
+    @GetMapping("/oauth/revoke")
+    fun revokeSquareOauth(): ResponseEntity<ApiResponse<LogOutResponse>> {
+        val response =  LogOutResponse (
+            squareOauthManager.revokeSquareOauth()
+        )
+        return ResponseEntity.ok(ApiResponse.success(response))
     }
 
 }

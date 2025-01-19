@@ -16,13 +16,15 @@ class UserRepositoryAdapter(private val userJpaRepo: UserJpaRepo): UserRepositor
         email: String,
         password: String,
         firstName: String,
-        lastName: String
+        lastName: String,
+        jwtToken: String
     ): User {
         val userEntity = UserEntity(
             email = email,
             password = password,
             firstName = firstName,
-            lastName = lastName
+            lastName = lastName,
+            jwtToken = jwtToken
         )
         return userJpaRepo.save(userEntity).toUser()
     }
@@ -37,11 +39,16 @@ class UserRepositoryAdapter(private val userJpaRepo: UserJpaRepo): UserRepositor
 
     @Transactional
     override fun updateUserPassword(email: String, password: String): Boolean {
-        return userJpaRepo.updatePasswordByEmail(email, password) == 0
+        return userJpaRepo.updatePasswordByEmail(email, password) == 1
     }
 
     @Transactional
     override fun deleteUser(email: String): Boolean {
-        return userJpaRepo.deleteByEmail(email) == 0
+        return userJpaRepo.deleteByEmail(email) == 1
+    }
+
+    @Transactional
+    override fun updateJwtToken(email: String, jwtToken: String?): Boolean {
+        return userJpaRepo.updateJwtTokenByEmail(email, jwtToken) == 1
     }
 }

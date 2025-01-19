@@ -32,11 +32,14 @@ class SecurityConfig(
                         "/api/v1/square/**",
                         "/api/v1/auth/**"
                     ).permitAll()
+                    .requestMatchers(
+                        "/oauth/revoke",
+                        "/auth/logout"
+                    ).authenticated()
                     .anyRequest().authenticated()
             }
             .sessionManagement { sessionManager ->
-                sessionManager.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                    .maximumSessions(1)
+                sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
         return httpSecurity.build()

@@ -2,17 +2,18 @@ package com.webxela.backend.coupit.infrastructure.persistence.entity
 
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.Instant
 
 @Entity
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener::class)
 data class UserEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
     @Column(nullable = false, updatable = false)
-    @CreatedDate
     val createdAt: Instant? = Instant.now(),
 
     @Column(nullable = false)
@@ -25,5 +26,8 @@ data class UserEntity(
     val email: String,
 
     @Column(nullable = false)
-    val password: String
+    val password: String,
+
+    @Column(nullable = true)
+    val jwtToken: String? = null
 )
