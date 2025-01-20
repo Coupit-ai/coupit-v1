@@ -24,7 +24,6 @@ object MerchantEntityMapper {
 
     fun SquareMerchant.toMerchantEntity(): MerchantEntity {
         return MerchantEntity(
-            id = this.id,
             merchantId = this.merchantId,
             country = this.country,
             businessName = this.businessName,

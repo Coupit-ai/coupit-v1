@@ -1,4 +1,4 @@
-package com.webxela.backend.coupit.api.rest.mappper
+package com.webxela.backend.coupit.infrastructure.external.mapper
 
 import com.squareup.square.models.Merchant
 import com.webxela.backend.coupit.domain.model.OauthToken

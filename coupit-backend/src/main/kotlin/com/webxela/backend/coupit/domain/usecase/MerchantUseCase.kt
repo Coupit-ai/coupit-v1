@@ -11,10 +11,6 @@ class MerchantUseCase(private val merchantRepository: MerchantRepository) {
         return merchantRepository.getMerchantById(merchantId)
     }
 
-    fun getAllMerchants(): List<SquareMerchant> {
-        return merchantRepository.getAllMerchants()
-    }
-
     fun addNewMerchant(merchant: SquareMerchant): SquareMerchant {
         return merchantRepository.addNewMerchant(merchant)
     }

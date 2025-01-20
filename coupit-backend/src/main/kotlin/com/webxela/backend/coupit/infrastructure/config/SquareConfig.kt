@@ -47,13 +47,17 @@ class SquareConfig {
         }
 
     val authorisationUri: String by lazy { "$baseUri/oauth2/authorize" }
-    val tokenUri: String by lazy { "$baseUri/oauth2/token" }
+//    val tokenUri: String by lazy { "$baseUri/oauth2/token" }
 //    val userInfoUri: String by lazy { "$baseUri/v2/merchants/me" }
 //    val userAttribute: String = "merchant"
 
-    fun squareClient(accessToken: String): SquareClient {
+    fun squareClient(accessToken: String? = null): SquareClient {
         logger.info("Initializing Square Client with environment: $clientEnvironment")
-        return SquareClient.Builder()
+        return if (accessToken == null) {
+            SquareClient.Builder()
+                .environment(clientEnvironment)
+                .build()
+        } else SquareClient.Builder()
             .bearerAuthCredentials(BearerAuthModel.Builder(accessToken).build())
             .environment(clientEnvironment)
             .build()

@@ -4,7 +4,6 @@ import com.webxela.backend.coupit.api.rest.dto.RedirectResponse
 import com.webxela.backend.coupit.api.rest.dto.auth.LogOutResponse
 import com.webxela.backend.coupit.application.service.SquareOauthManager
 import com.webxela.backend.coupit.common.exception.ApiResponse
-import jakarta.servlet.http.HttpServletRequest
 import org.apache.logging.log4j.LogManager
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -67,8 +66,9 @@ class SquareController(private val squareOauthManager: SquareOauthManager) {
 
     @GetMapping("/webhook/revoke")
     fun handleLogoutWebhook(): ResponseEntity<ApiResponse<LogOutResponse>> {
+        val merchantId = "" // Not implemented yet
         val response =  LogOutResponse (
-            squareOauthManager.revokeSquareOauth()
+            squareOauthManager.revokeSquareOauth(merchantId)
         )
         return ResponseEntity.ok(ApiResponse.success(response))
     }

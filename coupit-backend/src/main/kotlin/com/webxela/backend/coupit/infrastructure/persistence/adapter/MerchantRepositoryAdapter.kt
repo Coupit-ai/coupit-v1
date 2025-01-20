@@ -6,17 +6,19 @@ import com.webxela.backend.coupit.infrastructure.persistence.mapper.MerchantEnti
 import com.webxela.backend.coupit.infrastructure.persistence.mapper.MerchantEntityMapper.toSquareMerchant
 import com.webxela.backend.coupit.infrastructure.persistence.repo.MerchantJpaRepo
 import jakarta.transaction.Transactional
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import org.springframework.stereotype.Component
 
 @Component
 class MerchantRepositoryAdapter(private val merchantJpaRepo: MerchantJpaRepo) : MerchantRepository {
 
-    override fun getMerchantById(merchantId: String): SquareMerchant? {
-        return merchantJpaRepo.findByMerchantId(merchantId)?.toSquareMerchant()
+    companion object {
+        val logger: Logger = LogManager.getLogger(MerchantRepositoryAdapter::class.java)
     }
 
-    override fun getAllMerchants(): List<SquareMerchant> {
-        TODO("Not yet implemented")
+    override fun getMerchantById(merchantId: String): SquareMerchant? {
+        return merchantJpaRepo.findByMerchantId(merchantId)?.toSquareMerchant()
     }
 
     @Transactional
@@ -27,14 +29,18 @@ class MerchantRepositoryAdapter(private val merchantJpaRepo: MerchantJpaRepo) : 
     @Transactional
     override fun updateMerchant(merchant: SquareMerchant): SquareMerchant {
         val deleted = merchantJpaRepo.deleteByMerchantId(merchant.merchantId)
-        if (deleted == 1) {
+        if (deleted <= 1) {
             merchantJpaRepo.flush() // commit delete operation
             return merchantJpaRepo.save(merchant.toMerchantEntity()).toSquareMerchant()
+        } else {
+            logger.error("Cant update the merchant with id ${merchant.merchantId}")
+            throw RuntimeException("Cant update the merchant with id ${merchant.merchantId}")
         }
-        throw RuntimeException("Cant update the merchant with id ${merchant.merchantId}")
     }
 
+    @Transactional
     override fun deleteMerchant(merchantId: String): Boolean {
         return merchantJpaRepo.deleteByMerchantId(merchantId) == 1
     }
+
 }

@@ -1,11 +1,15 @@
 package com.webxela.backend.coupit.domain.repo
 
-import com.squareup.square.models.Merchant
 import com.webxela.backend.coupit.domain.model.OauthToken
+import com.webxela.backend.coupit.domain.model.SquareMerchant
 
 interface OauthRepository {
 
-    fun processOauthCallback(code: String): OauthToken?
+    fun exchangeAuthorizationCode(code: String): OauthToken?
 
-    fun getMerchantInfo(merchantId: String, accessToken: String): Merchant?
+    fun getMerchantInfo(oauthToken: OauthToken): SquareMerchant?
+
+    fun exchangeRefreshToken(refreshToken: String): OauthToken?
+
+    fun revokeOauthToken(merchantId: String): Boolean
 }

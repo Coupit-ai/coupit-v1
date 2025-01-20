@@ -1,13 +1,11 @@
 package com.webxela.backend.coupit.application.service
 
-import com.webxela.backend.coupit.api.rest.mappper.MerchantMapper.toSquareMerchant
 import com.webxela.backend.coupit.common.exception.ApiError
 import com.webxela.backend.coupit.common.utils.JwtUtils
 import com.webxela.backend.coupit.domain.usecase.MerchantUseCase
 import com.webxela.backend.coupit.domain.usecase.OauthUseCase
 import com.webxela.backend.coupit.domain.usecase.UserUseCase
 import com.webxela.backend.coupit.infrastructure.config.SquareConfig
-import jakarta.servlet.http.HttpServletRequest
 import jakarta.transaction.Transactional
 import org.apache.logging.log4j.LogManager
 import org.springframework.security.core.context.SecurityContextHolder
@@ -34,38 +32,35 @@ class SquareOauthManager(
                 "response_type=code&" +
                 "scope=${squareConfig.scopes.joinToString(",")}&" +
                 "redirect_uri=${squareConfig.redirectUri}&" +
-                "session=true"
+                "session=false"
     }
 
     @Transactional
     fun processSquareOauthCallback(code: String): String? {
-        val oauthToken = oauthUseCase.processOauthCallback(code)
+        val oauthToken = oauthUseCase.exchangeAuthorizationCode(code)
         if (oauthToken == null) {
             logger.error("Failed to get oauth token")
             return null
         }
-        val merchantInfo = oauthUseCase.getMerchantInfo(
-            merchantId = oauthToken.merchantId,
-            accessToken = oauthToken.accessToken
-        )
+        val merchantInfo = oauthUseCase.getMerchantInfo(oauthToken = oauthToken)
         if (merchantInfo == null) {
             logger.error("Failed to get merchant info during oauth")
             return null
         }
         try {
-            val user = userUseCase.getUserByEmail(merchantInfo.id)
+            val user = userUseCase.getUserByEmail(merchantInfo.merchantId)
             val data = if (user == null) {
-                merchantUseCase.addNewMerchant(merchantInfo.toSquareMerchant(oauthToken))
+                merchantUseCase.addNewMerchant(merchantInfo)
                 userAuthManager.registerNewUser(
-                    email = merchantInfo.id,
+                    email = merchantInfo.merchantId,
                     password = oauthToken.accessToken,
                     firstName = merchantInfo.businessName,
                     lastName = "",
                 ).token
             } else {
-                val jwtToken = jwtUtils.generateToken(merchantInfo.id)
-                userUseCase.updateJwtToken(merchantInfo.id, jwtToken)
-                merchantUseCase.updateMerchant(merchantInfo.toSquareMerchant(oauthToken))
+                val jwtToken = jwtUtils.generateToken(merchantInfo.merchantId)
+                userUseCase.updateJwtToken(merchantInfo.merchantId, jwtToken)
+                merchantUseCase.updateMerchant(merchantInfo)
                 jwtToken
             }
             return data
@@ -76,18 +71,43 @@ class SquareOauthManager(
     }
 
     @Transactional
-    fun revokeSquareOauth(): String {
+    fun exchangeRefreshToken(refreshToken: String): Boolean {
+        val oauthToken = oauthUseCase.exchangeRefreshToken(refreshToken)
+        if (oauthToken == null) {
+            logger.error("Failed to get refresh token")
+            return false
+        }
+        val merchant = merchantUseCase.getMerchantById(oauthToken.merchantId)
+        if (merchant == null) {
+            logger.error("Failed to get merchant data while fetching refresh token")
+            return false
+        }
+        val newMerchant = merchant.copy(oauthToken = oauthToken)
+        merchantUseCase.updateMerchant(newMerchant)
+        return true
+    }
+
+    @Transactional
+    fun revokeSquareOauth(merchantId: String? = null): String {
         try {
-            val authState = SecurityContextHolder.getContext().authentication
-            userAuthManager.performUserLogout()
-            // Temporarily delete the merchant entirely for logout flow
-            val user = authState.principal as UserDetails
-            if(merchantUseCase.deleteMerchant(user.username))
+            val id = if (merchantId == null) {
+                val authState = SecurityContextHolder.getContext().authentication
+                userAuthManager.performUserLogout()
+                (authState.principal as UserDetails).username
+            } else {
+                merchantId
+            }
+
+            if (oauthUseCase.revokeOauthToken(id))
+                logger.info("Successfully disconnected from Square dashboard")
+
+            if (merchantUseCase.deleteMerchant(id)) {
+                logger.info("Successfully disconnected from Square")
                 return "Successfully disconnected from Square"
-            else throw RuntimeException("Failed to disconnect from Square")
+            } else throw RuntimeException("Failed to disconnect from Square")
         } catch (ex: Exception) {
             logger.error("Failed to revoke oauth token", ex)
-            throw ApiError.InternalError("Failed to disconnect from square", ex)
+            throw ApiError.Unauthorized("Failed to disconnect from square", ex)
         }
     }
 }
