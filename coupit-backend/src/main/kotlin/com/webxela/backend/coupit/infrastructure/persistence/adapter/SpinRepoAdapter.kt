@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class SpinRepositoryAdapter(
+class SpinRepoAdapter(
     private val spinJpaRepo: SpinJpaRepo,
     private val rewardJpaRepo: RewardJpaRepo
 ) : SpinRepository {

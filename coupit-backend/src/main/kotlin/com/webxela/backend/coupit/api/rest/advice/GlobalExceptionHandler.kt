@@ -6,7 +6,9 @@ import org.apache.logging.log4j.LogManager
 import org.springframework.core.codec.EncodingException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
@@ -52,6 +54,18 @@ class GlobalExceptionHandler {
         return ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleMessageNotReadableException(ex: HttpMessageNotReadableException): ResponseEntity<ApiResponse<Nothing>> {
+        logger.error(ex.message, ex)
+        val response = ApiResponse.error<Nothing>(
+            status = HttpStatus.INTERNAL_SERVER_ERROR,
+            message = "Error while parsing your request.",
+            exception = ex.message
+        )
+        return ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+
     @ExceptionHandler(MethodNotAllowedException::class)
     fun handleMethodNotAllowedException(ex: MethodNotAllowedException): ResponseEntity<ApiResponse<Nothing>> {
         logger.error(ex.message, ex)
@@ -62,6 +76,18 @@ class GlobalExceptionHandler {
         )
         return ResponseEntity(response, HttpStatus.METHOD_NOT_ALLOWED)
     }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
+    fun handleMethodNotSupportedException(ex: HttpRequestMethodNotSupportedException): ResponseEntity<ApiResponse<Nothing>> {
+        logger.error(ex.message, ex)
+        val response = ApiResponse.error<Nothing>(
+            status = HttpStatus.METHOD_NOT_ALLOWED,
+            message = "Method not allowed.",
+            exception = ex.message
+        )
+        return ResponseEntity(response, HttpStatus.METHOD_NOT_ALLOWED)
+    }
+
 
     @ExceptionHandler(ServerWebInputException::class)
     fun handleServerWebInputException(ex: ServerWebInputException): ResponseEntity<ApiResponse<Nothing>> {

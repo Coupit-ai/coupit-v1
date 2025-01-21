@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class RewardRepositoryAdapter(private val rewardJpaRepo: RewardJpaRepo): RewardRepository {
+class RewardRepoAdapter(private val rewardJpaRepo: RewardJpaRepo): RewardRepository {
 
     override fun getAllOffers(merchantId: String): List<Reward> {
         return rewardJpaRepo.findAll().map { it.toOffer() }

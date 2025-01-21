@@ -1,5 +1,6 @@
 package com.webxela.backend.coupit.api.rest.controller
 
+import com.webxela.backend.coupit.api.rest.dto.PaymentWebhookRequest
 import com.webxela.backend.coupit.api.rest.dto.auth.RevokeWebhookRequest
 import com.webxela.backend.coupit.api.rest.dto.auth.RedirectResponse
 import com.webxela.backend.coupit.api.rest.dto.auth.LogOutResponse
@@ -57,11 +58,11 @@ class SquareController(private val squareOauthManager: SquareOauthManager) {
 
     @PostMapping("/webhook/revoke")
     fun handleLogoutWebhook(
-        @RequestBody revokeWebhookRequest: RevokeWebhookRequest,
+        @RequestBody requestBody: RevokeWebhookRequest,
         @RequestHeader("x-square-hmacsha256-signature") signature: String
     ): ResponseEntity<Nothing> {
-        if (revokeWebhookRequest.data?.type == "revocation") {
-            squareOauthManager.handleRevokeWebhook(revokeWebhookRequest, signature)
+        if (requestBody.data?.type == "revocation") {
+            squareOauthManager.handleRevokeWebhook(requestBody, signature)
             return ResponseEntity.ok().build()
         }
         return ResponseEntity.badRequest().build()
@@ -75,8 +76,14 @@ class SquareController(private val squareOauthManager: SquareOauthManager) {
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
-    @GetMapping("/webhook/payment")
-    fun handlePaymentWebhook() {
-
+    @PostMapping("/webhook/payment")
+    fun handlePaymentWebhook(
+        @RequestBody requestBody: PaymentWebhookRequest,
+        @RequestHeader("x-square-hmacsha256-signature") signature: String
+    ): ResponseEntity<String> {
+        if (requestBody.data.objectX.payment.status == "COMPLETED") {
+            squareOauthManager.handlePaymentWebhook(requestBody, signature)
+        }
+        return ResponseEntity.ok().build()
     }
 }

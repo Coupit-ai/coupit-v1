@@ -11,7 +11,7 @@ import java.util.*
 
 
 @Component
-class SessionRepositoryAdapter(private val sessionJpaRepo: SessionJpaRepo) : SessionRepository {
+class SessionRepoAdapter(private val sessionJpaRepo: SessionJpaRepo) : SessionRepository {
 
     @Transactional
     override fun createSession(merchantId: String, transactionId: String): Session {

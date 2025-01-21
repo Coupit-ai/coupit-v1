@@ -9,7 +9,7 @@ import jakarta.transaction.Transactional
 import org.springframework.stereotype.Component
 
 @Component
-class UserRepositoryAdapter(private val userJpaRepo: UserJpaRepo): UserRepository {
+class UserRepoAdapter(private val userJpaRepo: UserJpaRepo): UserRepository {
 
     @Transactional
     override fun createNewUser(user: User): User {

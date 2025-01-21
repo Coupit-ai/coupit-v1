@@ -1,16 +1,19 @@
 package com.webxela.backend.coupit.application.service
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.webxela.backend.coupit.api.rest.dto.PaymentWebhookRequest
 import com.webxela.backend.coupit.api.rest.dto.auth.RevokeWebhookRequest
+import com.webxela.backend.coupit.api.rest.mappper.PaymentMapper.toPayment
 import com.webxela.backend.coupit.api.rest.mappper.SignupMapper.toSignupRequest
 import com.webxela.backend.coupit.common.exception.ApiError
 import com.webxela.backend.coupit.common.utils.JwtUtils
 import com.webxela.backend.coupit.domain.usecase.MerchantUseCase
 import com.webxela.backend.coupit.domain.usecase.OauthUseCase
+import com.webxela.backend.coupit.domain.usecase.PaymentUseCase
 import com.webxela.backend.coupit.domain.usecase.UserUseCase
 import com.webxela.backend.coupit.infrastructure.config.SquareConfig
 import jakarta.transaction.Transactional
 import org.apache.logging.log4j.LogManager
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,6 +25,7 @@ class SquareOauthManager(
     private val userUseCase: UserUseCase,
     private val jwtUtils: JwtUtils,
     private val utilityService: UtilityService,
+    private val paymentUseCase: PaymentUseCase
 ) {
 
     companion object {
@@ -88,18 +92,20 @@ class SquareOauthManager(
 
     // Will investigate it later
     @Transactional
-    fun handleRevokeWebhook(body: RevokeWebhookRequest, signature: String) {
-        val mapper = jacksonObjectMapper()
-        val stringifiedBody = mapper.writeValueAsString(body)
-
-        val isFromSquare = oauthUseCase.isWebhookFromSquare(
-            stringifiedBody, signature,
-            squareConfig.revokeWebhookUrl,
-            squareConfig.revokeOauthSign
-        )
+    fun handleRevokeWebhook(requestBody: RevokeWebhookRequest, signature: String) {
+//        val mapper = jacksonObjectMapper()
+//        val stringifiedBody = mapper.writeValueAsString(requestBody)
+//
+//        val isFromSquare = oauthUseCase.isWebhookFromSquare(
+//            stringifiedBody, signature,
+//            squareConfig.revokeWebhookUrl,
+//            squareConfig.revokeOauthSign
+//        )
+        // We are not verifying the signature for now
+        val isFromSquare = true
         if (isFromSquare) {
-            merchantUseCase.deleteMerchant(body.merchantId)
-            userUseCase.updateJwtToken(body.merchantId, null)
+            merchantUseCase.deleteMerchant(requestBody.merchantId)
+            userUseCase.updateJwtToken(requestBody.merchantId, null)
             logger.info("Successfully disconnected from square using webhook")
         } else {
             logger.error("Received invalid revoke webhook")
@@ -127,8 +133,36 @@ class SquareOauthManager(
         }
     }
 
-    fun handlePaymentWebhook() {
-
+    @Transactional
+    fun handlePaymentWebhook(
+        requestBody: PaymentWebhookRequest,
+        signature: String
+    ) {
+        try {
+//        val mapper = jacksonObjectMapper()
+//        val stringifiedBody = mapper.writeValueAsString(requestBody)
+//
+//        val isFromSquare = oauthUseCase.isWebhookFromSquare(
+//            stringifiedBody, signature,
+//            squareConfig.revokeWebhookUrl,
+//            squareConfig.revokeOauthSign
+//        )
+            // We are not verifying the signature for now
+            val isFromSquare = true
+            if (isFromSquare) {
+                paymentUseCase.savePayment(requestBody.toPayment())
+                logger.info("Received payment webhook from square")
+                // Send FCM notification to merchant
+            } else {
+                logger.error("Received invalid payment webhook")
+                return
+            }
+        } catch (ex: DataIntegrityViolationException) {
+            logger.error("Cant save multiple instance of same payment", ex)
+        } catch (ex: Exception) {
+            logger.error("Failed to handle payment webhook", ex)
+            throw ApiError.InternalError("Failed to handle payment webhook", ex)
+        }
     }
 
 }

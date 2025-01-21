@@ -11,10 +11,10 @@ import org.apache.logging.log4j.Logger
 import org.springframework.stereotype.Component
 
 @Component
-class MerchantRepositoryAdapter(private val merchantJpaRepo: MerchantJpaRepo) : MerchantRepository {
+class MerchantRepoAdapter(private val merchantJpaRepo: MerchantJpaRepo) : MerchantRepository {
 
     companion object {
-        val logger: Logger = LogManager.getLogger(MerchantRepositoryAdapter::class.java)
+        val logger: Logger = LogManager.getLogger(MerchantRepoAdapter::class.java)
     }
 
     override fun getMerchantById(merchantId: String): SquareMerchant? {
