@@ -23,4 +23,18 @@ class OauthUseCase(private val oauthRepository: OauthRepository) {
     fun revokeOauthToken(merchantId: String): Boolean {
         return oauthRepository.revokeOauthToken(merchantId)
     }
+
+    fun isWebhookFromSquare(
+        body: String,
+        signature: String,
+        squareWebhookUrl: String,
+        squareSign: String
+    ): Boolean {
+        return oauthRepository.isWebhookFromSquare(
+            body,
+            signature,
+            squareWebhookUrl,
+            squareSign
+        )
+    }
 }

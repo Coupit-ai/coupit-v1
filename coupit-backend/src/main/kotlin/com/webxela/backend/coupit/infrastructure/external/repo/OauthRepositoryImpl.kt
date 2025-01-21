@@ -16,7 +16,8 @@ class OauthRepositoryImpl(private val oauthTokenDataSource: OauthTokenDataSource
     }
 
     override fun getMerchantInfo(oauthToken: OauthToken): SquareMerchant? {
-        return oauthTokenDataSource.getMerchantInfo(oauthToken.merchantId, oauthToken.accessToken)?.toSquareMerchant(oauthToken)
+        return oauthTokenDataSource.getMerchantInfo(oauthToken.merchantId, oauthToken.accessToken)
+            ?.toSquareMerchant(oauthToken)
     }
 
     override fun exchangeRefreshToken(refreshToken: String): OauthToken? {
@@ -25,6 +26,15 @@ class OauthRepositoryImpl(private val oauthTokenDataSource: OauthTokenDataSource
 
     override fun revokeOauthToken(merchantId: String): Boolean {
         return oauthTokenDataSource.revokeOauthToken(merchantId)
+    }
+
+    override fun isWebhookFromSquare(
+        body: String,
+        signature: String,
+        squareWebhookUrl: String,
+        squareSign: String
+    ): Boolean {
+        return oauthTokenDataSource.isWebhookFromSquare(body, signature, squareWebhookUrl, squareSign)
     }
 
 }

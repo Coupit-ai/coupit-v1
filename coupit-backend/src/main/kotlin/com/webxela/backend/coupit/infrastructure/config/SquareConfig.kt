@@ -18,17 +18,27 @@ class SquareConfig {
     private final val dotEnv = dotenv()
 
     val scopes = Constants.SQUARE_CLIENT_SCOPES
+
+    private val serverUrl = dotEnv["SERVER_URL"]
+        ?: throw IllegalStateException("Environment variable SERVER_URL is missing")
+
     val clientId: String = dotEnv["SQUARE_OAUTH_CLIENT_ID"]
         ?: throw IllegalStateException("Environment variable SQUARE_OAUTH_CLIENT_ID is missing")
 
     val clientSecret: String = dotEnv["SQUARE_OAUTH_CLIENT_SECRET"]
         ?: throw IllegalStateException("Environment variable SQUARE_OAUTH_CLIENT_SECRET is missing")
 
-    val redirectUri: String = dotEnv["SQUARE_OAUTH_REDIRECT_URI"]
-        ?.let { "$it/api/v1/square/oauth/callback" }
-        ?: throw IllegalStateException("Environment variable SQUARE_OAUTH_REDIRECT_URI is missing")
+    val redirectUri: String = "$$serverUrl/api/v1/square/oauth/callback"
 
-    private val clientEnvironment: Environment by lazy {
+    val revokeOauthSign: String = dotEnv["SQUARE_REVOKE_OAUTH_SIGN"]
+        ?: throw IllegalStateException("Environment variable SQUARE_WEBHOOK_SIGN is missing")
+    val revokeWebhookUrl = "$serverUrl/api/v1/square/webhook/revoke"
+
+    val paymentWebhookSign: String = dotEnv["SQUARE_PAYMENT_WEBHOOK_SIGN"]
+        ?: throw IllegalStateException("Environment variable SQUARE_PAYMENT_WEBHOOK_SIGN is missing")
+    val paymentWebhookUrl = "$serverUrl/api/v1/square/webhook/payment"
+
+    val clientEnvironment: Environment by lazy {
         when (dotEnv["SQUARE_ENVIRONMENT"]?.lowercase()) {
             "sandbox" -> Environment.SANDBOX
             "production" -> Environment.PRODUCTION

@@ -1,5 +1,7 @@
 package com.webxela.backend.coupit.application.service
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.webxela.backend.coupit.api.rest.dto.auth.RevokeWebhookRequest
 import com.webxela.backend.coupit.common.exception.ApiError
 import com.webxela.backend.coupit.common.utils.JwtUtils
 import com.webxela.backend.coupit.domain.usecase.MerchantUseCase
@@ -26,7 +28,7 @@ class SquareOauthManager(
         private val logger = LogManager.getLogger(SquareOauthManager::class.java)
     }
 
-    fun buildSquareAuthUrl(): String {
+    fun buildSquareOauthUrl(): String {
         return "${squareConfig.authorisationUri}?" +
                 "client_id=${squareConfig.clientId}&" +
                 "response_type=code&" +
@@ -87,21 +89,36 @@ class SquareOauthManager(
         return true
     }
 
-    @Transactional
-    fun revokeSquareOauth(merchantId: String? = null): String {
-        try {
-            val id = if (merchantId == null) {
-                val authState = SecurityContextHolder.getContext().authentication
-                userAuthManager.performUserLogout()
-                (authState.principal as UserDetails).username
-            } else {
-                merchantId
-            }
+    // Will investigate it later
+    fun handleRevokeWebhook(body: RevokeWebhookRequest, signature: String) {
+        val mapper = jacksonObjectMapper()
+        val stringifiedBody = mapper.writeValueAsString(body)
 
-            if (oauthUseCase.revokeOauthToken(id))
+        val isFromSquare = oauthUseCase.isWebhookFromSquare(
+            stringifiedBody, signature,
+            "https://webhook.site/04e501c3-cdc4-4a26-a6f3-9f56ae0f1c91",
+            squareConfig.revokeOauthSign
+        )
+        if (isFromSquare) {
+            merchantUseCase.deleteMerchant(body.merchantId)
+            userUseCase.updateJwtToken(body.merchantId, null)
+            logger.info("Successfully disconnected from square using webhook")
+        } else {
+            logger.error("Received invalid revoke webhook")
+            throw ApiError.Unauthorized("Invalid webhook")
+        }
+    }
+
+    @Transactional
+    fun revokeSquareOauth(): String {
+        try {
+            userAuthManager.performUserLogout()
+            val authState = SecurityContextHolder.getContext().authentication
+            val merchantId = (authState.principal as UserDetails).username
+            if (oauthUseCase.revokeOauthToken(merchantId))
                 logger.info("Successfully disconnected from Square dashboard")
 
-            if (merchantUseCase.deleteMerchant(id)) {
+            if (merchantUseCase.deleteMerchant(merchantId)) {
                 logger.info("Successfully disconnected from Square")
                 return "Successfully disconnected from Square"
             } else throw RuntimeException("Failed to disconnect from Square")

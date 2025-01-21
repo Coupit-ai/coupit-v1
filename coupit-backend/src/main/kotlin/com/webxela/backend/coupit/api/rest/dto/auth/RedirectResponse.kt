@@ -1,4 +1,4 @@
-package com.webxela.backend.coupit.api.rest.dto
+package com.webxela.backend.coupit.api.rest.dto.auth
 
 data class RedirectResponse(
     val redirectUri: String,
