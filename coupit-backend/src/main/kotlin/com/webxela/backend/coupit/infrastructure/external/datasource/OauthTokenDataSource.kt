@@ -4,6 +4,7 @@ import com.squareup.square.models.Merchant
 import com.squareup.square.models.ObtainTokenRequest
 import com.squareup.square.models.ObtainTokenResponse
 import com.squareup.square.models.RevokeTokenRequest
+import com.squareup.square.utilities.WebhooksHelper
 import com.webxela.backend.coupit.infrastructure.config.SquareConfig
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -73,6 +74,25 @@ class OauthTokenDataSource(private val squareConfig: SquareConfig) {
             response.success
         } catch (ex: Exception) {
             false
+        }
+    }
+
+    fun isWebhookFromSquare(
+        body: String,
+        signature: String,
+        squareWebhookUrl: String,
+        squareSign: String
+    ): Boolean {
+        try {
+            return WebhooksHelper.isValidWebhookEventSignature(
+                body,
+                signature,
+                squareSign,
+                squareWebhookUrl
+            )
+        } catch (ex: Exception) {
+            logger.error("Failed to validate webhook signature", ex)
+            return false
         }
     }
 

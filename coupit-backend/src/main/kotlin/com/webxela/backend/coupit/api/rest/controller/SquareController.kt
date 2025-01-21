@@ -1,16 +1,14 @@
 package com.webxela.backend.coupit.api.rest.controller
 
-import com.webxela.backend.coupit.api.rest.dto.RedirectResponse
+import com.webxela.backend.coupit.api.rest.dto.auth.RevokeWebhookRequest
+import com.webxela.backend.coupit.api.rest.dto.auth.RedirectResponse
 import com.webxela.backend.coupit.api.rest.dto.auth.LogOutResponse
 import com.webxela.backend.coupit.application.service.SquareOauthManager
 import com.webxela.backend.coupit.common.exception.ApiResponse
 import org.apache.logging.log4j.LogManager
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.net.URLEncoder
 
 @RestController
@@ -24,7 +22,7 @@ class SquareController(private val squareOauthManager: SquareOauthManager) {
     @GetMapping("/oauth/connect")
     fun loginToSquare(): ResponseEntity<ApiResponse<RedirectResponse>> {
         val loginResponse = RedirectResponse(
-            redirectUri = squareOauthManager.buildSquareAuthUrl(),
+            redirectUri = squareOauthManager.buildSquareOauthUrl(),
             message = "Follow this url to start oauth flow"
         )
         return ResponseEntity.ok(ApiResponse.success(loginResponse))
@@ -35,7 +33,6 @@ class SquareController(private val squareOauthManager: SquareOauthManager) {
         @RequestParam("code", required = false) code: String?,
         @RequestParam("error", required = false) error: String?,
     ): ResponseEntity<String> {
-
         var redirectUri = "coupit://callback?"
         redirectUri += if (error != null || code == null) {
             "error=${URLEncoder.encode(error ?: "Authorization failed", "UTF-8")}"
@@ -58,27 +55,28 @@ class SquareController(private val squareOauthManager: SquareOauthManager) {
             .header("Location", redirectUri).build()
     }
 
-
-    @GetMapping("/webhook/payment")
-    fun handlePaymentWebhook() {
-
-    }
-
-    @GetMapping("/webhook/revoke")
-    fun handleLogoutWebhook(): ResponseEntity<ApiResponse<LogOutResponse>> {
-        val merchantId = "" // Not implemented yet
-        val response =  LogOutResponse (
-            squareOauthManager.revokeSquareOauth(merchantId)
-        )
-        return ResponseEntity.ok(ApiResponse.success(response))
+    @PostMapping("/webhook/revoke")
+    fun handleLogoutWebhook(
+        @RequestBody revokeWebhookRequest: RevokeWebhookRequest,
+        @RequestHeader("x-square-hmacsha256-signature") signature: String
+    ): ResponseEntity<Nothing> {
+        if (revokeWebhookRequest.data?.type == "revocation") {
+            squareOauthManager.handleRevokeWebhook(revokeWebhookRequest, signature)
+            return ResponseEntity.ok().build()
+        }
+        return ResponseEntity.badRequest().build()
     }
 
     @GetMapping("/oauth/revoke")
     fun revokeSquareOauth(): ResponseEntity<ApiResponse<LogOutResponse>> {
-        val response =  LogOutResponse (
+        val response = LogOutResponse(
             squareOauthManager.revokeSquareOauth()
         )
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
+    @GetMapping("/webhook/payment")
+    fun handlePaymentWebhook() {
+
+    }
 }

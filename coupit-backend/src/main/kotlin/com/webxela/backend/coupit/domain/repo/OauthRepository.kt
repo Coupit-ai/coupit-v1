@@ -12,4 +12,11 @@ interface OauthRepository {
     fun exchangeRefreshToken(refreshToken: String): OauthToken?
 
     fun revokeOauthToken(merchantId: String): Boolean
+
+    fun isWebhookFromSquare(
+        body: String,
+        signature: String,
+        squareWebhookUrl: String,
+        squareSign: String
+    ): Boolean
 }
