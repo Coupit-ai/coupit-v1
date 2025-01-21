@@ -1,8 +1,8 @@
 package com.webxela.backend.coupit.application.service
 
 import com.webxela.backend.coupit.api.rest.dto.SessionResponse
-import com.webxela.backend.coupit.api.rest.mappper.RewardRespMapper.toOfferResponse
-import com.webxela.backend.coupit.api.rest.mappper.SessionRespMapper.toSessionResponse
+import com.webxela.backend.coupit.api.rest.mappper.RewardMapper.toOfferResponse
+import com.webxela.backend.coupit.api.rest.mappper.SessionMapper.toSessionResponse
 import com.webxela.backend.coupit.common.exception.ApiError
 import com.webxela.backend.coupit.domain.usecase.RewardUseCase
 import com.webxela.backend.coupit.domain.usecase.SessionUseCase

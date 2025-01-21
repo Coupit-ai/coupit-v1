@@ -1,10 +1,10 @@
 package com.webxela.backend.coupit.api.rest.mappper
 
 import com.webxela.backend.coupit.api.rest.dto.SpinResponse
-import com.webxela.backend.coupit.api.rest.mappper.RewardRespMapper.toOfferResponse
+import com.webxela.backend.coupit.api.rest.mappper.RewardMapper.toOfferResponse
 import com.webxela.backend.coupit.domain.model.SpinResult
 
-object SpinRespMapper {
+object SpinMapper {
 
     fun SpinResult.toSpinResponse(): SpinResponse {
         return SpinResponse(

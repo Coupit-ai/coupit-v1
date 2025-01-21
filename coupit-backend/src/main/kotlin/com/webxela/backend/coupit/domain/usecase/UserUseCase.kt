@@ -7,16 +7,8 @@ import org.springframework.stereotype.Component
 @Component
 class UserUseCase(private val userRepository: UserRepository) {
 
-    fun createNewUser(
-        email: String, password: String,
-        firstName: String, lastName: String,
-        jwtToken: String
-    ): User {
-        return userRepository.createNewUser(
-            email, password,
-            firstName, lastName,
-            jwtToken
-        )
+    fun createNewUser(user: User): User {
+        return userRepository.createNewUser(user)
     }
 
     fun getUserById(id: Long): User? {

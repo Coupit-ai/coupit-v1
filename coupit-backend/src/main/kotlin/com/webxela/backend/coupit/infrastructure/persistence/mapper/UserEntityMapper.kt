@@ -15,4 +15,14 @@ object UserEntityMapper {
             jwtToken = this.jwtToken
         )
     }
+
+    fun User.toUserEntity(): UserEntity {
+        return UserEntity(
+            firstName = this.firstName,
+            lastName = this.lastName,
+            email = this.email,
+            password = this.password,
+            jwtToken = this.jwtToken
+        )
+    }
 }

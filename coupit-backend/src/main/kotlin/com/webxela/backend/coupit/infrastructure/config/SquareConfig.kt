@@ -28,7 +28,7 @@ class SquareConfig {
     val clientSecret: String = dotEnv["SQUARE_OAUTH_CLIENT_SECRET"]
         ?: throw IllegalStateException("Environment variable SQUARE_OAUTH_CLIENT_SECRET is missing")
 
-    val redirectUri: String = "$$serverUrl/api/v1/square/oauth/callback"
+    val redirectUri: String = "$serverUrl/api/v1/square/oauth/callback"
 
     val revokeOauthSign: String = dotEnv["SQUARE_REVOKE_OAUTH_SIGN"]
         ?: throw IllegalStateException("Environment variable SQUARE_WEBHOOK_SIGN is missing")

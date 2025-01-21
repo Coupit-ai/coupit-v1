@@ -1,8 +1,10 @@
 package com.webxela.backend.coupit.application.service
 
 import com.webxela.backend.coupit.api.rest.dto.auth.LoginResponse
+import com.webxela.backend.coupit.api.rest.dto.auth.SignupRequest
 import com.webxela.backend.coupit.api.rest.dto.auth.SignupResponse
-import com.webxela.backend.coupit.api.rest.mappper.SignupRespMapper.toSignupResponse
+import com.webxela.backend.coupit.api.rest.mappper.SignupMapper.toSignupResponse
+import com.webxela.backend.coupit.api.rest.mappper.SignupMapper.toUser
 import com.webxela.backend.coupit.common.exception.ApiError
 import com.webxela.backend.coupit.common.utils.JwtUtils
 import com.webxela.backend.coupit.domain.usecase.UserUseCase
@@ -12,7 +14,6 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -23,6 +24,7 @@ class UserAuthManager(
     private val passwordEncoder: BCryptPasswordEncoder,
     private val authenticationManager: AuthenticationManager,
     private val jwtUtils: JwtUtils,
+    private val utilityService: UtilityService
 ) {
 
     companion object {
@@ -30,27 +32,17 @@ class UserAuthManager(
     }
 
     @Transactional
-    fun registerNewUser(
-        email: String,
-        password: String,
-        firstName: String,
-        lastName: String
-    ): SignupResponse {
-        logger.info("Registering new user with email: $email")
+    fun registerNewUser(signupRequest: SignupRequest): SignupResponse {
+        logger.info("Registering new user with email: $signupRequest.email")
         try {
-            val jwtToken = jwtUtils.generateToken(email)
+            val jwtToken = jwtUtils.generateToken(signupRequest.email)
             val createdUser = userUseCase.createNewUser(
-                email = email,
-                password = passwordEncoder.encode(password),
-                firstName = firstName,
-                lastName = lastName,
-                jwtToken = jwtToken
+                signupRequest.toUser(jwtToken, passwordEncoder)
             )
-            println(createdUser)
             return createdUser.toSignupResponse()
         } catch (ex: Exception) {
-            logger.error("User with id $email already exists", ex)
-            throw ApiError.DataIntegrityError("User with email $email already exists", ex)
+            logger.error("User with id $signupRequest.email already exists", ex)
+            throw ApiError.DataIntegrityError("User with email $signupRequest.email already exists", ex)
         } catch (ex: Exception) {
             logger.error("An unexpected error occurred while registering new user", ex)
             throw ApiError.InternalError("Unexpected error occurred", ex)
@@ -60,7 +52,9 @@ class UserAuthManager(
     @Transactional
     fun performUserLogin(email: String, password: String): LoginResponse {
         // Check if user exists
-        userUseCase.getUserByEmail(email) ?: throw ApiError.ResourceNotFound("User with email $email not found")
+        userUseCase.getUserByEmail(email) ?: throw ApiError.ResourceNotFound(
+            "User with email $email not found"
+        )
         try {
             val authState = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(email, password)
@@ -84,10 +78,10 @@ class UserAuthManager(
         }
     }
 
+    @Transactional
     fun performUserLogout(): String {
-        val authState = SecurityContextHolder.getContext().authentication
-        if (authState != null && authState.principal != "anonymousUser") {
-            val user = authState.principal as UserDetails
+        val user = utilityService.getCurrentLoginUser()
+        if (user != null) {
             userUseCase.updateJwtToken(user.username, null)
             SecurityContextHolder.clearContext()
             logger.info("User has been logged out")

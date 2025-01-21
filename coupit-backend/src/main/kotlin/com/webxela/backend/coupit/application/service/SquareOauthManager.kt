@@ -2,6 +2,7 @@ package com.webxela.backend.coupit.application.service
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.webxela.backend.coupit.api.rest.dto.auth.RevokeWebhookRequest
+import com.webxela.backend.coupit.api.rest.mappper.SignupMapper.toSignupRequest
 import com.webxela.backend.coupit.common.exception.ApiError
 import com.webxela.backend.coupit.common.utils.JwtUtils
 import com.webxela.backend.coupit.domain.usecase.MerchantUseCase
@@ -10,8 +11,6 @@ import com.webxela.backend.coupit.domain.usecase.UserUseCase
 import com.webxela.backend.coupit.infrastructure.config.SquareConfig
 import jakarta.transaction.Transactional
 import org.apache.logging.log4j.LogManager
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,7 +20,8 @@ class SquareOauthManager(
     private val merchantUseCase: MerchantUseCase,
     private val userAuthManager: UserAuthManager,
     private val userUseCase: UserUseCase,
-    private val jwtUtils: JwtUtils
+    private val jwtUtils: JwtUtils,
+    private val utilityService: UtilityService,
 ) {
 
     companion object {
@@ -54,10 +54,7 @@ class SquareOauthManager(
             val data = if (user == null) {
                 merchantUseCase.addNewMerchant(merchantInfo)
                 userAuthManager.registerNewUser(
-                    email = merchantInfo.merchantId,
-                    password = oauthToken.accessToken,
-                    firstName = merchantInfo.businessName,
-                    lastName = "",
+                    merchantInfo.toSignupRequest()
                 ).token
             } else {
                 val jwtToken = jwtUtils.generateToken(merchantInfo.merchantId)
@@ -90,6 +87,7 @@ class SquareOauthManager(
     }
 
     // Will investigate it later
+    @Transactional
     fun handleRevokeWebhook(body: RevokeWebhookRequest, signature: String) {
         val mapper = jacksonObjectMapper()
         val stringifiedBody = mapper.writeValueAsString(body)
@@ -113,8 +111,9 @@ class SquareOauthManager(
     fun revokeSquareOauth(): String {
         try {
             userAuthManager.performUserLogout()
-            val authState = SecurityContextHolder.getContext().authentication
-            val merchantId = (authState.principal as UserDetails).username
+            val merchantId = utilityService.getCurrentLoginUser()?.username
+                ?: throw RuntimeException("Failed to get merchant id from this auth context")
+
             if (oauthUseCase.revokeOauthToken(merchantId))
                 logger.info("Successfully disconnected from Square dashboard")
 
@@ -127,4 +126,9 @@ class SquareOauthManager(
             throw ApiError.Unauthorized("Failed to disconnect from square", ex)
         }
     }
+
+    fun handlePaymentWebhook() {
+
+    }
+
 }

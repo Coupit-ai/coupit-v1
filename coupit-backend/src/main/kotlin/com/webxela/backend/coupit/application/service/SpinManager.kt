@@ -1,7 +1,7 @@
 package com.webxela.backend.coupit.application.service
 
 import com.webxela.backend.coupit.api.rest.dto.SpinResponse
-import com.webxela.backend.coupit.api.rest.mappper.SpinRespMapper.toSpinResponse
+import com.webxela.backend.coupit.api.rest.mappper.SpinMapper.toSpinResponse
 import com.webxela.backend.coupit.common.exception.ApiError
 import com.webxela.backend.coupit.domain.model.Reward
 import com.webxela.backend.coupit.domain.model.Session

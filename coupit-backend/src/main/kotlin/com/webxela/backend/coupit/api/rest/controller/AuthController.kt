@@ -25,12 +25,8 @@ class AuthController(
     fun registerNewUser(
         @RequestBody signupRequest: SignupRequest
     ): ResponseEntity<ApiResponse<SignupResponse>> {
-
         signupValidator.validate(signupRequest)
-        val signup = userAuthManager.registerNewUser(
-            signupRequest.email, signupRequest.password,
-            signupRequest.firstName,  signupRequest.lastName
-        )
+        val signup = userAuthManager.registerNewUser(signupRequest)
         return ResponseEntity.ok(ApiResponse.success(signup))
     }
 

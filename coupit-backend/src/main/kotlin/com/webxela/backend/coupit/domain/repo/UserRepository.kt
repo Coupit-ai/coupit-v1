@@ -4,11 +4,7 @@ import com.webxela.backend.coupit.domain.model.User
 
 interface UserRepository {
 
-    fun createNewUser(
-        email: String, password: String,
-        firstName: String, lastName: String,
-        jwtToken: String
-    ): User
+    fun createNewUser(user: User): User
 
     fun getUserById(id: Long): User?
 

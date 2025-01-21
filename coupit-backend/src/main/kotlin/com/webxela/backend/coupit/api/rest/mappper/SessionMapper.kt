@@ -4,7 +4,7 @@ import com.webxela.backend.coupit.api.rest.dto.RewardResponse
 import com.webxela.backend.coupit.api.rest.dto.SessionResponse
 import com.webxela.backend.coupit.domain.model.Session
 
-object SessionRespMapper {
+object SessionMapper {
 
     fun Session.toSessionResponse(offers: List<RewardResponse>): SessionResponse {
         return SessionResponse(
