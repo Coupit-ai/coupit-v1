@@ -26,7 +26,7 @@ class SpinController(private val spinManager: SpinManager) {
 
     @GetMapping("{spinId}")
     fun getSpinResult(
-        @PathVariable spinId: UUID
+        @PathVariable spinId: String
     ): ResponseEntity<ApiResponse<SpinResponse>> {
 
         val spinResponse = spinManager.getSpinResult(spinId)

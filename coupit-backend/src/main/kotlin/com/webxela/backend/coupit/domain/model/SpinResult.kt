@@ -1,14 +1,13 @@
 package com.webxela.backend.coupit.domain.model
 
 import java.time.Instant
-import java.util.*
 
 data class SpinResult(
-    val id: Long,
-    val spinId: UUID,
+    val id: Long? = null,
+    val spinId: String,
     val merchantId: String,
-    val sessionId: UUID,
-    val timeStamp: Instant,
+    val sessionId: String,
+    val createdAt: Instant,
     val reward: Reward,
     val qrCode: String,
     val expiresAt: Instant,

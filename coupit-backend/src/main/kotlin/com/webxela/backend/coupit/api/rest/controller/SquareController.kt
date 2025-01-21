@@ -48,7 +48,7 @@ class SquareController(private val squareOauthManager: SquareOauthManager) {
                     }
                 }
             } catch (ex: Exception) {
-                "error=${URLEncoder.encode(ex.message ?: "Token generation failed", "UTF-8")}"
+                "error=${URLEncoder.encode("Token generation failed", "UTF-8")}"
             }
         }
         logger.info("Redirecting oauth flow to $redirectUri")

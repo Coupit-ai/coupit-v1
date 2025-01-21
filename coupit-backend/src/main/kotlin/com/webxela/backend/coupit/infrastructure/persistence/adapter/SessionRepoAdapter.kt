@@ -1,33 +1,32 @@
 package com.webxela.backend.coupit.infrastructure.persistence.adapter
 
-import com.webxela.backend.coupit.domain.model.Session
+import com.webxela.backend.coupit.domain.model.SpinSession
 import com.webxela.backend.coupit.domain.repo.SessionRepository
 import com.webxela.backend.coupit.infrastructure.persistence.entity.SessionEntity
 import com.webxela.backend.coupit.infrastructure.persistence.mapper.SessionEntityMapper.toSession
 import com.webxela.backend.coupit.infrastructure.persistence.repo.SessionJpaRepo
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Component
-import java.util.*
 
 
 @Component
 class SessionRepoAdapter(private val sessionJpaRepo: SessionJpaRepo) : SessionRepository {
 
     @Transactional
-    override fun createSession(merchantId: String, transactionId: String): Session {
+    override fun createSession(merchantId: String, paymentId: String): SpinSession {
         val sessionEntity = SessionEntity(
             merchantId = merchantId,
-            transactionId = transactionId
+            paymentId = paymentId
         )
         return sessionJpaRepo.save(sessionEntity).toSession()
     }
 
-    override fun getSession(transactionId: String, merchantId: String): Session? {
-        return sessionJpaRepo.findByTransactionIdAndMerchantId(transactionId, merchantId)?.toSession()
+    override fun getSession(paymentId: String, merchantId: String): SpinSession? {
+        return sessionJpaRepo.findByPaymentIdAndMerchantId(paymentId, merchantId)?.toSession()
     }
 
     @Transactional
-    override fun markSessionAsUsed(sessionId: UUID): Boolean {
+    override fun markSessionAsUsed(sessionId: String): Boolean {
         return when (sessionJpaRepo.markSessionAsUsed(sessionId)) {
             0 -> false
             1 -> true
@@ -35,13 +34,13 @@ class SessionRepoAdapter(private val sessionJpaRepo: SessionJpaRepo) : SessionRe
         }
     }
 
-    override fun getSessionBySessionId(sessionId: UUID): Session? {
+    override fun getSessionBySessionId(sessionId: String): SpinSession? {
         return sessionJpaRepo.findBySessionId(sessionId)?.toSession()
     }
 
     @Transactional
-    override fun deleteSession(transactionId: String, merchantId: String): Boolean {
-        return when (sessionJpaRepo.deleteByTransactionIdAndMerchantId(transactionId, merchantId)) {
+    override fun deleteSession(paymentId: String, merchantId: String): Boolean {
+        return when (sessionJpaRepo.deleteByPaymentIdAndMerchantId(paymentId, merchantId)) {
             0 -> false
             1 -> true
             else -> throw IllegalStateException("Unexpected state: Multiple rows marked as deleted")

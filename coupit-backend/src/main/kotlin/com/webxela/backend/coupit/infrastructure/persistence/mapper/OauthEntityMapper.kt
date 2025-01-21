@@ -19,7 +19,6 @@ object OauthEntityMapper {
 
     fun OauthToken.toOauthEntity(): OauthEntity {
         return OauthEntity(
-            id = this.id,
             accessToken = this.accessToken,
             refreshToken = this.refreshToken,
             expiresAt = this.expiresAt,

@@ -11,7 +11,7 @@ object SpinMapper {
             id = this.spinId,
             merchantId = this.merchantId,
             sessionId = this.sessionId,
-            timeStamp = this.timeStamp,
+            timeStamp = this.createdAt,
             offer = this.reward.toOfferResponse(),
             qrCode = this.qrCode,
             expiresAt = this.expiresAt,

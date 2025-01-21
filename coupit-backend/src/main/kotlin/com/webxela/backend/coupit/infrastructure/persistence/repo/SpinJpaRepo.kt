@@ -10,14 +10,14 @@ import java.util.*
 @Repository
 interface SpinJpaRepo: JpaRepository<SpinEntity, Long> {
 
-    fun findSpinEntityBySpinId(spinId: UUID): SpinEntity?
-    fun findSpinEntityBySessionId(sessionId: UUID): SpinEntity?
+    fun findSpinEntityBySpinId(spinId: String): SpinEntity?
+    fun findSpinEntityBySessionId(sessionId: String): SpinEntity?
 
     @Modifying
     @Query(
         "UPDATE SpinEntity s SET s.claimed = true " +
                 "WHERE s.spinId = :spinId AND s.claimed = false"
     )
-    fun markSpinAsClaimed(spinId: UUID): Int
-    fun deleteBySessionId(sessionId: UUID): Int
+    fun markSpinAsClaimed(spinId: String): Int
+    fun deleteBySessionId(sessionId: String): Int
 }

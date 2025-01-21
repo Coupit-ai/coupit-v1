@@ -8,23 +8,23 @@ import java.util.*
 @Component
 class SpinUseCase(private val spinRepository: SpinRepository) {
 
-    fun getSpinResultBySpinId(spinId: UUID): SpinResult? {
+    fun getSpinResultBySpinId(spinId: String): SpinResult? {
         return spinRepository.getSpinResultBySpinId(spinId)
     }
 
-    fun getSpinResultBySessionId(sessionId: UUID): SpinResult? {
+    fun getSpinResultBySessionId(sessionId: String): SpinResult? {
         return spinRepository.getSpinResultBySessionId(sessionId)
     }
 
-    fun saveSpinResult(merchantId: String, rewardId: UUID, qrCode: String, sessionId: UUID): SpinResult {
+    fun saveSpinResult(merchantId: String, rewardId: String, qrCode: String, sessionId: String): SpinResult {
         return spinRepository.saveSpinResult(merchantId, rewardId, qrCode, sessionId)
     }
 
-    fun markSpinAsClaimed(spinId: UUID): Boolean {
+    fun markSpinAsClaimed(spinId: String): Boolean {
         return spinRepository.markSpinAsClaimed(spinId)
     }
 
-    fun deleteSpinResult(sessionId: UUID): Boolean {
+    fun deleteSpinResult(sessionId: String): Boolean {
         return spinRepository.deleteSpinResult(sessionId)
     }
 }

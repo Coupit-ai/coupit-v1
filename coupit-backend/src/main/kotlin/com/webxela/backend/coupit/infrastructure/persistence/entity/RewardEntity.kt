@@ -1,23 +1,21 @@
 package com.webxela.backend.coupit.infrastructure.persistence.entity
 
+import com.webxela.backend.coupit.common.utils.generateUniqueIdentifier
 import jakarta.persistence.*
 import java.time.Instant
-import java.time.temporal.ChronoUnit
-import java.util.UUID
 
 @Entity
 @Table(name = "rewards")
 data class RewardEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    val id: Long? = null,
 
     @Column(nullable = false, unique = true)
-    val rewardId: UUID = UUID.randomUUID(),
+    val rewardId: String = generateUniqueIdentifier(),
 
     @Column(nullable = false)
-    val timeStamp: Instant = Instant.now()
-        .truncatedTo(ChronoUnit.SECONDS),
+    val createdAt: Instant = Instant.now(),
 
     @Column(nullable = false)
     val title: String,

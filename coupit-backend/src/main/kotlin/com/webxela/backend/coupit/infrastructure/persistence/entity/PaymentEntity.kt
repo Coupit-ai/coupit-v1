@@ -10,6 +10,9 @@ data class PaymentEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
+    @Column(nullable = false, unique = true)
+    val paymentId: String,
+
     @Column(nullable = false)
     val merchantId: String,
 
@@ -21,9 +24,6 @@ data class PaymentEntity(
 
     @Column(nullable = true)
     val currency: String?,
-
-    @Column(nullable = false, unique = true)
-    val paymentId: String,
 
     @Column(nullable = true)
     val locationId: String?,

@@ -1,32 +1,31 @@
 package com.webxela.backend.coupit.domain.usecase
 
-import com.webxela.backend.coupit.domain.model.Session
+import com.webxela.backend.coupit.domain.model.SpinSession
 import com.webxela.backend.coupit.domain.repo.SessionRepository
 import org.springframework.stereotype.Component
-import java.util.*
 
 
 @Component
 class SessionUseCase(private val sessionRepository: SessionRepository) {
 
-    fun createSession(merchantId: String, transactionId: String): Session {
-        return sessionRepository.createSession(merchantId, transactionId)
+    fun createSession(merchantId: String, paymentId: String): SpinSession {
+        return sessionRepository.createSession(merchantId, paymentId)
     }
 
-    fun getSessionByTransactionId(transactionId: String, merchantId: String): Session? {
-        return sessionRepository.getSession(transactionId, merchantId)
+    fun getSessionByPaymentId(paymentId: String, merchantId: String): SpinSession? {
+        return sessionRepository.getSession(paymentId, merchantId)
     }
 
-    fun getSessionBySessionId(sessionId: UUID): Session? {
+    fun getSessionBySessionId(sessionId: String): SpinSession? {
         return sessionRepository.getSessionBySessionId(sessionId)
     }
 
-    fun markSessionAsUsed(sessionId: UUID): Boolean {
+    fun markSessionAsUsed(sessionId: String): Boolean {
         return sessionRepository.markSessionAsUsed(sessionId)
     }
 
-    fun deleteSession(transactionId: String, merchantId: String): Boolean {
-        return sessionRepository.deleteSession(transactionId, merchantId)
+    fun deleteSession(paymentId: String, merchantId: String): Boolean {
+        return sessionRepository.deleteSession(paymentId, merchantId)
     }
 
 }

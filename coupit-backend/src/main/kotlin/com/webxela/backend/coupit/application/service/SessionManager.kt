@@ -9,7 +9,6 @@ import com.webxela.backend.coupit.domain.usecase.SessionUseCase
 import jakarta.transaction.Transactional
 import org.apache.logging.log4j.LogManager
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class SessionManager(
@@ -22,33 +21,33 @@ class SessionManager(
     }
 
     @Transactional
-    fun createSession(merchantId: String, transactionId: String): SessionResponse {
+    fun createSession(merchantId: String, paymentId: String): SessionResponse {
         // Merchant id should not be blank
         if (merchantId.isBlank()) {
             throw ApiError.BadRequest(message = "Merchant ID cannot be empty.")
         }
 
         // Transaction id should not be blank
-        if (transactionId.isBlank()) {
+        if (paymentId.isBlank()) {
             throw ApiError.BadRequest(message = "Transaction ID cannot be empty.")
         }
 
         try {
             // Early return session data if it already exists otherwise create new one
-            val sessionData = sessionUseCase.getSessionByTransactionId(transactionId, merchantId) ?: run {
-                return@run sessionUseCase.createSession(merchantId, transactionId)
+            val sessionData = sessionUseCase.getSessionByPaymentId(paymentId, merchantId) ?: run {
+                return@run sessionUseCase.createSession(merchantId, paymentId)
             }
 
             val offers = rewardUseCase.getAllOffers(merchantId).map { it.toOfferResponse() }
             return sessionData.toSessionResponse(offers)
 
         } catch (ex: Exception) {
-            logger.error("Error while creating session for merchant $merchantId, and transaction $transactionId: ", ex)
+            logger.error("Error while creating session for merchant $merchantId, and transaction $paymentId: ", ex)
             throw ApiError.InternalError("Failed to create session.", ex)
         }
     }
 
-    fun getSession(sessionId: UUID): SessionResponse {
+    fun getSession(sessionId: String): SessionResponse {
         // Session should not be null
         val sessionData = sessionUseCase.getSessionBySessionId(sessionId)
             ?: throw ApiError.ResourceNotFound(message = "Session with session_id $sessionId does not exist.")

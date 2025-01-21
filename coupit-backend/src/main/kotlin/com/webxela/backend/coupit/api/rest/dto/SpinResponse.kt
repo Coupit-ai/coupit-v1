@@ -1,12 +1,11 @@
 package com.webxela.backend.coupit.api.rest.dto
 
 import java.time.Instant
-import java.util.*
 
 data class SpinResponse(
-    val id: UUID,
+    val id: String,
     val merchantId: String,
-    val sessionId: UUID,
+    val sessionId: String,
     val timeStamp: Instant,
     val offer: RewardResponse,
     val qrCode: String,

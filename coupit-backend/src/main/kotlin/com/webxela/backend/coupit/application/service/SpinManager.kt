@@ -4,7 +4,7 @@ import com.webxela.backend.coupit.api.rest.dto.SpinResponse
 import com.webxela.backend.coupit.api.rest.mappper.SpinMapper.toSpinResponse
 import com.webxela.backend.coupit.common.exception.ApiError
 import com.webxela.backend.coupit.domain.model.Reward
-import com.webxela.backend.coupit.domain.model.Session
+import com.webxela.backend.coupit.domain.model.SpinSession
 import com.webxela.backend.coupit.domain.usecase.RewardUseCase
 import com.webxela.backend.coupit.domain.usecase.SessionUseCase
 import com.webxela.backend.coupit.domain.usecase.SpinUseCase
@@ -27,7 +27,7 @@ class SpinManager(
     }
 
     @Transactional
-    fun performSpin(merchantId: String, sessionId: UUID): SpinResponse {
+    fun performSpin(merchantId: String, sessionId: String): SpinResponse {
         // Merchant id should not be blank
         if (merchantId.isBlank()) {
             throw ApiError.BadRequest(message = "Merchant ID cannot be empty.")
@@ -87,19 +87,19 @@ class SpinManager(
             ?: throw ApiError.ResourceNotFound(message = "No offer available.")
     }
 
-    private fun isValidSession(session: Session, merchantId: String): Boolean {
-        if (session.merchantId != merchantId) {
+    private fun isValidSession(spinSession: SpinSession, merchantId: String): Boolean {
+        if (spinSession.merchantId != merchantId) {
             throw ApiError.BadRequest(message = "Merchant Id $merchantId does not match with provided session.")
         }
 
         val currentTime = Instant.now().truncatedTo(ChronoUnit.SECONDS)
-        if (session.expiresAt.isBefore(currentTime)) {
-            throw ApiError.Unauthorized(message = "Session with session_id ${session.sessionId} has been expired.")
+        if (spinSession.expiresAt.isBefore(currentTime)) {
+            throw ApiError.Unauthorized(message = "Session with session_id ${spinSession.sessionId} has been expired.")
         }
         return true
     }
 
-    fun getSpinResult(spinId: UUID): SpinResponse {
+    fun getSpinResult(spinId: String): SpinResponse {
         val spinResult = spinUseCase.getSpinResultBySpinId(spinId)
             ?: throw ApiError.ResourceNotFound(message = "Spin result with id $spinId does not exist.")
 

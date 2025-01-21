@@ -5,17 +5,17 @@ import com.webxela.backend.coupit.infrastructure.persistence.entity.RewardEntity
 
 object RewardEntityMapper {
 
-    fun RewardEntity.toOffer(): Reward {
+    fun RewardEntity.toReward(): Reward {
         return Reward(
             id = this.id,
             rewardId = this.rewardId,
-            timeStamp = this.timeStamp,
+            timeStamp = this.createdAt,
             title = this.title,
             description = this.description
         )
     }
 
-    fun Reward.toOfferEntity(): RewardEntity {
+    fun Reward.toRewardEntity(): RewardEntity {
         return RewardEntity(
             title = this.title,
             description = this.description

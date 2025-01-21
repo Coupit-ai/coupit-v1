@@ -8,7 +8,6 @@ import com.webxela.backend.coupit.infrastructure.persistence.repo.RewardJpaRepo
 import com.webxela.backend.coupit.infrastructure.persistence.repo.SpinJpaRepo
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 class SpinRepoAdapter(
@@ -16,22 +15,22 @@ class SpinRepoAdapter(
     private val rewardJpaRepo: RewardJpaRepo
 ) : SpinRepository {
 
-    override fun getSpinResultBySpinId(spinId: UUID): SpinResult? {
+    override fun getSpinResultBySpinId(spinId: String): SpinResult? {
         return spinJpaRepo.findSpinEntityBySpinId(spinId)?.toSpinResult()
     }
 
-    override fun getSpinResultBySessionId(sessionId: UUID): SpinResult? {
+    override fun getSpinResultBySessionId(sessionId: String): SpinResult? {
         return spinJpaRepo.findSpinEntityBySessionId(sessionId)?.toSpinResult()
     }
 
     @Transactional
-    override fun saveSpinResult(merchantId: String, rewardId: UUID, qrCode: String, sessionId: UUID): SpinResult {
+    override fun saveSpinResult(merchantId: String, rewardId: String, qrCode: String, sessionId: String): SpinResult {
         val offer = rewardJpaRepo.findByRewardId(rewardId)
             ?: throw IllegalStateException("Offer not found in database")
 
         val spinEntity = SpinEntity(
             merchantId = merchantId,
-            offer = offer,
+            reward = offer,
             qrCode = qrCode,
             sessionId = sessionId
         )
@@ -40,7 +39,7 @@ class SpinRepoAdapter(
     }
 
     @Transactional
-    override fun markSpinAsClaimed(spinId: UUID): Boolean {
+    override fun markSpinAsClaimed(spinId: String): Boolean {
         return when (spinJpaRepo.markSpinAsClaimed(spinId)) {
             0 -> false
             1 -> true
@@ -49,7 +48,7 @@ class SpinRepoAdapter(
     }
 
     @Transactional
-    override fun deleteSpinResult(sessionId: UUID): Boolean {
+    override fun deleteSpinResult(sessionId: String): Boolean {
         return when(spinJpaRepo.deleteBySessionId(sessionId)) {
             0 -> false
             1 -> true

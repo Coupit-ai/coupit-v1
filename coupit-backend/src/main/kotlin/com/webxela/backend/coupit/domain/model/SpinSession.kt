@@ -1,14 +1,13 @@
 package com.webxela.backend.coupit.domain.model
 
 import java.time.Instant
-import java.util.*
 
-data class Session(
-    val id: Long,
-    val timeStamp: Instant?,
-    val sessionId: UUID,
+data class SpinSession(
+    val id: Long? = null,
+    val createdAt: Instant,
+    val sessionId: String,
     val merchantId: String,
-    val transactionId: String,
+    val paymentId: String,
     val expiresAt: Instant,
     val used: Boolean
 )

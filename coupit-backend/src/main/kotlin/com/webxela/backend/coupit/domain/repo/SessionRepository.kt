@@ -1,14 +1,13 @@
 package com.webxela.backend.coupit.domain.repo
 
-import com.webxela.backend.coupit.domain.model.Session
-import java.util.UUID
+import com.webxela.backend.coupit.domain.model.SpinSession
 
 interface SessionRepository {
 
-    fun createSession(merchantId: String, transactionId: String): Session
-    fun getSession(transactionId: String, merchantId: String): Session?
-    fun markSessionAsUsed(sessionId: UUID): Boolean
-    fun getSessionBySessionId(sessionId: UUID): Session?
-    fun deleteSession(transactionId: String, merchantId: String): Boolean
+    fun createSession(merchantId: String, paymentId: String): SpinSession
+    fun getSession(paymentId: String, merchantId: String): SpinSession?
+    fun markSessionAsUsed(sessionId: String): Boolean
+    fun getSessionBySessionId(sessionId: String): SpinSession?
+    fun deleteSession(paymentId: String, merchantId: String): Boolean
 
 }

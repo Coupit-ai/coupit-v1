@@ -6,7 +6,6 @@ import com.webxela.backend.coupit.application.service.SessionManager
 import com.webxela.backend.coupit.common.exception.ApiResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @RestController
 @RequestMapping("/api/v1/session")
@@ -19,14 +18,14 @@ class SessionController(private val sessionManager: SessionManager) {
 
         val session = sessionManager.createSession(
             merchantId = sessionReq.merchantId,
-            transactionId = sessionReq.transactionId
+            paymentId = sessionReq.paymentId
         )
         return ResponseEntity.ok(ApiResponse.success(session))
     }
 
     @GetMapping("/{sessionId}")
     fun getSession(
-        @PathVariable sessionId: UUID
+        @PathVariable sessionId: String
     ): ResponseEntity<ApiResponse<SessionResponse>> {
 
         val session = sessionManager.getSession(sessionId)
