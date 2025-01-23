@@ -1,11 +1,10 @@
 package com.webxela.backend.coupit.domain.model
 
-import java.time.Instant
-
 data class Reward(
-    val id: Long? = null,
-    val rewardId: String,
-    val timeStamp: Instant,
+    val id: String,
+    val merchant: SquareMerchant,
     val title: String,
-    val description: String
+    val description: String,
+    val probability: Double,
+    val validityHours: Int
 )
