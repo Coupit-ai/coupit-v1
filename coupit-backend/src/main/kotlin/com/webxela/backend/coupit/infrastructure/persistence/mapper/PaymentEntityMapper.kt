@@ -12,7 +12,6 @@ object PaymentEntityMapper {
             amount = this.amount,
             currency = this.currency,
             createdAt = this.createdAt,
-            paymentId = this.paymentId,
             locationId = this.locationId,
             orderId = this.orderId
         )
@@ -20,13 +19,13 @@ object PaymentEntityMapper {
 
     fun SquarePayment.toPaymentEntity(): PaymentEntity {
         return PaymentEntity(
+            id = this.id,
             merchantId = this.merchantId,
             amount = this.amount,
             currency = this.currency,
             createdAt = this.createdAt,
-            paymentId = this.paymentId,
             locationId = this.locationId,
-            orderId = this.orderId,
+            orderId = this.orderId
         )
     }
 }

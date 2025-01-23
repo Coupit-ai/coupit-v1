@@ -2,24 +2,26 @@ package com.webxela.backend.coupit.infrastructure.persistence.entity
 
 import com.webxela.backend.coupit.common.utils.generateUniqueIdentifier
 import jakarta.persistence.*
-import java.time.Instant
 
 @Entity
 @Table(name = "rewards")
 data class RewardEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: String = generateUniqueIdentifier(),
 
-    @Column(nullable = false, unique = true)
-    val rewardId: String = generateUniqueIdentifier(),
-
-    @Column(nullable = false)
-    val createdAt: Instant = Instant.now(),
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "merchant_id", nullable = false)
+    val merchant: MerchantEntity,
 
     @Column(nullable = false)
     val title: String,
 
     @Column(nullable = false)
-    val description: String
+    val probability: Double,
+
+    @Column(nullable = false)
+    val description: String,
+
+    @Column(nullable = false)
+    val validityHours: Int
 )

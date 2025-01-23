@@ -2,18 +2,35 @@ package com.webxela.backend.coupit.infrastructure.persistence.mapper
 
 import com.webxela.backend.coupit.domain.model.SpinSession
 import com.webxela.backend.coupit.infrastructure.persistence.entity.SessionEntity
+import com.webxela.backend.coupit.infrastructure.persistence.mapper.MerchantEntityMapper.toMerchantEntity
+import com.webxela.backend.coupit.infrastructure.persistence.mapper.MerchantEntityMapper.toSquareMerchant
+import com.webxela.backend.coupit.infrastructure.persistence.mapper.PaymentEntityMapper.toPaymentEntity
+import com.webxela.backend.coupit.infrastructure.persistence.mapper.PaymentEntityMapper.toSquarePayment
+import com.webxela.backend.coupit.infrastructure.persistence.mapper.SpinEntityMapper.toSpinEntity
+import com.webxela.backend.coupit.infrastructure.persistence.mapper.SpinEntityMapper.toSpinResult
 
 object SessionEntityMapper {
 
-    fun SessionEntity.toSession(): SpinSession {
+    fun SessionEntity.toSpinSession(): SpinSession {
         return SpinSession(
             id = this.id,
-            sessionId = this.sessionId,
-            merchantId = this.merchantId,
-            paymentId = this.paymentId,
             createdAt = this.createdAt,
             expiresAt = this.expiresAt,
-            used = this.used,
+            sessionState = this.sessionState,
+            spin = this.spin?.toSpinResult(),
+            payment = this.payment.toSquarePayment(),
+            merchant = this.merchant.toSquareMerchant()
+        )
+    }
+
+    fun SpinSession.toSessionEntity(): SessionEntity {
+        return SessionEntity(
+            createdAt = this.createdAt,
+            expiresAt = this.expiresAt,
+            sessionState = this.sessionState,
+            spin = this.spin?.toSpinEntity(),
+            payment = this.payment.toPaymentEntity(),
+            merchant = this.merchant.toMerchantEntity()
         )
     }
 }

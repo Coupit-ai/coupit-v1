@@ -2,8 +2,9 @@ package com.webxela.backend.coupit.domain.model
 
 
 data class SquareMerchant(
-    val id: Long? = null,
-    val merchantId: String,
+    val id: String,
+    val sessions: List<SpinSession>,
+    val rewards: List<Reward>,
     val country: String,
     val businessName: String,
     val languageCode: String,
@@ -11,6 +12,6 @@ data class SquareMerchant(
     val status: String,
     val mainLocationId: String,
     val createdAt: String,
-    val oauthToken: OauthToken
+//    val oauthToken: OauthToken
 )
 

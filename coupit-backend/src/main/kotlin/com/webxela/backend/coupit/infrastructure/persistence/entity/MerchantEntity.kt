@@ -5,13 +5,14 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "merchants")
 data class MerchantEntity(
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: String,
 
-    @Column(nullable = false, unique = true, updatable = false)
-    val merchantId: String,
+    @OneToMany(mappedBy = "merchant", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val sessions: MutableSet<SessionEntity> = mutableSetOf(),
+
+    @OneToMany(mappedBy = "merchant", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val rewards: MutableSet<RewardEntity> = mutableSetOf(),
 
     @Column(nullable = false)
     val country: String,
@@ -32,9 +33,9 @@ data class MerchantEntity(
     val mainLocationId: String,
 
     @Column(nullable = false)
-    val createdAt: String,
+    val createdAt: String
 
-    @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    @JoinColumn(name = "oauth_token_id", referencedColumnName = "id")
-    val oauthEntity: OauthEntity
+//    @OneToOne(cascade = [CascadeType.ALL]) //
+//    @JoinColumn(name = "oauth_token_id")   // Will update it later
+//    val oauthEntity: OauthEntity           //
 )

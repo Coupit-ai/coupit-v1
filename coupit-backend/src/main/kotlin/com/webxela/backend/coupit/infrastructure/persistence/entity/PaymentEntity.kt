@@ -1,17 +1,15 @@
 package com.webxela.backend.coupit.infrastructure.persistence.entity
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "payments")
 data class PaymentEntity(
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
-
-    @Column(nullable = false, unique = true)
-    val paymentId: String,
+    val id: String,
 
     @Column(nullable = false)
     val merchantId: String,
