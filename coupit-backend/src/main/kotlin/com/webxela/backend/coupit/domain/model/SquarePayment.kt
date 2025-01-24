@@ -2,7 +2,7 @@ package com.webxela.backend.coupit.domain.model
 
 data class SquarePayment(
     val id: String,
-    val merchantId: String,
+    val merchant: SquareMerchant,
     val createdAt: String?,
     val amount: String?,
     val currency: String?,

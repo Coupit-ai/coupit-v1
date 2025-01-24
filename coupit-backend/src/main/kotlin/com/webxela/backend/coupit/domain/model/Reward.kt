@@ -1,7 +1,9 @@
 package com.webxela.backend.coupit.domain.model
 
+import java.util.UUID
+
 data class Reward(
-    val id: String,
+    val id: UUID? = null,
     val merchant: SquareMerchant,
     val title: String,
     val description: String,

@@ -1,7 +1,9 @@
 package com.webxela.backend.coupit.domain.model
 
+import java.util.UUID
+
 data class OauthToken(
-    val id: Long? = null,
+    val id: UUID? = null,
     val accessToken: String,
     val refreshToken: String,
     val expiresAt: String,
