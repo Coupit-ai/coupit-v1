@@ -17,8 +17,6 @@ object MerchantEntityMapper {
             status = this.status,
             mainLocationId = this.mainLocationId,
             createdAt = this.createdAt,
-            sessions = this.sessions.map { it.toSpinSession() }.toMutableSet(),
-            rewards = this.rewards.map { it.toReward() }.toMutableSet(),
         )
     }
 

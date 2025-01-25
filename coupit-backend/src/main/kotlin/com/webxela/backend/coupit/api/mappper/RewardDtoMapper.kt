@@ -24,7 +24,7 @@ object RewardDtoMapper {
             id = this.id!!,
             createdAt = this.createdAt!!,
             expiresAt = this.expiresAt!!,
-            sessionState = this.sessionState!!
+            used = this.used!!
         )
     }
 

@@ -1,5 +1,6 @@
 package com.webxela.backend.coupit.infra.persistence.adapter
 
+import com.webxela.backend.coupit.domain.model.SpinSession
 import com.webxela.backend.coupit.domain.model.SquareMerchant
 import com.webxela.backend.coupit.infra.persistence.mapper.MerchantEntityMapper.toMerchantEntity
 import com.webxela.backend.coupit.infra.persistence.mapper.MerchantEntityMapper.toSquareMerchant
@@ -16,17 +17,17 @@ class MerchantRepoAdapter(private val merchantJpaRepo: MerchantJpaRepo) {
         val logger: Logger = LogManager.getLogger(MerchantRepoAdapter::class.java)
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     fun getMerchant(merchantId: String): SquareMerchant? {
         return merchantJpaRepo.findById(merchantId).map { it.toSquareMerchant() }.orElse(null)
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun saveOrUpdateMerchant(merchant: SquareMerchant): SquareMerchant {
         return merchantJpaRepo.save(merchant.toMerchantEntity()).toSquareMerchant()
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun deleteMerchant(merchantId: String) {
         return merchantJpaRepo.deleteById(merchantId)
     }

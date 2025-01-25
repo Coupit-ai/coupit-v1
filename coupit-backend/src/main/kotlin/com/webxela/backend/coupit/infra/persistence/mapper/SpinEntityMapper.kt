@@ -16,7 +16,7 @@ object SpinEntityMapper {
             reward = this.reward.toReward(),
             qrCode = this.qrCode,
             expiresAt = this.expiresAt,
-            rewardState = this.rewardState,
+            claimed = this.claimed,
             session = this.session.toSpinSession()
         )
     }

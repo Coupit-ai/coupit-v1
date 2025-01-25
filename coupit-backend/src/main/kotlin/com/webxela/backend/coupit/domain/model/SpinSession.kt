@@ -1,8 +1,7 @@
 package com.webxela.backend.coupit.domain.model
 
-import com.webxela.backend.coupit.domain.enum.SessionState
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 data class SpinSession(
     val id: UUID? = null,
@@ -10,6 +9,5 @@ data class SpinSession(
     val createdAt: Instant? = null,
     val merchant: SquareMerchant,
     val expiresAt: Instant? = null,
-    val sessionState: SessionState? = null,
-    val spin: SpinResult? = null
+    val used: Boolean? = null
 )

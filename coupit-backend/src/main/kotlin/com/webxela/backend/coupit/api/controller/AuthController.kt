@@ -45,12 +45,4 @@ class AuthController(
         )
         return ResponseEntity.ok(ApiResponse.success(response))
     }
-
-//    @GetMapping("/reset/{email}")
-//    fun resetUserPassword(
-//        @PathVariable email: String
-//    ) {
-//
-//    }
-
 }

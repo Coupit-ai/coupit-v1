@@ -1,12 +1,10 @@
 package com.webxela.backend.coupit.infra.persistence.entity
 
-import com.webxela.backend.coupit.domain.enum.SessionState
 import com.webxela.backend.coupit.utils.Constants.SESSION_EXPIRY
-import com.webxela.backend.coupit.utils.generateUniqueIdentifier
 import jakarta.persistence.*
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.UUID
+import java.util.*
 
 
 @Entity
@@ -32,10 +30,5 @@ data class SessionEntity(
         .plus(SESSION_EXPIRY, ChronoUnit.MINUTES),
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    val sessionState: SessionState = SessionState.ACTIVE,
-
-    @OneToOne(mappedBy = "session", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    @JoinColumn(name = "spin_id")
-    val spin: SpinEntity? = null
+    val used: Boolean = false
 )

@@ -1,5 +1,6 @@
 package com.webxela.backend.coupit.infra.persistence.adapter
 
+import com.webxela.backend.coupit.domain.exception.ApiError
 import com.webxela.backend.coupit.domain.model.SpinSession
 import com.webxela.backend.coupit.infra.persistence.mapper.SessionEntityMapper.toSessionEntity
 import com.webxela.backend.coupit.infra.persistence.mapper.SessionEntityMapper.toSpinSession
@@ -17,7 +18,7 @@ class SessionRepoAdapter(private val sessionJpaRepo: SessionJpaRepo) {
         val logger: Logger = LogManager.getLogger(SessionRepoAdapter::class.java)
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun createSession(session: SpinSession): SpinSession? {
         return sessionJpaRepo.save(session.toSessionEntity()).toSpinSession()
     }
@@ -33,5 +34,15 @@ class SessionRepoAdapter(private val sessionJpaRepo: SessionJpaRepo) {
         sessionJpaRepo.flush()
         return session
     }
+
+    @Transactional(readOnly = false)
+    fun markSessionAsUsed(sessionId: UUID) {
+        val session = sessionJpaRepo.findById(sessionId).orElseThrow {
+            ApiError.ResourceNotFound("Session with sessionId $sessionId not found.")
+        }
+        val updatedSession = session.copy(used = true)
+        sessionJpaRepo.saveAndFlush(updatedSession)
+    }
+
 
 }

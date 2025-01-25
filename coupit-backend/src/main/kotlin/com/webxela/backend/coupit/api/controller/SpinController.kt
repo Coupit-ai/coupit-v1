@@ -2,6 +2,8 @@ package com.webxela.backend.coupit.api.controller
 
 
 import com.webxela.backend.coupit.api.dto.SpinConfigResponse
+import com.webxela.backend.coupit.api.dto.SpinRequest
+import com.webxela.backend.coupit.api.dto.SpinResponse
 import com.webxela.backend.coupit.domain.exception.ApiResponse
 import com.webxela.backend.coupit.service.SpinService
 import org.springframework.http.ResponseEntity
@@ -12,26 +14,16 @@ import java.util.UUID
 @RequestMapping("/api/v1/spin")
 class SpinController(private val spinService: SpinService) {
 
-//    @PostMapping
-//    fun performSpin(
-//        @RequestBody spinRequest: SpinRequest
-//    ): ResponseEntity<ApiResponse<SpinResponse>> {
-//
-//        val spinResponse = spinService.performSpin(
-//            merchantId = spinRequest.merchantId,
-//            sessionId = spinRequest.sessionId
-//        )
-//        return ResponseEntity.ok(ApiResponse.success(spinResponse))
-//    }
+    @PostMapping
+    fun performSpin(
+        @RequestBody spinRequest: SpinRequest
+    ): ResponseEntity<ApiResponse<SpinResponse>> {
 
-//    @GetMapping("{spinId}")
-//    fun getSpinResult(
-//        @PathVariable spinId: String
-//    ): ResponseEntity<ApiResponse<SpinResponse>> {
-//
-//        val spinResponse = spinService.getSpinResult(spinId)
-//        return ResponseEntity.ok(ApiResponse.success(spinResponse))
-//    }
+        val spinResponse = spinService.performSpin(
+            sessionId = spinRequest.sessionId
+        )
+        return ResponseEntity.ok(ApiResponse.success(spinResponse))
+    }
 
     @GetMapping("/config/{sessionId}")
     fun getSpinConfig(
@@ -40,5 +32,13 @@ class SpinController(private val spinService: SpinService) {
 
         val spinConfig = spinService.getSpinConfig(sessionId)
         return ResponseEntity.ok(ApiResponse.success(spinConfig))
+    }
+
+    @GetMapping("/redeem/{spinId}")
+    fun redeemReward(
+        @PathVariable spinId: UUID
+    ): ResponseEntity<ApiResponse<SpinResponse>> {
+        val spinResponse = spinService.redeemReward(spinId)
+        return ResponseEntity.ok(ApiResponse.success(spinResponse))
     }
 }

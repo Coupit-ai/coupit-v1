@@ -42,10 +42,12 @@ class SquareOauthService(
             logger.error("Failed to get oauth token")
             return null
         }
+
         val merchantInfo = oauthDataSource.getMerchantInfo(oauthToken = oauthToken) ?: run {
             logger.error("Failed to get merchant info during oauth flow")
             return null
         }
+
         try {
             val user = userRepo.getUserByEmail(merchantInfo.id)
             val data = if (user == null) {
@@ -58,6 +60,7 @@ class SquareOauthService(
                 if (jwtUpdated) jwtToken
                 else throw RuntimeException("Failed to update existing user")
             }
+
             merchantRepo.saveOrUpdateMerchant(merchantInfo)
             val oauthUpdated = userRepo.updateOauthToken(email = merchantInfo.id, oauthToken = oauthToken)
             if (oauthUpdated.not()) {
@@ -77,16 +80,19 @@ class SquareOauthService(
             logger.error("Failed to get refresh token")
             return false
         }
+
         val merchant = merchantRepo.getMerchant(merchantId = oauthToken.merchantId) ?: run {
             logger.error("Failed to get merchant data while fetching refresh token")
             return false
         }
+
         // Update new oauth token
         val updated = userRepo.updateOauthToken(merchant.id, oauthToken)
         if (updated.not()) {
             logger.error("Failed to exchange refresh token")
             return false
         }
+
         return true
     }
 
@@ -104,10 +110,12 @@ class SquareOauthService(
         // We are not verifying the signature for now
         val isFromSquare = true
         if (isFromSquare) {
+
             userRepo.updateOauthToken(requestBody.merchantId, null)
             userRepo.updateJwtToken(requestBody.merchantId, null)
             logger.info("Successfully disconnected from square using webhook")
         } else {
+
             logger.error("Received invalid revoke webhook")
             throw ApiError.Unauthorized("Invalid webhook")
         }
@@ -124,11 +132,13 @@ class SquareOauthService(
 
             val updated = userRepo.updateOauthToken(merchantId, null)
             if (updated) {
+
                 userAuthService.performUserLogout()
                 logger.info("Successfully disconnected from Square")
                 return "Successfully disconnected from Square"
             } else throw RuntimeException("Failed to disconnect from Square")
         } catch (ex: Exception) {
+
             logger.error("Failed to revoke oauth token", ex)
             throw ApiError.Unauthorized("Failed to disconnect from square", ex)
         }

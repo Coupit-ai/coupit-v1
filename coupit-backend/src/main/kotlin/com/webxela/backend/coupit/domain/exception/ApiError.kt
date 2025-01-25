@@ -26,6 +26,15 @@ sealed class ApiError(
         exception = exception?.message
     )
 
+    class ExpiredException(
+        message: String,
+        exception: Exception? = null
+    ) : ApiError(
+        status = HttpStatus.GONE,
+        message = message,
+        exception = exception?.message
+    )
+
     class Unauthorized(
         message: String,
         exception: Exception? = null

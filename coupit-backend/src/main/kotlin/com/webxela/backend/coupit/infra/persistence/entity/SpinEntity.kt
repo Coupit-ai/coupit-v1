@@ -1,6 +1,5 @@
 package com.webxela.backend.coupit.infra.persistence.entity
 
-import com.webxela.backend.coupit.domain.enum.RewardState
 import jakarta.persistence.*
 import java.time.Instant
 import java.util.*
@@ -30,7 +29,6 @@ data class SpinEntity(
     val expiresAt: Instant,
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    val rewardState: RewardState = RewardState.UNUSED
+    val claimed: Boolean = false
 
 )

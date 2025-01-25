@@ -21,6 +21,15 @@ class RewardRepoAdapter(private val rewardJpaRepo: RewardJpaRepo) {
         return rewardJpaRepo.findById(rewardId).map { it.toReward() }.orElse(null)
     }
 
+    @Transactional(readOnly = true)
+    fun getRewardsByMerchantId(merchantId: String): List<Reward> {
+        val rewards = rewardJpaRepo.findAll()
+            .filter { it.merchant.id == merchantId }
+            .map { it.toReward() }
+        rewardJpaRepo.flush()
+        return rewards
+    }
+
     @Transactional
     fun createNewReward(reward: Reward): Reward {
         return rewardJpaRepo.saveAndFlush(reward.toRewardEntity()).toReward()

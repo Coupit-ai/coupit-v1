@@ -8,12 +8,6 @@ data class MerchantEntity(
     @Id
     val id: String,
 
-    @OneToMany(mappedBy = "merchant", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val sessions: MutableSet<SessionEntity> = mutableSetOf(),
-
-    @OneToMany(mappedBy = "merchant", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val rewards: MutableSet<RewardEntity> = mutableSetOf(),
-
     @Column(nullable = false)
     val country: String,
 

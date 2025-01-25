@@ -8,9 +8,9 @@ import com.webxela.backend.coupit.infra.external.repo.OauthDataSourceAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.MerchantRepoAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.PaymentRepoAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.SessionRepoAdapter
-import jakarta.transaction.Transactional
 import org.apache.logging.log4j.LogManager
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
@@ -57,7 +57,7 @@ class SquarePaymentService(
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun savePaymentAndCreateSession(requestBody: PaymentWebhookRequest): UUID? {
         try {
 
@@ -72,21 +72,21 @@ class SquarePaymentService(
             }
 
             val merchant = merchantRepo.getMerchant(requestBody.merchantId) ?: run {
-                logger.error("Merchant not found")
+                logger.error("The merchant in payment webhook does not exist in our DB")
                 return null
             }
 
             val payment = paymentRepo.savePayment(requestBody.toPayment(merchant)) ?: run {
-                logger.error("Cant save payment info")
+                logger.error("Cant save payment info to DB")
                 return null
             }
 
             val session = SpinSession(
                 merchant = merchant,
                 payment = payment
-            ).also { sessionRepo.createSession(it) }
+            ).let { sessionRepo.createSession(it) }
 
-            return session.id
+            return session?.id
 
         } catch (ex: Exception) {
             logger.error("Failed to save payment and create session", ex)
@@ -96,6 +96,6 @@ class SquarePaymentService(
 
     private fun sendFcmNotification(sessionId: UUID) {
         // Send FCM notification to merchant
-
+        logger.info("Sending FCM notification")
     }
 }

@@ -5,7 +5,7 @@ import com.webxela.backend.coupit.domain.model.OauthToken
 import com.webxela.backend.coupit.domain.model.SquareMerchant
 
 object MerchantMapper {
-    fun Merchant.toSquareMerchant(oauthToken: OauthToken): SquareMerchant {
+    fun Merchant.toSquareMerchant(): SquareMerchant {
         return SquareMerchant(
             id = this.id,
             status = this.status,
@@ -14,9 +14,7 @@ object MerchantMapper {
             country = this.country,
             currency = this.currency,
             languageCode = this.languageCode,
-            mainLocationId = this.mainLocationId,
-            sessions = mutableSetOf(),
-            rewards = mutableSetOf()
+            mainLocationId = this.mainLocationId
         )
     }
 }

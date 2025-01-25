@@ -8,7 +8,6 @@ import com.webxela.backend.coupit.api.mappper.SignupDtoMapper.toUser
 import com.webxela.backend.coupit.domain.exception.ApiError
 import com.webxela.backend.coupit.infra.persistence.adapter.UserRepoAdapter
 import com.webxela.backend.coupit.utils.JwtUtils
-import jakarta.transaction.Transactional
 import org.apache.logging.log4j.LogManager
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
@@ -16,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 
 @Service
@@ -31,7 +31,7 @@ class UserAuthService(
         private val logger = LogManager.getLogger(UserAuthService::class.java)
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun registerNewUser(signupRequest: SignupRequest): SignupResponse {
         logger.info("Registering new user with email: $signupRequest.email")
         try {
@@ -49,7 +49,7 @@ class UserAuthService(
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun performUserLogin(email: String, password: String): LoginResponse {
         // Check if user exists
         userRepo.getUserByEmail(email) ?: throw ApiError.ResourceNotFound(
@@ -78,7 +78,7 @@ class UserAuthService(
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun performUserLogout(): String {
         utilityService.getCurrentLoginUser()?.let { user ->
             userRepo.updateJwtToken(user.username, null)

@@ -16,7 +16,7 @@ class OauthDataSourceAdapter(private val oauthTokenDataSource: OauthTokenDataSou
 
     fun getMerchantInfo(oauthToken: OauthToken): SquareMerchant? {
         return oauthTokenDataSource.getMerchantInfo(oauthToken.merchantId, oauthToken.accessToken)
-            ?.toSquareMerchant(oauthToken)
+            ?.toSquareMerchant()
     }
 
     fun exchangeRefreshToken(refreshToken: String): OauthToken? {

@@ -6,7 +6,6 @@ import com.webxela.backend.coupit.infra.persistence.mapper.MerchantEntityMapper.
 import com.webxela.backend.coupit.infra.persistence.mapper.MerchantEntityMapper.toSquareMerchant
 import com.webxela.backend.coupit.infra.persistence.mapper.PaymentEntityMapper.toPaymentEntity
 import com.webxela.backend.coupit.infra.persistence.mapper.PaymentEntityMapper.toSquarePayment
-import com.webxela.backend.coupit.infra.persistence.mapper.SpinEntityMapper.toSpinResult
 
 object SessionEntityMapper {
 
@@ -15,8 +14,7 @@ object SessionEntityMapper {
             id = this.id,
             createdAt = this.createdAt,
             expiresAt = this.expiresAt,
-            sessionState = this.sessionState,
-            spin = this.spin?.toSpinResult(),
+            used = this.used,
             payment = this.payment.toSquarePayment(),
             merchant = this.merchant.toSquareMerchant()
         )
