@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.server.MethodNotAllowedException
 import org.springframework.web.server.ServerWebInputException
+import org.springframework.web.servlet.resource.NoResourceFoundException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -122,5 +123,15 @@ class GlobalExceptionHandler {
         return ResponseEntity(response, HttpStatus.NOT_FOUND)
     }
 
+    @ExceptionHandler(NoResourceFoundException::class)
+    fun userNameNotFoundException(ex: NoResourceFoundException): ResponseEntity<ApiResponse<Nothing>> {
+        logger.error(ex.message, ex)
+        val response = ApiResponse.error<Nothing>(
+            status = HttpStatus.BAD_REQUEST,
+            message = "Static resources could not be found.",
+            exception = ex.message
+        )
+        return ResponseEntity(response, HttpStatus.BAD_REQUEST)
+    }
 
 }

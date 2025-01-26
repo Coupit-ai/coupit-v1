@@ -1,6 +1,5 @@
 package com.webxela.backend.coupit.infra.persistence.entity
 
-import com.webxela.backend.coupit.utils.generateUniqueIdentifier
 import jakarta.persistence.*
 import java.util.UUID
 

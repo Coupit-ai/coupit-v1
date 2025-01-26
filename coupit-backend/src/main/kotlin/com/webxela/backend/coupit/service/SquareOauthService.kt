@@ -27,17 +27,18 @@ class SquareOauthService(
         private val logger = LogManager.getLogger(SquareOauthService::class.java)
     }
 
-    fun buildSquareOauthUrl(): String {
+    fun buildSquareOauthUrl(state: String): String {
         return "${squareConfig.authorisationUri}?" +
                 "client_id=${squareConfig.clientId}&" +
                 "response_type=code&" +
                 "scope=${squareConfig.scopes.joinToString(",")}&" +
                 "redirect_uri=${squareConfig.redirectUri}&" +
-                "session=false"
+                "session=false&" +
+                "state=$state"
     }
 
     @Transactional
-    fun processSquareOauthCallback(code: String): String? {
+    fun processSquareOauthCallback(code: String, state: String): String? {
         val oauthToken = oauthDataSource.exchangeAuthorizationCode(code = code) ?: run {
             logger.error("Failed to get oauth token")
             return null
