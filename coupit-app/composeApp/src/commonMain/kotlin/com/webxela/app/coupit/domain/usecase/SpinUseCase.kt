@@ -15,6 +15,10 @@ class SpinUseCase(private val spinRepo: SpinRepo) {
         return spinRepo.performSpin(merchantId, sessionId)
     }
 
+//    suspend fun getSpinConfig(sessionId: String):  ApiResponse<SpinResult, DataError.Remote> {
+//        return
+//    }
+
     suspend fun getSpinResult(spinId: String): ApiResponse<SpinResult, DataError.Remote> {
 
         return spinRepo.getSpinResult(spinId)

@@ -1,9 +1,10 @@
 import UIKit
-import ComposeApp
+import Rinku
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
+    let rinku = RinkuIos(deepLinkFilter: nil, deepLinkMapper: nil) // Initialize Rinku
 
     func application(
         _ application: UIApplication,
@@ -14,6 +15,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window.rootViewController = MainKt.MainViewController()
             window.makeKeyAndVisible()
         }
+        return true
+    }
+
+    func application(
+        _ app: UIApplication,
+        open url: URL,
+        options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+    ) -> Bool {
+        rinku.onDeepLinkReceived(url: url.absoluteString)
         return true
     }
 }

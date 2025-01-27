@@ -1,6 +1,5 @@
 package com.webxela.app.coupit.core.data
 
-import co.touchlab.kermit.Logger
 import com.webxela.app.coupit.core.domain.ApiResponse
 import com.webxela.app.coupit.core.domain.DataError
 import com.webxela.app.coupit.core.domain.Error

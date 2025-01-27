@@ -24,6 +24,7 @@ kotlin {
         it.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            export(libs.theolm.rinku)
         }
     }
 
@@ -54,6 +55,8 @@ kotlin {
             implementation(libs.composeIcons.featherIcons)
             implementation(libs.androidx.compose.navigation)
             implementation(libs.alexzhirkevich.qrose)
+            api(libs.theolm.rinku)
+            implementation(libs.theolm.rinku.compose.ext)
         }
 
         commonTest.dependencies {

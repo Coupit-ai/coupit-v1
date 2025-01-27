@@ -3,7 +3,7 @@ package com.webxela.app.coupit.data.repo
 import com.webxela.app.coupit.core.domain.ApiResponse
 import com.webxela.app.coupit.core.domain.DataError
 import com.webxela.app.coupit.core.domain.map
-import com.webxela.app.coupit.data.model.mapper.SpinResultMapper.toSpinResult
+import com.webxela.app.coupit.data.model.mapper.SpinResultDtoMapper.toSpinResult
 import com.webxela.app.coupit.data.remote.SpinManager
 import com.webxela.app.coupit.domain.model.SpinResult
 import com.webxela.app.coupit.domain.repo.SpinRepo

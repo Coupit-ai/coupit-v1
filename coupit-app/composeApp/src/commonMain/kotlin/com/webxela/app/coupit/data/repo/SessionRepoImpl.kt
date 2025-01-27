@@ -3,7 +3,7 @@ package com.webxela.app.coupit.data.repo
 import com.webxela.app.coupit.core.domain.ApiResponse
 import com.webxela.app.coupit.core.domain.DataError
 import com.webxela.app.coupit.core.domain.map
-import com.webxela.app.coupit.data.model.mapper.SessionMapper.toSession
+import com.webxela.app.coupit.data.model.mapper.SessionDtoMapper.toSession
 import com.webxela.app.coupit.data.remote.SessionManager
 import com.webxela.app.coupit.domain.model.Session
 import com.webxela.app.coupit.domain.repo.SessionRepo

@@ -7,5 +7,7 @@ import org.koin.dsl.module
 
 internal actual val platformModule: Module
     get() = module {
-        single<HttpClientEngine> { OkHttp.create() }
+        single<HttpClientEngine> {
+            OkHttp.create()
+        }
     }

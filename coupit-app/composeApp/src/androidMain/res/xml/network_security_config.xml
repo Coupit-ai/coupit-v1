@@ -2,6 +2,6 @@
 <network-security-config>
     <!-- Allow cleartext (HTTP) traffic for specific domains -->
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">192.168.31.53</domain> <!-- your local server IP -->
+        <domain includeSubdomains="true">52.172.220.174</domain> <!-- your local server IP -->
     </domain-config>
 </network-security-config>
