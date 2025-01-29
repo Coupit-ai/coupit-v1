@@ -35,6 +35,7 @@ class UtilityService(private val userRepo: UserRepoAdapter) {
 
     fun buildErrorUri(errorMessage: String): String {
         return Constants.DEEPLINK_URI +
-                "error=${URLEncoder.encode(errorMessage, "UTF-8")}"
+                "/oauth" +
+                "?error=${URLEncoder.encode(errorMessage, "UTF-8")}"
     }
 }
