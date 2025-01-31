@@ -1,6 +1,6 @@
 package com.webxela.backend.coupit.infra.persistence.entity
 
-import com.webxela.backend.coupit.utils.Constants.SESSION_EXPIRY
+import com.webxela.backend.coupit.utils.AppConstants.SESSION_EXPIRY
 import jakarta.persistence.*
 import java.time.Instant
 import java.time.temporal.ChronoUnit

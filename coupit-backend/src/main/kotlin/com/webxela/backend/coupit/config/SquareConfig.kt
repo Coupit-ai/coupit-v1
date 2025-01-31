@@ -3,7 +3,7 @@ package com.webxela.backend.coupit.config
 import com.squareup.square.Environment
 import com.squareup.square.SquareClient
 import com.squareup.square.authentication.BearerAuthModel
-import com.webxela.backend.coupit.utils.Constants
+import com.webxela.backend.coupit.utils.AppConstants
 import io.github.cdimascio.dotenv.dotenv
 import org.apache.logging.log4j.LogManager
 import org.springframework.context.annotation.Configuration
@@ -17,7 +17,7 @@ class SquareConfig {
 
     private final val dotEnv = dotenv()
 
-    val scopes = Constants.SQUARE_CLIENT_SCOPES
+    val scopes = AppConstants.SQUARE_CLIENT_SCOPES
 
     private val serverUrl = dotEnv["SERVER_URL"]
         ?: throw IllegalStateException("Environment variable SERVER_URL is missing")
@@ -51,8 +51,8 @@ class SquareConfig {
 
     private val baseUri: String
         get() = when (clientEnvironment) {
-            Environment.SANDBOX -> Constants.SQUARE_SANDBOX_URI
-            Environment.PRODUCTION -> Constants.SQUARE_PROD_URI
+            Environment.SANDBOX -> AppConstants.SQUARE_SANDBOX_URI
+            Environment.PRODUCTION -> AppConstants.SQUARE_PROD_URI
             else -> throw IllegalStateException("Unexpected environment: $clientEnvironment")
         }
 

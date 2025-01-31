@@ -1,8 +1,7 @@
 package com.webxela.backend.coupit.api.validator
 
-import com.webxela.backend.coupit.api.dto.auth.SignupRequest
 import com.webxela.backend.coupit.domain.exception.ApiError
-import com.webxela.backend.coupit.utils.Constants
+import com.webxela.backend.coupit.utils.AppConstants
 import org.apache.logging.log4j.LogManager
 import org.springframework.stereotype.Component
 
@@ -15,7 +14,7 @@ class SignupValidator {
 
     fun validate(signupRequest: com.webxela.backend.coupit.api.dto.auth.SignupRequest) {
 
-        if (signupRequest.email.matches(Constants.EMAIL_PATTERN.toRegex()).not()) {
+        if (signupRequest.email.matches(AppConstants.EMAIL_PATTERN.toRegex()).not()) {
             com.webxela.backend.coupit.api.validator.SignupValidator.Companion.logger.error("Invalid email address format")
             throw ApiError.BadRequest("Invalid email address")
         }

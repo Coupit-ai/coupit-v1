@@ -15,9 +15,9 @@ class JwtUtils {
         private val logger = LogManager.getLogger(JwtUtils::class.java)
     }
 
-    private val jwtSecret = Constants.JWT_SECRET
-    private val expiry = Constants.JWT_EXPIRY
-    private val issuer = Constants.JWT_ISSUER
+    private val jwtSecret = AppConstants.JWT_SECRET
+    private val expiry = AppConstants.JWT_EXPIRY
+    private val issuer = AppConstants.JWT_ISSUER
 
     private fun getKey(): Algorithm? {
         return Algorithm.HMAC512(jwtSecret)
