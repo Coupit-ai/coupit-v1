@@ -35,7 +35,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("io.github.cdimascio:dotenv-kotlin:6.5.0")
-    implementation("com.squareup:square:42.1.0.20241218")
+    implementation("com.squareup:square:43.0.0.20250123")
     implementation("com.auth0:java-jwt:4.4.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
 }
