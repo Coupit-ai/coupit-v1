@@ -24,13 +24,14 @@ import com.webxela.app.coupit.presentation.component.HomeTopBar
 import com.webxela.app.coupit.presentation.features.home.viewmodel.HomeUiEvent
 import com.webxela.app.coupit.presentation.features.home.viewmodel.HomeUiState
 import com.webxela.app.coupit.presentation.features.home.viewmodel.HomeViewModel
+import com.webxela.app.coupit.core.presentation.navigation.LocalErrorHandler
+import dev.theolm.rinku.Rinku
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreenRoot(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = koinViewModel(),
-    onNavigateToWheelScreen: (sessionId: String) -> Unit,
     onNavigateToScannerScreen: () -> Unit
 ) {
 
@@ -40,7 +41,6 @@ fun HomeScreenRoot(
         modifier = modifier,
         uiState = uiState,
         uiEvent = viewModel::onEvent,
-        onNavigateToWheelScreen = onNavigateToWheelScreen,
         onNavigateToScannerScreen = onNavigateToScannerScreen
     )
 }
@@ -50,9 +50,10 @@ private fun HomeScreen(
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
     uiEvent: (HomeUiEvent) -> Unit,
-    onNavigateToWheelScreen: (sessionId: String) -> Unit,
     onNavigateToScannerScreen: () -> Unit
 ) {
+
+    val errorHandler = LocalErrorHandler.current
 
     var sessionString by remember { mutableStateOf("") }
 
@@ -91,11 +92,18 @@ private fun HomeScreen(
 
             Button(
                 onClick = {
-                    if (sessionString.isNotEmpty())
-                        onNavigateToWheelScreen(sessionString)
+                    Rinku.handleDeepLink("coupit://callback/oauth")
                 }
             ) {
                 Text("Start Test")
+            }
+
+            Button(
+                onClick = {
+                    errorHandler.showError("I am the error message")
+                }
+            ) {
+                Text("Show Error")
             }
         }
     }

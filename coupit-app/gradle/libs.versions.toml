@@ -3,14 +3,15 @@ kotlin = "2.1.0"
 compose = "1.7.3"
 agp = "8.8.0"
 androidx-activityCompose = "1.10.0"
-androidx-uiTest = "1.7.6"
+androidx-uiTest = "1.7.7"
 kermit = "2.0.5"
 kotlinx-coroutines = "1.10.1"
 ktor = "3.0.3"
 androidx-lifecycle = "2.9.0-alpha02"
-kotlinx-serialization = "1.7.3"
+kotlinx-serialization = "1.8.0"
 koin = "4.0.1"
 coil = "3.0.4"
+kvault = "1.12.0"
 multiplatformSettings = "1.3.0"
 kotlinx-datetime = "0.6.1"
 composeIcons = "1.1.1"
@@ -47,6 +48,7 @@ koin-compose-vm = { module = "io.insert-koin:koin-compose-viewmodel", version.re
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 coil = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil" }
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+liftric-kvault = { module = "com.liftric:kvault", version.ref = "kvault" }
 multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 composeIcons-featherIcons = { module = "br.com.devsrsouza.compose.icons:feather", version.ref = "composeIcons" }

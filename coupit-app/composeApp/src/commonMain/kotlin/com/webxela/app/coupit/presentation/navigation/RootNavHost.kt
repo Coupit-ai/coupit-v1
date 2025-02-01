@@ -9,11 +9,13 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.webxela.app.coupit.presentation.features.auth.screen.AuthScreen
+import com.webxela.app.coupit.presentation.features.auth.screen.RootAuthScreen
 import com.webxela.app.coupit.presentation.features.home.screen.HomeScreenRoot
 import com.webxela.app.coupit.presentation.features.reward.screen.RewardScreenRoot
 import com.webxela.app.coupit.presentation.features.screen.ScannerScreenRoot
@@ -26,6 +28,7 @@ fun RootNavHost(
 ) {
 
     val navController = rememberNavController()
+    HandleDeepLinks(navController)
 
     NavHost(
         navController = navController,
@@ -38,15 +41,26 @@ fun RootNavHost(
     ) {
 
         composable<NavDestinations.Home> {
-            AuthScreen()
-//            HomeScreenRoot(
-//                onNavigateToWheelScreen = { sessionId ->
-//                    navController.navigate(NavDestinations.Wheel(sessionId))
-//                },
-//                onNavigateToScannerScreen = {
-//                    navController.navigate(NavDestinations.Scanner)
-//                }
-//            )
+            HomeScreenRoot(
+                onNavigateToScannerScreen = {
+                    navController.navigate(NavDestinations.Scanner)
+                }
+            )
+        }
+
+        dialog<NavDestinations.Auth>(
+            dialogProperties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            )
+        ) { backStackEntry ->
+            val auth = backStackEntry.toRoute<NavDestinations.Auth>()
+            RootAuthScreen(
+                token = auth.token,
+                state = auth.state,
+                error = auth.error,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
 
         composable<NavDestinations.Wheel> { backstackEntry ->

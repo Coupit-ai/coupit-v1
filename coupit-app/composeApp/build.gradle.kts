@@ -41,6 +41,7 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.client.serialization)
             implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.serialization.json)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
@@ -57,6 +58,7 @@ kotlin {
             implementation(libs.alexzhirkevich.qrose)
             api(libs.theolm.rinku)
             implementation(libs.theolm.rinku.compose.ext)
+            implementation(libs.liftric.kvault)
         }
 
         commonTest.dependencies {
@@ -90,7 +92,7 @@ android {
         minSdk = 24
         targetSdk = 35
 
-        applicationId = "com.webxela.app.coupit.androidApp"
+        applicationId = "com.webxela.app.coupit"
         versionCode = 1
         versionName = "1.0.0"
 

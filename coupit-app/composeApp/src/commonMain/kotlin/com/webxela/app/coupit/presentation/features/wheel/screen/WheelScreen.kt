@@ -42,7 +42,7 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun WheelScreenRoot(
     modifier: Modifier = Modifier,
-    sessionId: String,
+    sessionId: String?,
     viewModel: WheelViewModel = koinViewModel(),
     navigateToRewardScreen: (spinId: String) -> Unit
 ) {
@@ -52,7 +52,7 @@ fun WheelScreenRoot(
         modifier = modifier,
         uiState = uiState,
         uiEvent = viewModel::onEvent,
-       sessionId = sessionId,
+        sessionId = sessionId,
         navigateToRewardScreen = navigateToRewardScreen
     )
 
@@ -64,7 +64,7 @@ private fun WheelScreen(
     modifier: Modifier = Modifier,
     uiState: WheelUiState,
     uiEvent: (WheelUiEvent) -> Unit,
-    sessionId: String,
+    sessionId: String?,
     navigateToRewardScreen: (spinId: String) -> Unit
 ) {
 
@@ -74,6 +74,7 @@ private fun WheelScreen(
 
     var spinItemToId by remember { mutableStateOf("") }
     var spinId by remember { mutableStateOf("") }
+
     LaunchedEffect(uiState.spinResponse) {
         if (uiState.spinResponse != null) {
             spinItemToId = uiState.spinResponse.data.offer.offerId

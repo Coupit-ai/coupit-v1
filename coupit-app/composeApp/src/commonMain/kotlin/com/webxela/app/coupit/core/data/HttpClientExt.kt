@@ -1,10 +1,14 @@
 package com.webxela.app.coupit.core.data
 
+import co.touchlab.kermit.Logger
 import com.webxela.app.coupit.core.domain.ApiResponse
 import com.webxela.app.coupit.core.domain.DataError
 import com.webxela.app.coupit.core.domain.Error
+import com.webxela.app.coupit.core.utils.AppConstant
+import dev.theolm.rinku.Rinku
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
+import io.ktor.client.network.sockets.ConnectTimeoutException
 import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
@@ -28,15 +32,17 @@ internal suspend inline fun <reified T> safeCall(
 ): ApiResponse<T, DataError.Remote> {
     val response = try {
         execute()
+    } catch (ex: ConnectTimeoutException) {
+        return ApiResponse.Error(DataError.Remote.RequestTimeout("Request timed out."))
     } catch (ex: SocketTimeoutException) {
         return ApiResponse.Error(DataError.Remote.RequestTimeout("Request timed out."))
     } catch (ex: UnresolvedAddressException) {
         return ApiResponse.Error(DataError.Remote.NoInternet("No internet connection."))
     } catch (ex: Exception) {
+        Logger.e(ex.message.toString())
         coroutineContext.ensureActive()
         return ApiResponse.Error(DataError.Remote.UnknownError(ex.message ?: "Unknown Error"))
     }
-
     return responseToResult(response)
 }
 
@@ -63,6 +69,11 @@ private suspend fun parseErrorResponse(response: HttpResponse): ApiResponse.Erro
             429 -> ApiResponse.Error(DataError.Remote.TooManyRequests(errorResponse.message))
             404 -> ApiResponse.Error(DataError.Remote.NotFound(errorResponse.message))
             in 500..599 -> ApiResponse.Error(DataError.Remote.ServerError(errorResponse.message))
+            401, 403 -> {
+                Rinku.handleDeepLink("${AppConstant.DEEPLINK_URL}/oauth")
+                ApiResponse.Error(DataError.Remote.Unauthorised(errorResponse.message))
+            }
+
             else -> ApiResponse.Error(DataError.Remote.UnknownError(errorResponse.message))
         }
     } catch (e: Exception) {

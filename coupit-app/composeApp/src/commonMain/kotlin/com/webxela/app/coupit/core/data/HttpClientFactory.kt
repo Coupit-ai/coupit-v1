@@ -2,6 +2,7 @@ package com.webxela.app.coupit.core.data
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
@@ -15,7 +16,7 @@ import kotlinx.serialization.json.Json
 internal object HttpClientFactory {
 
     internal fun create(engine: HttpClientEngine): HttpClient {
-        return HttpClient(engine) {
+        return HttpClient(CIO) {
             followRedirects = false
             install(ContentNegotiation) {
                 json(

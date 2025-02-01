@@ -5,6 +5,7 @@ sealed interface DataError : Error {
         data class RequestTimeout(val message: String) : Remote
         data class TooManyRequests(val message: String) : Remote
         data class NoInternet(val message: String) : Remote
+        data class Unauthorised(val message: String) : Remote
         data class ServerError(val message: String) : Remote
         data class SerializationError(val message: String) : Remote
         data class NotFound(val message: String) : Remote

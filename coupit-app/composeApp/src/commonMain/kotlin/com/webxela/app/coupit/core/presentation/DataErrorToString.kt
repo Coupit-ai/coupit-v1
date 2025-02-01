@@ -12,6 +12,7 @@ fun DataError.toErrorMessage(): String {
         is DataError.Remote.ServerError -> this.message
         is DataError.Remote.TooManyRequests -> this.message
         is DataError.Remote.UnknownError -> this.message
+        is DataError.Remote.Unauthorised -> this.message
     } ?: "Unknown error occurred."
 
     return message

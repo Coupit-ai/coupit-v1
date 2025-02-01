@@ -1,21 +1,31 @@
 package com.webxela.app.coupit
 
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import co.touchlab.kermit.Logger
+import androidx.compose.runtime.rememberCoroutineScope
+import com.webxela.app.coupit.core.presentation.navigation.ErrorHandler
+import com.webxela.app.coupit.core.presentation.navigation.LocalErrorHandler
 import com.webxela.app.coupit.presentation.navigation.NavDestinations
 import com.webxela.app.coupit.presentation.navigation.RootNavHost
 import com.webxela.app.coupit.presentation.theme.AppTheme
-import dev.theolm.rinku.DeepLink
-import dev.theolm.rinku.compose.ext.DeepLinkListener
+import kotlinx.coroutines.launch
 
 @Composable
-internal fun App() = AppTheme {
-    var deepLink by remember { mutableStateOf<DeepLink?>(null) }
-    DeepLinkListener { deepLink = it }
+internal fun App() {
+    val snackBarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
-    RootNavHost(startDestination = NavDestinations.Home)
+    CompositionLocalProvider(LocalErrorHandler provides ErrorHandler { message ->
+        coroutineScope.launch { snackBarHostState.showSnackbar(message) }
+    }) {
+        AppTheme {
+            Scaffold(snackbarHost = { SnackbarHost(snackBarHostState) }) {
+                RootNavHost(startDestination = NavDestinations.Home)
+            }
+        }
+    }
 }

@@ -10,4 +10,5 @@ class SquareUseCase(private val squareRepo: SquareRepo) {
     suspend fun connectWithSquare(state: String): ApiResponse<Connection, DataError.Remote> {
         return squareRepo.connectWithSquare(state)
     }
+    
 }

@@ -9,11 +9,18 @@ sealed interface NavDestinations {
     data object Home: NavDestinations
 
     @Serializable
-    data class Wheel(val sessionId: String): NavDestinations
+    data class Wheel(val sessionId: String?): NavDestinations
 
     @Serializable
     data object Scanner: NavDestinations
 
     @Serializable
     data class Reward(val spinId: String): NavDestinations
+
+    @Serializable
+    data class Auth(
+        val token: String?,
+        val state: String?,
+        val error: String?
+    ): NavDestinations
 }

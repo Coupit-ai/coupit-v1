@@ -27,9 +27,14 @@ class WheelViewModel(
         }
     }
 
-    private fun getWheelConfig(sessionId: String) = viewModelScope.launch {
+    private fun getWheelConfig(sessionId: String?) = viewModelScope.launch {
 
         _wheelUiState.update { it.copy(isLoading = true) }
+        if (sessionId == null) {
+            _wheelUiState.update { it.copy(errorMessage = "Something went wrong, Try again") }
+            return@launch
+        }
+
         sessionUseCase.createSession("merchantId", "transactionId")
             .onSuccess { session ->
                 _wheelUiState.update {

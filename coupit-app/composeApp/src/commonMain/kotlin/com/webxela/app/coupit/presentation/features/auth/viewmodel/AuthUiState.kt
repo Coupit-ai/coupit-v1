@@ -5,5 +5,6 @@ import com.webxela.app.coupit.domain.model.Connection
 data class AuthUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val connectionResponse: Connection? = null
+    val connectionResponse: Connection? = null,
+    val oauthFlowResponse: Boolean = false
 )
