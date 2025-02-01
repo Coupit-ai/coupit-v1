@@ -8,7 +8,7 @@ sealed interface AuthUiEvent {
 
     data object ConnectWithSquare: AuthUiEvent
 
-    data class HandleAuthCallback(
+    data class HandleOauthDeeplink(
         val token: String?,
         val state: String?,
         val error: String?

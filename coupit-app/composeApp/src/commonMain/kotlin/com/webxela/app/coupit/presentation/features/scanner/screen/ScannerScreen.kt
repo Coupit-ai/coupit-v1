@@ -1,4 +1,4 @@
-package com.webxela.app.coupit.presentation.features.screen
+package com.webxela.app.coupit.presentation.features.scanner.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

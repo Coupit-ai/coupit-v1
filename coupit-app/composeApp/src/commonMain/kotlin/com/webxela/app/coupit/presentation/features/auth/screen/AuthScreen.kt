@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSizeIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,8 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -29,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import co.touchlab.kermit.Logger
 import com.webxela.app.coupit.presentation.component.LoadingButton
 import com.webxela.app.coupit.presentation.features.auth.viewmodel.AuthUiEvent
 import com.webxela.app.coupit.presentation.features.auth.viewmodel.AuthUiState
@@ -86,7 +84,7 @@ private fun AuthScreen(
     }
 
     LaunchedEffect(key1 = token, key2 = state, key3 = error) {
-        uiEvent(AuthUiEvent.HandleAuthCallback(token, state, error))
+        uiEvent(AuthUiEvent.HandleOauthDeeplink(token, state, error))
     }
 
     LaunchedEffect(uiState.oauthFlowResponse) {
@@ -122,7 +120,8 @@ private fun AuthScreen(
 
     Surface(
         modifier = modifier
-            .fillMaxWidth(0.8f)
+            .fillMaxWidth(.8f)
+            .requiredSizeIn(minWidth = 350.dp)
             .padding(16.dp),
         shape = RoundedCornerShape(LARGE_CORNER_RADIUS),
     ) {

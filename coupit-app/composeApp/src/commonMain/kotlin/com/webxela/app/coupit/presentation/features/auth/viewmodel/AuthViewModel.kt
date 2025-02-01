@@ -27,18 +27,17 @@ class AuthViewModel(
     fun onEvent(event: AuthUiEvent) {
         when (event) {
             is AuthUiEvent.ConnectWithSquare -> connectWithSquare()
-            is AuthUiEvent.HandleAuthCallback -> handleAuthCallback(
+            is AuthUiEvent.ResetErrorMessage -> _authUiState.update { it.copy(errorMessage = null) }
+            is AuthUiEvent.ResetConnectionResp -> _authUiState.update { it.copy(connectionResponse = null) }
+            is AuthUiEvent.HandleOauthDeeplink -> handleOauthDeeplink(
                 event.token,
                 event.state,
                 event.error
             )
-
-            is AuthUiEvent.ResetErrorMessage -> _authUiState.update { it.copy(errorMessage = null) }
-            is AuthUiEvent.ResetConnectionResp -> _authUiState.update { it.copy(connectionResponse = null) }
         }
     }
 
-    private fun handleAuthCallback(
+    private fun handleOauthDeeplink(
         token: String?, state: String?, error: String?
     ) = viewModelScope.launch {
             if (token != null && state != null) {
@@ -91,7 +90,7 @@ class AuthViewModel(
                 _authUiState.update {
                     it.copy(
                         connectionResponse = connection,
-                        isLoading = false
+//                        isLoading = false
                     )
                 }
             }
