@@ -14,5 +14,5 @@ data class User(
     val jwtToken: String?,
     val oauthToken: OauthToken?,
     val fcmToken: String?,
-    val deviceType: DeviceType?
+    val deviceType: DeviceType
 )

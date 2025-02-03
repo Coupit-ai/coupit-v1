@@ -2,6 +2,7 @@ package com.webxela.backend.coupit.api.mappper
 
 import com.webxela.backend.coupit.api.dto.auth.SignupRequest
 import com.webxela.backend.coupit.api.dto.auth.SignupResponse
+import com.webxela.backend.coupit.domain.enum.DeviceType
 import com.webxela.backend.coupit.domain.model.OauthToken
 import com.webxela.backend.coupit.domain.model.SquareMerchant
 import com.webxela.backend.coupit.domain.model.User
@@ -33,7 +34,7 @@ object SignupDtoMapper {
             oauthToken = oauthToken,
             createdAt = null,
             fcmToken = null,
-            deviceType = null
+            deviceType = DeviceType.UNKNOWN
         )
     }
 
@@ -42,7 +43,7 @@ object SignupDtoMapper {
             firstName = this.businessName,
             lastName = null,
             email = this.id,
-            password = UUID.randomUUID().toString() // Generate a random password
+            password = UUID.randomUUID().toString()
         )
     }
 }
