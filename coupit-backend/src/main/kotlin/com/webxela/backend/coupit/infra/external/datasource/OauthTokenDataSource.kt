@@ -39,7 +39,7 @@ class OauthTokenDataSource(private val squareConfig: SquareConfig) {
         return try {
             client.merchantsApi.retrieveMerchant(merchantId).merchant
         } catch (ex: Exception) {
-            logger.error("Failed to retrieve merchant info from square", ex)
+            logger.error("Failed to retrieve merchant info from square: ${ex.message}", ex)
             null
         }
     }
@@ -56,7 +56,7 @@ class OauthTokenDataSource(private val squareConfig: SquareConfig) {
         return try {
             client.oAuthApi.obtainToken(body)
         } catch (ex: Exception) {
-            logger.error("Failed to exchange refresh token with square", ex)
+            logger.error("Failed to exchange refresh token with square: ${ex.message}", ex)
             null
         }
     }
@@ -87,7 +87,7 @@ class OauthTokenDataSource(private val squareConfig: SquareConfig) {
                 squareSign, squareWebhookUrl
             )
         } catch (ex: Exception) {
-            logger.error("Failed to validate webhook signature", ex)
+            logger.error("Failed to validate webhook signature: ${ex.message}", ex)
             return false
         }
     }

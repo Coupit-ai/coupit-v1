@@ -16,11 +16,11 @@ class SpinController(private val spinService: SpinService) {
 
     @PostMapping
     fun performSpin(
-        @RequestBody spinRequest: SpinRequest
+        @RequestBody requestBody: SpinRequest
     ): ResponseEntity<ApiResponse<SpinResponse>> {
 
         val spinResponse = spinService.performSpin(
-            sessionId = spinRequest.sessionId
+            sessionId = requestBody.sessionId
         )
         return ResponseEntity.ok(ApiResponse.success(spinResponse))
     }

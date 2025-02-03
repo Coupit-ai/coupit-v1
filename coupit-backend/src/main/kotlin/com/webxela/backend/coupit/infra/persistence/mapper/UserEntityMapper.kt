@@ -16,7 +16,9 @@ object UserEntityMapper {
             password = this.password,
             jwtToken = this.jwtToken,
             createdAt = this.createdAt,
-            oauthToken = this.oauthTokenEntity?.toOauthToken()
+            oauthToken = this.oauthTokenEntity?.toOauthToken(),
+            fcmToken = this.fcmToken,
+            deviceType = this.deviceType
         )
     }
 
@@ -28,7 +30,8 @@ object UserEntityMapper {
             email = this.email,
             password = this.password,
             jwtToken = this.jwtToken,
-            oauthTokenEntity = this.oauthToken?.toOauthEntity()
+            oauthTokenEntity = this.oauthToken?.toOauthEntity(),
+            fcmToken = this.fcmToken
         )
     }
 }

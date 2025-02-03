@@ -1,5 +1,6 @@
 package com.webxela.backend.coupit.infra.persistence.entity
 
+import com.webxela.backend.coupit.domain.enum.DeviceType
 import jakarta.persistence.*
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.Instant
@@ -30,6 +31,13 @@ data class UserEntity(
 
     @Column(nullable = true)
     val jwtToken: String?,
+
+    @Column(nullable = true)
+    val fcmToken: String?,
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    val deviceType: DeviceType = DeviceType.UNKNOWN,
 
     @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "oauth_token_id")

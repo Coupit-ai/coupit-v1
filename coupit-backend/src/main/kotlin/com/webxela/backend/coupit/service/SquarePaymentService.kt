@@ -3,11 +3,14 @@ package com.webxela.backend.coupit.service
 import com.webxela.backend.coupit.api.dto.PaymentWebhookRequest
 import com.webxela.backend.coupit.api.mappper.PaymentDtoMapper.toPayment
 import com.webxela.backend.coupit.config.SquareConfig
+import com.webxela.backend.coupit.domain.exception.ApiError
 import com.webxela.backend.coupit.domain.model.SpinSession
 import com.webxela.backend.coupit.infra.external.repo.OauthDataSourceAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.MerchantRepoAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.PaymentRepoAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.SessionRepoAdapter
+import com.webxela.backend.coupit.infra.persistence.adapter.UserRepoAdapter
+import com.webxela.backend.coupit.utils.AppConstants
 import org.apache.logging.log4j.LogManager
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,7 +23,9 @@ class SquarePaymentService(
     private val paymentRepo: PaymentRepoAdapter,
     private val sessionRepo: SessionRepoAdapter,
     private val squareConfig: SquareConfig,
-    private val utilityService: UtilityService
+    private val utilityService: UtilityService,
+    private val fcmService: FcmService,
+    private val userRepo: UserRepoAdapter
 ) {
 
     companion object {
@@ -45,15 +50,17 @@ class SquarePaymentService(
             val isFromSquare = true
             if (isFromSquare) {
                 logger.info("Received payment webhook from square")
+
                 savePaymentAndCreateSession(requestBody)?.let { sessionId ->
-                    sendFcmNotification(sessionId)
+                    sendFcmNotification(sessionId, requestBody.merchantId)
                 } ?: logger.error("failed to send FCM notification")
+
             } else {
                 logger.error("Received invalid payment webhook")
                 return
             }
         } catch (ex: Exception) {
-            logger.error("Failed to handle payment webhook", ex)
+            logger.error("Failed to handle payment webhook: ${ex.message}", ex)
         }
     }
 
@@ -89,13 +96,29 @@ class SquarePaymentService(
             return session?.id
 
         } catch (ex: Exception) {
-            logger.error("Failed to save payment and create session", ex)
+            logger.error("Failed to save payment and create session: ${ex.message}", ex)
             return null
         }
     }
 
-    private fun sendFcmNotification(sessionId: UUID) {
-        // Send FCM notification to merchant
+    private fun sendFcmNotification(sessionId: UUID, merchantId: String) {
         logger.info("Sending FCM notification")
+
+        userRepo.getUserByEmail(merchantId)?.let { user ->
+            user.fcmToken ?: run {
+                logger.error("User $merchantId does not have a fcm token")
+                throw ApiError.InternalError("User $merchantId does not have a fcm token")
+            }
+
+            fcmService.sendFcmNotification(
+                sessionId = sessionId.toString(),
+                token = user.fcmToken,
+                title = AppConstants.PAYMENT_FCM_TITLE,
+                body = AppConstants.PAYMENT_FCM_BODY
+            )
+        } ?: run {
+            logger.error("User with id $merchantId not found")
+            throw ApiError.InternalError("User with id $merchantId not found")
+        }
     }
 }

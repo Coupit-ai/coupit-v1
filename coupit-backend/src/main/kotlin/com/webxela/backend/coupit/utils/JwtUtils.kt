@@ -43,7 +43,7 @@ class JwtUtils {
             verifier.verify(token)
             return true
         } catch (ex: Exception) {
-            logger.error("Token failed to validate", ex)
+            logger.error("Token failed to validate: ${ex.message}", ex)
             return false
         }
     }
@@ -55,7 +55,7 @@ class JwtUtils {
             val decodedJWT = verifier.verify(token)
             return decodedJWT.subject
         } catch (ex: Exception) {
-            logger.error("Unable to get User from token", ex)
+            logger.error("Unable to get User from token: ${ex.message}", ex)
             return null
         }
     }

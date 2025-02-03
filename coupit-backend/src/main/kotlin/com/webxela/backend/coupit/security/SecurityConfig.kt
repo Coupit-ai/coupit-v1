@@ -29,11 +29,11 @@ class SecurityConfig(
                 authority
                     .requestMatchers(
                         "/api/v1/square/**",
-                        "/api/v1/auth/**"
+//                        "/api/v1/auth/**"
                     ).permitAll()
                     .requestMatchers(
                         "/oauth/revoke",
-                        "/auth/logout"
+//                        "/auth/logout"
                     ).authenticated()
                     .anyRequest().authenticated()
             }

@@ -6,6 +6,7 @@ import com.webxela.backend.coupit.api.dto.auth.SignupResponse
 import com.webxela.backend.coupit.api.mappper.SignupDtoMapper.toSignupResponse
 import com.webxela.backend.coupit.api.mappper.SignupDtoMapper.toUser
 import com.webxela.backend.coupit.domain.exception.ApiError
+import com.webxela.backend.coupit.domain.model.User
 import com.webxela.backend.coupit.infra.persistence.adapter.UserRepoAdapter
 import com.webxela.backend.coupit.utils.JwtUtils
 import org.apache.logging.log4j.LogManager
@@ -33,18 +34,21 @@ class UserAuthService(
 
     @Transactional(readOnly = false)
     fun registerNewUser(signupRequest: SignupRequest): SignupResponse {
+
         logger.info("Registering new user with email: $signupRequest.email")
         try {
+
             val jwtToken = jwtUtils.generateToken(signupRequest.email)
             val createdUser = userRepo.createNewUser(
                 signupRequest.toUser(jwtToken, passwordEncoder)
             )
             return createdUser.toSignupResponse()
+
         } catch (ex: Exception) {
-            logger.error("User with id $signupRequest.email already exists", ex)
+            logger.error("User with id $signupRequest.email already exists: ${ex.message}", ex)
             throw ApiError.DataIntegrityError("User with email $signupRequest.email already exists", ex)
         } catch (ex: Exception) {
-            logger.error("An unexpected error occurred while registering new user", ex)
+            logger.error("An unexpected error occurred while registering new user: ${ex.message}", ex)
             throw ApiError.InternalError("Unexpected error occurred", ex)
         }
     }
@@ -52,42 +56,58 @@ class UserAuthService(
     @Transactional(readOnly = false)
     fun performUserLogin(email: String, password: String): LoginResponse {
         // Check if user exists
-        userRepo.getUserByEmail(email) ?: throw ApiError.ResourceNotFound(
-            "User with email $email not found"
-        )
+        userRepo.getUserByEmail(email) ?: throw ApiError
+            .ResourceNotFound("User with email $email not found")
+
         try {
+
             val authState = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(email, password)
             )
+
             if (authState.isAuthenticated) {
+
                 logger.info("User with id $email has been authenticated")
                 val jwtToken = jwtUtils.generateToken(email)
                 if (userRepo.updateJwtToken(email = email, jwtToken = jwtToken).not())
                     throw RuntimeException("Failed to update JWT token")
                 return LoginResponse(email = email, token = jwtToken)
+
             } else {
+
                 logger.error("User with email $email could not be authenticated")
                 throw ApiError.Unauthorized("Invalid email or password")
+
             }
         } catch (ex: BadCredentialsException) {
-            logger.error("User with email $email could not be authenticated", ex)
+
+            logger.error("User with email $email could not be authenticated: ${ex.message}", ex)
             throw ApiError.Unauthorized("Invalid email or password", ex)
+
         } catch (ex: Exception) {
-            logger.error("An unexpected error occurred while authenticating user with email $email", ex)
+
+            logger.error("An unexpected error occurred while authenticating user with email $email: ${ex.message}", ex)
             throw ApiError.InternalError("Unexpected error occurred", ex)
+
         }
     }
 
     @Transactional(readOnly = false)
     fun performUserLogout(): String {
+
         utilityService.getCurrentLoginUser()?.let { user ->
+
             userRepo.updateJwtToken(user.username, null)
             SecurityContextHolder.clearContext()
+
             logger.info("User has been logged out")
             return "User has been logged out"
+
         } ?: run {
+
             logger.error("No user is currently logged in")
-            throw ApiError.Unauthorized("You are not authorised to perform this action")
+            throw ApiError.BadRequest("You are not authorised to perform this action")
+
         }
     }
 

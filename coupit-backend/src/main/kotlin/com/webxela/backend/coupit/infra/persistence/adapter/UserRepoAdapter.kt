@@ -1,5 +1,6 @@
 package com.webxela.backend.coupit.infra.persistence.adapter
 
+import com.webxela.backend.coupit.domain.enum.DeviceType
 import com.webxela.backend.coupit.domain.model.OauthToken
 import com.webxela.backend.coupit.domain.model.User
 import com.webxela.backend.coupit.infra.persistence.mapper.OauthEntityMapper.toOauthEntity
@@ -31,6 +32,22 @@ class UserRepoAdapter(private val userJpaRepo: UserJpaRepo) {
     fun updateJwtToken(email: String, jwtToken: String?): Boolean {
         val user = userJpaRepo.findUserByEmail(email) ?: return false
         val updatedUser = user.copy(jwtToken = jwtToken)
+        userJpaRepo.saveAndFlush(updatedUser)
+        return true
+    }
+
+    @Transactional(readOnly = false)
+    fun updateFcmToken(email: String, fcmToken: String?): Boolean {
+        val user = userJpaRepo.findUserByEmail(email) ?: return false
+        val updatedUser = user.copy(fcmToken = fcmToken)
+        userJpaRepo.saveAndFlush(updatedUser)
+        return true
+    }
+
+    @Transactional(readOnly = false)
+    fun updateDeviceType(email: String, deviceType: DeviceType): Boolean {
+        val user = userJpaRepo.findUserByEmail(email) ?: return false
+        val updatedUser = user.copy(deviceType = deviceType)
         userJpaRepo.saveAndFlush(updatedUser)
         return true
     }

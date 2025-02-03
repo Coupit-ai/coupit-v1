@@ -21,19 +21,19 @@ class AuthController(
 
     @PostMapping("/signup")
     fun registerNewUser(
-        @RequestBody signupRequest: SignupRequest
+        @RequestBody requestBody: SignupRequest
     ): ResponseEntity<ApiResponse<SignupResponse>> {
-        signupValidator.validate(signupRequest)
-        val signup = userAuthService.registerNewUser(signupRequest)
+        signupValidator.validate(requestBody)
+        val signup = userAuthService.registerNewUser(requestBody)
         return ResponseEntity.ok(ApiResponse.success(signup))
     }
 
     @PostMapping("/login")
     fun performUserLogin(
-        @RequestBody loginRequest: LoginRequest
+        @RequestBody requestBody: LoginRequest
     ): ResponseEntity<ApiResponse<LoginResponse>> {
         val login = userAuthService.performUserLogin(
-            loginRequest.email, loginRequest.password
+            requestBody.email, requestBody.password
         )
         return ResponseEntity.ok(ApiResponse.success(login))
     }

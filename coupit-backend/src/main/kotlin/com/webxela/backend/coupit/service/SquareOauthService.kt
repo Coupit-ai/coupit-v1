@@ -70,7 +70,7 @@ class SquareOauthService(
             }
             return data
         } catch (ex: Exception) {
-            logger.error("Failed to process oauth callback", ex)
+            logger.error("Failed to process oauth callback: ${ex.message}", ex)
             return null
         }
     }
@@ -93,7 +93,6 @@ class SquareOauthService(
             logger.error("Failed to exchange refresh token")
             return false
         }
-
         return true
     }
 
@@ -114,9 +113,10 @@ class SquareOauthService(
 
             userRepo.updateOauthToken(requestBody.merchantId, null)
             userRepo.updateJwtToken(requestBody.merchantId, null)
-            logger.info("Successfully disconnected from square using webhook")
-        } else {
 
+            logger.info("Successfully disconnected from square using webhook")
+
+        } else {
             logger.error("Received invalid revoke webhook")
             throw ApiError.Unauthorized("Invalid webhook")
         }
@@ -131,17 +131,22 @@ class SquareOauthService(
             if (oauthDataSource.revokeOauthToken(merchantId))
                 logger.info("Successfully disconnected from Square dashboard")
 
-            val updated = userRepo.updateOauthToken(merchantId, null)
-            if (updated) {
+            val updatedToken = userRepo.updateOauthToken(merchantId, null)
 
+            if (updatedToken) {
+
+                userRepo.updateFcmToken(merchantId, null)
                 userAuthService.performUserLogout()
                 logger.info("Successfully disconnected from Square")
                 return "Successfully disconnected from Square"
+
             } else throw RuntimeException("Failed to disconnect from Square")
+
         } catch (ex: Exception) {
 
-            logger.error("Failed to revoke oauth token", ex)
-            throw ApiError.Unauthorized("Failed to disconnect from square", ex)
+            logger.error("Failed to revoke oauth token: ${ex.message}", ex)
+            throw ApiError.InternalError("Failed to disconnect from square", ex)
+
         }
     }
 }

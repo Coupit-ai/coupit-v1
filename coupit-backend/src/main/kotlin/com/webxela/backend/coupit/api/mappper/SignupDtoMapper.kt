@@ -31,7 +31,9 @@ object SignupDtoMapper {
             jwtToken = jwtToken,
             password = passwordEncoder.encode(this.password),
             oauthToken = oauthToken,
-            createdAt = null
+            createdAt = null,
+            fcmToken = null,
+            deviceType = null
         )
     }
 
