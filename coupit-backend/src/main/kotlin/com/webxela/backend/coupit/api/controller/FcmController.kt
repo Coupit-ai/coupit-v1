@@ -6,6 +6,7 @@ import com.webxela.backend.coupit.domain.exception.ApiResponse
 import com.webxela.backend.coupit.service.FcmService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -15,7 +16,7 @@ class FcmController(private val fcmService: FcmService) {
 
     @PostMapping("/token")
     fun registerToken(
-        requestBody: FcmTokenRequest
+        @RequestBody requestBody: FcmTokenRequest
     ): ResponseEntity<ApiResponse<FcmTokenResponse>> {
         val token = fcmService.registerFcmToken(requestBody)
         val response = FcmTokenResponse(
