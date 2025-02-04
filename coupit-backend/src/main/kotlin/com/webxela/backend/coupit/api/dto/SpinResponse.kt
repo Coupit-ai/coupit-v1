@@ -9,5 +9,5 @@ data class SpinResponse(
     val reward: RewardResponse,
     val qrCode: String,
     val expiresAt: Instant,
-    val claimed: Boolean? = null
+    val claimed: Boolean
 )
