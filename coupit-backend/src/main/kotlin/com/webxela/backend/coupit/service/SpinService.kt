@@ -6,13 +6,10 @@ import com.webxela.backend.coupit.api.mappper.SpinDtoMapper.toSpinConfig
 import com.webxela.backend.coupit.api.mappper.SpinDtoMapper.toSpinResponse
 import com.webxela.backend.coupit.domain.exception.ApiError
 import com.webxela.backend.coupit.domain.model.Reward
-import com.webxela.backend.coupit.domain.model.SpinResult
 import com.webxela.backend.coupit.domain.model.SpinSession
-import com.webxela.backend.coupit.infra.persistence.adapter.MerchantRepoAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.RewardRepoAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.SessionRepoAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.SpinRepoAdapter
-import com.webxela.backend.coupit.service.RewardService.Companion
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.springframework.stereotype.Service
@@ -20,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID
-import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 @Service
@@ -74,7 +70,7 @@ class SpinService(
 
         } catch (ex: Exception) {
             logger.error("Error while saving spin result for session $sessionId", ex)
-            throw ApiError.InternalError("Failed to perform spin action.")
+            throw ApiError.InternalError("Failed to perform spin action: ${ex.message}", ex)
         }
     }
 
@@ -82,7 +78,7 @@ class SpinService(
         // Filter out rewards with invalid probabilities
         val validRewards = rewards.filter { it.probability > 0 }
         if (validRewards.isEmpty()) {
-            println("No valid rewards available.")
+            logger.error("No valid rewards available.")
             return null
         }
         val totalProbability = validRewards.sumOf { it.probability }
@@ -100,7 +96,7 @@ class SpinService(
         }
 
         // This should never happen if probabilities are valid
-        println("No reward selected. Check input probabilities.")
+        logger.error("No reward selected. Check input probabilities.")
         return null
     }
 
@@ -118,14 +114,14 @@ class SpinService(
 
         if (rewards.size < 2) {
             logger.error("There are less than 2 rewards configured.")
-            throw ApiError.ResourceNotFound("There should be at least 2 rewards configured.")
+            throw ApiError.ResourceNotFound("There should be at least 2 rewards configured, configure rewards please")
         }
         return rewards.toSpinConfig(sessionData)
 
     }
 
     @Transactional(readOnly = false)
-    fun redeemReward(spinId: UUID): SpinResponse {
+    fun getOrRedeemReward(spinId: UUID, redeem: Boolean): SpinResponse {
 
         val user = utilityService.getCurrentLoginUser()
             ?: throw ApiError.Unauthorized("You are not authorized to perform this action.")
@@ -138,13 +134,15 @@ class SpinService(
         if (user.username != spinResult.session.merchant.id)
             throw ApiError.Unauthorized("You are not authorized to perform this action.")
 
-        if (spinResult.expiresAt.isBefore(Instant.now()) || spinResult.claimed!!) {
-            throw ApiError.ExpiredException("Reward has been already claimed or expired.")
+        if (redeem) {
+            if (spinResult.expiresAt.isBefore(Instant.now()) || spinResult.claimed!!) {
+                throw ApiError.ExpiredException("Reward has been already claimed or expired.")
+            }
         }
 
         try {
 
-            spinRepo.markSpinAsClaimed(spinId)
+            if (redeem) spinRepo.markSpinAsClaimed(spinId)
             return spinResult.toSpinResponse()
 
         } catch (ex: Exception) {
@@ -169,6 +167,4 @@ class SpinService(
         }
         return sessionData
     }
-
-
 }

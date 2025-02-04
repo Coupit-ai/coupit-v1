@@ -38,7 +38,15 @@ class SpinController(private val spinService: SpinService) {
     fun redeemReward(
         @PathVariable spinId: UUID
     ): ResponseEntity<ApiResponse<SpinResponse>> {
-        val spinResponse = spinService.redeemReward(spinId)
+        val spinResponse = spinService.getOrRedeemReward(spinId, true)
+        return ResponseEntity.ok(ApiResponse.success(spinResponse))
+    }
+
+    @GetMapping("/{spinId}")
+    fun getSpinResult(
+        @PathVariable spinId: UUID
+    ): ResponseEntity<ApiResponse<SpinResponse>> {
+        val spinResponse = spinService.getOrRedeemReward(spinId, false)
         return ResponseEntity.ok(ApiResponse.success(spinResponse))
     }
 }
