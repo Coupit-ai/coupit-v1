@@ -35,4 +35,10 @@ class RewardRepoAdapter(private val rewardJpaRepo: RewardJpaRepo) {
         return rewardJpaRepo.saveAndFlush(reward.toRewardEntity()).toReward()
     }
 
+    fun createRewardInBatch(rewards: List<Reward>): List<Reward> {
+        return rewardJpaRepo.saveAllAndFlush(
+            rewards.map { it.toRewardEntity() }
+        ).map { it.toReward() }
+    }
+
 }

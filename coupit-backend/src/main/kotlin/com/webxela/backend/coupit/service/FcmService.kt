@@ -1,6 +1,7 @@
 package com.webxela.backend.coupit.service
 
 import com.google.firebase.messaging.*
+import com.squareup.square.models.Merchant
 import com.webxela.backend.coupit.api.dto.FcmTokenRequest
 import com.webxela.backend.coupit.domain.exception.ApiError
 import com.webxela.backend.coupit.infra.persistence.adapter.UserRepoAdapter

@@ -14,11 +14,12 @@ class RewardController(private val rewardService: RewardService) {
 
     @PostMapping
     fun createNewReward(
-        @RequestBody requestBody: RewardRequest
-    ): ResponseEntity<ApiResponse<RewardResponse>> {
+        @RequestBody requestBody: List<RewardRequest>
+    ): ResponseEntity<ApiResponse<List<RewardResponse>>> {
 
-        val reward = rewardService.createNewReward(requestBody)
+        val reward = rewardService.createNewRewards(requestBody)
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(ApiResponse.success(reward))
     }
+
 }
