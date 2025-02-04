@@ -3,12 +3,16 @@ package com.webxela.app.coupit.presentation.features.auth.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.mmk.kmpnotifier.notification.NotifierManager
+import com.webxela.app.coupit.core.domain.getDeviceType
 import com.webxela.app.coupit.core.domain.onError
 import com.webxela.app.coupit.core.domain.onSuccess
 import com.webxela.app.coupit.core.presentation.toErrorMessage
 import com.webxela.app.coupit.core.utils.AppConstant
 import com.webxela.app.coupit.domain.usecase.DataStoreUseCase
+import com.webxela.app.coupit.domain.usecase.FirebaseUseCase
 import com.webxela.app.coupit.domain.usecase.SquareUseCase
+import com.webxela.app.coupit.presentation.features.firebase.FirebaseService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -18,7 +22,8 @@ import kotlin.uuid.Uuid
 
 class AuthViewModel(
     private val squareUseCase: SquareUseCase,
-    private val dataStoreUseCase: DataStoreUseCase
+    private val dataStoreUseCase: DataStoreUseCase,
+    private val firebaseUseCase: FirebaseUseCase
 ) : ViewModel() {
 
     private val _authUiState = MutableStateFlow(AuthUiState())
@@ -40,42 +45,47 @@ class AuthViewModel(
     private fun handleOauthDeeplink(
         token: String?, state: String?, error: String?
     ) = viewModelScope.launch {
-            if (token != null && state != null) {
-                _authUiState.update { it.copy(isLoading = true) }
-                val oauthState = dataStoreUseCase.getStringFromVault(
-                    AppConstant.SECURE_OAUTH_STATE
+        if (token != null && state != null) {
+            _authUiState.update { it.copy(isLoading = true) }
+            val oauthState = dataStoreUseCase.getStringFromVault(
+                AppConstant.SECURE_OAUTH_STATE
+            )
+            Logger.i("Previous oauth state: $oauthState")
+            if (oauthState == state) {
+                val response = dataStoreUseCase.saveStringInVault(
+                    key = AppConstant.SECURE_JWT_TOKEN,
+                    value = token
                 )
-                Logger.i("Previous oauth state: $oauthState")
-                if (oauthState == state) {
-                    val response = dataStoreUseCase.saveStringInVault(
-                        key = AppConstant.SECURE_JWT_STORE,
-                        value = token
-                    )
-                    _authUiState.update {
-                        it.copy(
-                            isLoading = false,
-                            oauthFlowResponse = response
-                        )
-                    }
-                } else {
-                    Logger.e("Invalid login attempt")
-                    _authUiState.update {
-                        it.copy(
-                            errorMessage = "Invalid login attempt",
-                            isLoading = false
-                        )
-                    }
+                // Push FCM token to server
+                NotifierManager.getPushNotifier().getToken()?.let { fcmToken ->
+                    Logger.i("Pushing FCM token to server")
+                    firebaseUseCase.updateNewToken(fcmToken, getDeviceType())
                 }
-            } else if (error != null) {
-                Logger.e("Error during oauth callback: $error")
                 _authUiState.update {
                     it.copy(
-                        errorMessage = error,
+                        isLoading = false,
+                        oauthFlowResponse = response
+                    )
+                }
+            } else {
+                Logger.e("Invalid login attempt")
+                _authUiState.update {
+                    it.copy(
+                        errorMessage = "Invalid login attempt",
                         isLoading = false
                     )
                 }
             }
+        } else if (error != null) {
+            Logger.e("Error during oauth callback: $error")
+            _authUiState.update {
+                it.copy(
+                    errorMessage = "Something went wrong. Please try again",
+                    isLoading = false
+                )
+            }
         }
+    }
 
     private fun connectWithSquare() = viewModelScope.launch {
         _authUiState.update { it.copy(isLoading = true) }

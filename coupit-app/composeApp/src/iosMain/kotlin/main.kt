@@ -1,8 +1,8 @@
 import androidx.compose.ui.window.ComposeUIViewController
 import com.webxela.app.coupit.App
-import com.webxela.app.coupit.koin.KoinInitializer
+import com.webxela.app.coupit.koin.AppInitializer
 import platform.UIKit.UIViewController
 
 fun MainViewController(): UIViewController = ComposeUIViewController(
-    configure = { KoinInitializer.initKoin() }
+    configure = { AppInitializer.initKoin() }
 ) { App() }

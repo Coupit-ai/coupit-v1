@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import com.mmk.kmpnotifier.notification.NotifierManager
 import com.webxela.app.coupit.core.presentation.navigation.ErrorHandler
 import com.webxela.app.coupit.core.presentation.navigation.LocalErrorHandler
 import com.webxela.app.coupit.presentation.navigation.NavDestinations

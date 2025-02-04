@@ -49,8 +49,6 @@ private fun DashboardScreen(
     onNavigateToScannerScreen: () -> Unit
 ) {
 
-    var sessionString by remember { mutableStateOf("") }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -84,22 +82,6 @@ private fun DashboardScreen(
                 .padding(innerPadding)
         ) {
             Text("Dashboard")
-            Spacer(Modifier.height(12.dp))
-            OutlinedTextField(
-                value = sessionString,
-                onValueChange = { sessionString = it },
-                placeholder = { Text("Enter Session Id here") }
-            )
-            Spacer(Modifier.height(12.dp))
-            Button(
-                onClick = {
-                    Rinku.handleDeepLink(
-                        url = "${AppConstant.DEEPLINK_URL}/nav/wheel?sessionId=$sessionString"
-                    )
-                }
-            ) {
-                Text("Submit")
-            }
         }
     }
 }

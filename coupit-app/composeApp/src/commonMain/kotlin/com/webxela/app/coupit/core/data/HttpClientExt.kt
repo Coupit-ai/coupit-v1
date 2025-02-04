@@ -21,9 +21,9 @@ import kotlin.coroutines.coroutineContext
 
 @Serializable
 data class ErrorResponse(
-    val statusCode: Int,
-    val message: String,
-    val timeStamp: String,
+    val statusCode: Int? = null,
+    val message: String? = null,
+    val timeStamp: String? = null,
     val error: String? = null
 )
 
@@ -62,6 +62,12 @@ private suspend inline fun <reified T> responseToResult(
 
 private suspend fun parseErrorResponse(response: HttpResponse): ApiResponse.Error<DataError.Remote> {
     return try {
+        when (response.status.value) {
+            401, 403 -> {
+                Rinku.handleDeepLink("${AppConstant.DEEPLINK_URL}/oauth")
+                return ApiResponse.Error(DataError.Remote.Unauthorised(null))
+            }
+        }
         val errorBody = response.bodyAsText()
         val errorResponse = Json.decodeFromString<ErrorResponse>(errorBody)
         when (response.status.value) {
@@ -69,11 +75,6 @@ private suspend fun parseErrorResponse(response: HttpResponse): ApiResponse.Erro
             429 -> ApiResponse.Error(DataError.Remote.TooManyRequests(errorResponse.message))
             404 -> ApiResponse.Error(DataError.Remote.NotFound(errorResponse.message))
             in 500..599 -> ApiResponse.Error(DataError.Remote.ServerError(errorResponse.message))
-            401, 403 -> {
-                Rinku.handleDeepLink("${AppConstant.DEEPLINK_URL}/oauth")
-                ApiResponse.Error(DataError.Remote.Unauthorised(errorResponse.message))
-            }
-
             else -> ApiResponse.Error(DataError.Remote.UnknownError(errorResponse.message))
         }
     } catch (e: Exception) {

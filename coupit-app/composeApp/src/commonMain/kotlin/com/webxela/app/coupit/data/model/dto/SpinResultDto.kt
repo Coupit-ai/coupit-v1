@@ -1,31 +1,47 @@
 package com.webxela.app.coupit.data.model.dto
 
+
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class SpinResultDto(
+    @SerialName("data")
+    val `data`: Data,
+    @SerialName("message")
     val message: String,
+    @SerialName("statusCode")
     val statusCode: Int,
-    val timeStamp: String,
-    val data: Data
+    @SerialName("timeStamp")
+    val timeStamp: String
 ) {
     @Serializable
     data class Data(
+        @SerialName("id")
+        val id: String,
+        @SerialName("claimed")
         val claimed: Boolean,
+        @SerialName("createdAt")
+        val createdAt: String,
+        @SerialName("expiresAt")
         val expiresAt: String,
-        val merchantId: String,
+        @SerialName("qrCode")
         val qrCode: String,
-        val sessionId: String,
-        val spinId: String,
-        val timeStamp: String,
-        val offer: Offer
+        @SerialName("reward")
+        val reward: Reward
     ) {
         @Serializable
-        data class Offer(
+        data class Reward(
+            @SerialName("id")
+            val id: String,
+            @SerialName("description")
             val description: String,
-            val offerId: String,
-            val timeStamp: String,
-            val title: String
+            @SerialName("probability")
+            val probability: Double,
+            @SerialName("title")
+            val title: String,
+            @SerialName("validityHours")
+            val validityHours: Int
         )
     }
 }

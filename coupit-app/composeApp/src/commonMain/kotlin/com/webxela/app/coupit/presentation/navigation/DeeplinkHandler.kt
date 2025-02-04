@@ -29,7 +29,12 @@ private fun handleDeepNavigation(deepLink: DeepLink, navController: NavControlle
     when (deepLink.encodedPath) {
         "/nav/wheel" -> {
             val sessionId = parameters["sessionId"]
-            navController.navigate(NavDestinations.Wheel(sessionId))
+            navController.navigate(NavDestinations.Wheel(sessionId)) {
+                launchSingleTop = true
+                popUpTo(NavDestinations.Home) {
+                    inclusive = false
+                }
+            }
         }
 
         "/oauth" -> {
@@ -38,9 +43,7 @@ private fun handleDeepNavigation(deepLink: DeepLink, navController: NavControlle
             val error = parameters["error"]
             navController.navigate(
                 NavDestinations.Auth(token, state, error)
-            ) {
-                launchSingleTop = true
-            }
+            ) { launchSingleTop = true }
         }
 
         else -> Logger.e("Invalid deeplink")

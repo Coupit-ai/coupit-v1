@@ -9,4 +9,8 @@ interface SquareRepo {
     suspend fun connectWithSquare(state: String): ApiResponse<Connection, DataError.Remote>
 
     suspend fun revokeSquareConnection()
+
+    suspend fun checkIfJwtExpired(token: String): Boolean
+
+    fun getJwtToken(): String?
 }

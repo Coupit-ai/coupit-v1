@@ -1,4 +1,5 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
@@ -7,12 +8,14 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.google.services)
 }
 
 kotlin {
     jvmToolchain(21)
     androidTarget {
         //https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-test.html
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
@@ -25,6 +28,7 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
             export(libs.theolm.rinku)
+            export(libs.mirzemehdi.kmpnotifier)
         }
     }
 
@@ -53,12 +57,17 @@ kotlin {
             implementation(libs.coil.network.ktor)
             implementation(libs.multiplatformSettings)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.composeIcons.featherIcons)
+            implementation(libs.composeIcons.fontAwesome)
             implementation(libs.androidx.compose.navigation)
             implementation(libs.alexzhirkevich.qrose)
             api(libs.theolm.rinku)
             implementation(libs.theolm.rinku.compose.ext)
             implementation(libs.liftric.kvault)
+            implementation(libs.material.icons.extended)
+            implementation(libs.sascha.kase64)
+            implementation(libs.material.kolor)
+            api(libs.mirzemehdi.kmpnotifier)
+            implementation("network.chaintech:qr-kit:3.0.6")
         }
 
         commonTest.dependencies {

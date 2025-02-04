@@ -4,8 +4,5 @@ sealed interface WheelUiEvent {
 
     data class GetWheelConfig(val sessionId: String?) : WheelUiEvent
 
-    data class PerformSpin(
-        val merchantId: String,
-        val sessionId: String
-    ) : WheelUiEvent
+    data class PerformSpin(val sessionId: String) : WheelUiEvent
 }

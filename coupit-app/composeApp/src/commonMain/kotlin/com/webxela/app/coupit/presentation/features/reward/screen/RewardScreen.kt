@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Scaffold
@@ -22,12 +23,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImagePainter.State.Empty.painter
+import com.webxela.app.coupit.core.presentation.navigation.LocalErrorHandler
 import com.webxela.app.coupit.presentation.component.SecondaryTopAppBar
 import com.webxela.app.coupit.presentation.features.reward.viewmodel.RewardUiEvent
 import com.webxela.app.coupit.presentation.features.reward.viewmodel.RewardUiState
@@ -68,6 +71,7 @@ fun RewardScreenRoot(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RewardScreen(
     modifier: Modifier = Modifier,
@@ -77,8 +81,16 @@ private fun RewardScreen(
     onNavigateBack: () -> Unit
 ) {
 
+    val errorHandler = LocalErrorHandler.current
+
     LaunchedEffect(Unit) {
         uiEvent(RewardUiEvent.GetSpinResult(spinId))
+    }
+
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let { error ->
+            errorHandler.showError(error)
+        }
     }
 
     Scaffold(
@@ -95,7 +107,6 @@ private fun RewardScreen(
             modifier = modifier.fillMaxSize()
         ) {
             if (uiState.isLoading) CircularProgressIndicator()
-            if (uiState.errorMessage != null) Text(uiState.errorMessage)
             if (uiState.spinResponse != null) {
                 Column(
                     verticalArrangement = Arrangement.Center,
@@ -107,7 +118,7 @@ private fun RewardScreen(
 
                     val logoPainter = painterResource(Res.drawable.ic_qrcode_scanner)
 
-                    val qrcodePainter : Painter = rememberQrCodePainter(uiState.spinResponse.data.qrCode) {
+                    val qrcodePainter : Painter = rememberQrCodePainter(uiState.spinResponse.qrCode) {
                         logo {
                             painter = logoPainter
                             padding = QrLogoPadding.Natural(.1f)
@@ -125,13 +136,14 @@ private fun RewardScreen(
                     Image(
                         painter = qrcodePainter,
                         contentDescription = "Your Offer",
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
                         modifier = Modifier.size(200.dp)
                     )
 
                     Spacer(Modifier.height(16.dp))
 
                     Text(
-                        text = uiState.spinResponse.data.offer.title,
+                        text = uiState.spinResponse.reward.title,
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -139,7 +151,7 @@ private fun RewardScreen(
                     Spacer(Modifier.height(16.dp))
 
                     Text(
-                        text = uiState.spinResponse.data.offer.description,
+                        text = uiState.spinResponse.reward.description,
                         style = MaterialTheme.typography.headlineSmall,
                         textAlign = TextAlign.Center
                     )

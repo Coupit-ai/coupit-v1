@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ConnectionDto(
     @SerialName("data")
-    val data: Data,
+    val `data`: Data,
     @SerialName("message")
     val message: String,
     @SerialName("statusCode")

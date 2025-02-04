@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,7 +29,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.webxela.app.coupit.domain.model.Session
+import com.webxela.app.coupit.core.presentation.navigation.LocalErrorHandler
+import com.webxela.app.coupit.domain.model.SpinConfig
 import com.webxela.app.coupit.presentation.features.wheel.viewmodel.WheelUiEvent
 import com.webxela.app.coupit.presentation.features.wheel.viewmodel.WheelUiState
 import com.webxela.app.coupit.presentation.features.wheel.viewmodel.WheelViewModel
@@ -48,6 +50,7 @@ fun WheelScreenRoot(
 ) {
 
     val uiState by viewModel.wheelUiState.collectAsStateWithLifecycle()
+
     WheelScreen(
         modifier = modifier,
         uiState = uiState,
@@ -68,17 +71,25 @@ private fun WheelScreen(
     navigateToRewardScreen: (spinId: String) -> Unit
 ) {
 
-    LaunchedEffect(Unit) {
-        uiEvent(WheelUiEvent.GetWheelConfig(sessionId))
-    }
+    val errorHandler = LocalErrorHandler.current
 
     var spinItemToId by remember { mutableStateOf("") }
     var spinId by remember { mutableStateOf("") }
 
+    LaunchedEffect(Unit) {
+        uiEvent(WheelUiEvent.GetWheelConfig(sessionId))
+    }
+
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let {
+            errorHandler.showError(it)
+        }
+    }
+
     LaunchedEffect(uiState.spinResponse) {
         if (uiState.spinResponse != null) {
-            spinItemToId = uiState.spinResponse.data.offer.offerId
-            spinId = uiState.spinResponse.data.spinId
+            spinItemToId = uiState.spinResponse.reward.id
+            spinId = uiState.spinResponse.id
         }
     }
 
@@ -91,9 +102,9 @@ private fun WheelScreen(
         ) {
 
             if (uiState.isLoading) CircularProgressIndicator()
-            if (uiState.errorMessage != null) Text(uiState.errorMessage)
-            if (uiState.sessionResponse != null) {
-                val wheelItems = uiState.sessionResponse.data.toSpinWheelItems()
+
+            if (uiState.spinConfigResponse != null) {
+                val wheelItems = uiState.spinConfigResponse.toSpinWheelItems()
                 val spinState = rememberSpinWheelState(
                     items = wheelItems,
                     onSpinningFinished = {
@@ -124,8 +135,7 @@ private fun WheelScreen(
                                 .clickable {
                                     uiEvent(
                                         WheelUiEvent.PerformSpin(
-                                            merchantId = uiState.sessionResponse.data.merchantId,
-                                            sessionId = uiState.sessionResponse.data.sessionId
+                                            sessionId = uiState.spinConfigResponse.session.id
                                         )
                                     )
                                 }
@@ -145,14 +155,14 @@ private fun WheelScreen(
 }
 
 
-fun Session.Data.toSpinWheelItems(): List<SpinWheelItem> {
+fun SpinConfig.toSpinWheelItems(): List<SpinWheelItem> {
     val colors = listOf(
         Color(0xFF3357FF),
         Color(0xFFFF5733)
     )
-    return this.offers.mapIndexed { index, offer ->
+    return this.reward.mapIndexed { index, offer ->
         SpinWheelItem(
-            identifier = offer.offerId,
+            identifier = offer.id,
             brush = Brush.verticalGradient(
                 listOf(colors[index % colors.size], Color.White)
             ),

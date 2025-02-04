@@ -2,26 +2,18 @@ package com.webxela.app.coupit.domain.model
 
 
 data class SpinResult(
-    val message: String,
-    val statusCode: Int,
-    val timeStamp: String,
-    val data: Data
+    val id: String,
+    val claimed: Boolean,
+    val createdAt: String,
+    val expiresAt: String,
+    val qrCode: String,
+    val reward: Reward
 ) {
-    data class Data(
-        val claimed: Boolean,
-        val expiresAt: String,
-        val merchantId: String,
-        val qrCode: String,
-        val sessionId: String,
-        val spinId: String,
-        val timeStamp: String,
-        val offer: Offer
-    ) {
-        data class Offer(
-            val description: String,
-            val offerId: String,
-            val timeStamp: String,
-            val title: String
-        )
-    }
+    data class Reward(
+        val id: String,
+        val description: String,
+        val probability: Double,
+        val title: String,
+        val validityHours: Int
+    )
 }

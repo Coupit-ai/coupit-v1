@@ -3,8 +3,12 @@ package com.webxela.app.coupit.presentation.features.home.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.mmk.kmpnotifier.notification.NotifierManager
+import com.webxela.app.coupit.core.domain.DeviceType
+import com.webxela.app.coupit.core.domain.getDeviceType
 import com.webxela.app.coupit.core.utils.AppConstant
 import com.webxela.app.coupit.domain.usecase.DataStoreUseCase
+import com.webxela.app.coupit.domain.usecase.FirebaseUseCase
 import com.webxela.app.coupit.domain.usecase.SquareUseCase
 import dev.theolm.rinku.Rinku
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,11 +33,11 @@ class HomeViewModel(
 
     private fun checkIfUserIsLoggedIn() = viewModelScope.launch {
         _homeUiState.update { it.copy(isLoading = true) }
-        dataStoreUseCase.getStringFromVault(AppConstant.SECURE_JWT_STORE)?.let { token ->
+        dataStoreUseCase.getStringFromVault(AppConstant.SECURE_JWT_TOKEN)?.let { token ->
             val isExpired = squareUseCase.checkIfJwtExpired(token)
             if (isExpired) {
                 Logger.e("JWT token is invalid or expired, starting login flow")
-                dataStoreUseCase.deleteObject(AppConstant.SECURE_JWT_STORE)
+                dataStoreUseCase.deleteObject(AppConstant.SECURE_JWT_TOKEN)
                 Rinku.handleDeepLink("${AppConstant.DEEPLINK_URL}/oauth")
                 _homeUiState.update { it.copy(isLoading = false) }
             } else {

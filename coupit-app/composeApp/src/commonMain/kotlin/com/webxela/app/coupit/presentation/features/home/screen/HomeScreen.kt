@@ -21,6 +21,7 @@ import com.webxela.app.coupit.presentation.features.home.viewmodel.HomeUiState
 import com.webxela.app.coupit.presentation.features.home.viewmodel.HomeViewModel
 import com.webxela.app.coupit.presentation.features.home.viewmodel.drawerItems
 import com.webxela.app.coupit.presentation.features.reward.screen.RewardManagerScreenRoot
+import com.webxela.app.coupit.presentation.features.setting.screen.SettingScreenRoot
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -51,13 +52,13 @@ private fun HomeScreen(
     val errorHandler = LocalErrorHandler.current
     var selectedItem by remember { mutableStateOf(drawerItems[0]) }
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(Unit) {
         uiEvent(HomeUiEvent.CheckIfUserIsLoggedIn)
     }
 
-    LaunchedEffect(key1 = uiState.errorMessage) {
-        if (uiState.errorMessage != null) {
-            errorHandler.showError(uiState.errorMessage)
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let {
+            errorHandler.showError(it)
         }
     }
 
@@ -77,7 +78,7 @@ private fun HomeScreen(
         when (selectedItem.type) {
             DrawerItemType.DASHBOARD -> DashboardScreenRoot { onNavigateToScanner() }
             DrawerItemType.REWARD_MANAGER -> RewardManagerScreenRoot()
-            DrawerItemType.SETTING -> Unit
+            DrawerItemType.SETTING -> SettingScreenRoot()
         }
     }
 

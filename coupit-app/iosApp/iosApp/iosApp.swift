@@ -15,7 +15,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window.rootViewController = MainKt.MainViewController()
             window.makeKeyAndVisible()
         }
+        // Initialize FCM
+        FirebaseApp.configure()
+        AppInitializer.shared.startFcmListeners()
         return true
+    }
+
+
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+         Messaging.messaging().apnsToken = deviceToken
+    }
+
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) async -> UIBackgroundFetchResult {
+         NotifierManager.shared.onApplicationDidReceiveRemoteNotification(userInfo: userInfo)
+         return UIBackgroundFetchResult.newData
     }
 
     func application(

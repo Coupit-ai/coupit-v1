@@ -7,32 +7,22 @@ object SpinResultDtoMapper {
 
     fun SpinResultDto.toSpinResult(): SpinResult {
         return SpinResult(
-            message = this.message,
-            statusCode = this.statusCode,
-            timeStamp = this.timeStamp,
-            data = this.data.toSpinData()
+            id = this.data.id,
+            createdAt = this.data.createdAt,
+            expiresAt = this.data.expiresAt,
+            claimed = this.data.claimed,
+            qrCode = this.data.qrCode,
+            reward = this.data.reward.toSpinReward()
         )
     }
 
-    private fun SpinResultDto.Data.toSpinData(): SpinResult.Data {
-        return SpinResult.Data(
-            expiresAt = this.expiresAt,
-            merchantId = this.merchantId,
-            sessionId = this.sessionId,
-            timeStamp = this.timeStamp,
-            claimed = this.claimed,
-            qrCode = this.qrCode,
-            spinId = this.spinId,
-            offer = this.offer.toSpinOffer()
-        )
-    }
-
-    private fun SpinResultDto.Data.Offer.toSpinOffer(): SpinResult.Data.Offer {
-        return SpinResult.Data.Offer(
+    private fun SpinResultDto.Data.Reward.toSpinReward(): SpinResult.Reward {
+        return SpinResult.Reward(
+            id = this.id,
             description = this.description,
-            offerId = this.offerId,
-            timeStamp = this.timeStamp,
-            title = this.title
+            probability = this.probability,
+            title = this.title,
+            validityHours = this.validityHours
         )
     }
 }

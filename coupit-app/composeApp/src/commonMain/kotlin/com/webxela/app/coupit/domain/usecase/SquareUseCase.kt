@@ -10,5 +10,12 @@ class SquareUseCase(private val squareRepo: SquareRepo) {
     suspend fun connectWithSquare(state: String): ApiResponse<Connection, DataError.Remote> {
         return squareRepo.connectWithSquare(state)
     }
-    
+
+    suspend fun checkIfJwtExpired(token: String): Boolean {
+        return squareRepo.checkIfJwtExpired(token)
+    }
+
+    fun getJwtToken(): String? {
+        return squareRepo.getJwtToken()
+    }
 }

@@ -16,9 +16,10 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.webxela.app.coupit.presentation.features.auth.screen.RootAuthScreen
+import com.webxela.app.coupit.presentation.features.dashboard.screen.DashboardScreenRoot
 import com.webxela.app.coupit.presentation.features.home.screen.HomeScreenRoot
 import com.webxela.app.coupit.presentation.features.reward.screen.RewardScreenRoot
-import com.webxela.app.coupit.presentation.features.screen.ScannerScreenRoot
+import com.webxela.app.coupit.presentation.features.scanner.screen.ScannerScreenRoot
 import com.webxela.app.coupit.presentation.features.wheel.screen.WheelScreenRoot
 
 @Composable
@@ -41,11 +42,9 @@ fun RootNavHost(
     ) {
 
         composable<NavDestinations.Home> {
-            HomeScreenRoot(
-                onNavigateToScannerScreen = {
-                    navController.navigate(NavDestinations.Scanner)
-                }
-            )
+            HomeScreenRoot {
+                navController.navigate(NavDestinations.Scanner)
+            }
         }
 
         dialog<NavDestinations.Auth>(
@@ -69,10 +68,10 @@ fun RootNavHost(
                 sessionId = wheel.sessionId,
                 navigateToRewardScreen = { spinId ->
                     navController.navigate(NavDestinations.Reward(spinId)) {
+                        launchSingleTop = true
                         popUpTo(NavDestinations.Home) {
                             inclusive = false
                         }
-                        launchSingleTop = true
                     }
                 }
             )
@@ -88,10 +87,17 @@ fun RootNavHost(
 
         composable<NavDestinations.Scanner>(
             enterTransition = { slideInVertically(tween(500)) { -it } },
-            popExitTransition = { slideOutVertically(tween(500)) { -it } },
         ) {
             ScannerScreenRoot(
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToRewardScreen = { spinId ->
+                    navController.navigate(NavDestinations.Reward(spinId)) {
+                        launchSingleTop = true
+                        popUpTo(NavDestinations.Home) {
+                            inclusive = false
+                        }
+                    }
+                }
             )
         }
 

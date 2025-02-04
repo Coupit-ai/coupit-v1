@@ -73,7 +73,7 @@ private fun AuthScreen(
     val uriHandler = LocalUriHandler.current
     val errorHandler = LocalErrorHandler.current
 
-    LaunchedEffect(key1 = uiState.errorMessage) {
+    LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let {
             errorHandler.showError(it)
         }
