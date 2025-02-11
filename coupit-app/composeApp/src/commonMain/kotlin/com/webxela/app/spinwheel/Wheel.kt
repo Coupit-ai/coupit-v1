@@ -22,7 +22,7 @@ internal fun Wheel(
                 size = size,
                 brush = item.brush,
                 degree = degreesPerItems,
-                content = item.content
+                content = item.title
             )
         }
     }

@@ -8,7 +8,7 @@ object SpinConfigDtoMapper {
     fun SpinConfigDto.toSpinConfig(): SpinConfig {
         return SpinConfig(
             session = this.data.session.toSpinConfigSession(),
-            reward = this.data.rewards.map { it.toSpinConfigReward() }
+            rewards = this.data.rewards.map { it.toSpinConfigReward() }
         )
     }
 

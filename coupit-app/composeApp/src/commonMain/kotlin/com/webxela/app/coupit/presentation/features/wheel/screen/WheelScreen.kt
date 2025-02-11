@@ -1,13 +1,12 @@
 package com.webxela.app.coupit.presentation.features.wheel.screen
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -15,16 +14,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -37,7 +33,12 @@ import com.webxela.app.coupit.presentation.features.wheel.viewmodel.WheelViewMod
 import com.webxela.app.spinwheel.SpinWheel
 import com.webxela.app.spinwheel.SpinWheelItem
 import com.webxela.app.spinwheel.rememberSpinWheelState
+import coupit.composeapp.generated.resources.Res
+import coupit.composeapp.generated.resources.ic_cyclone
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.time.Duration.Companion.seconds
 
 
@@ -126,27 +127,20 @@ private fun WheelScreen(
                         .fillMaxSize(.5f)
                         .aspectRatio(1f)
                 ) {
-                    SpinWheel(spinWheelState = spinState) {
-                        Box(
+                    SpinWheel(
+                        outerRingColor = MaterialTheme.colorScheme.error,
+                        spinWheelState = spinState
+                    ) {
+                        Image(
+                            painter = painterResource(Res.drawable.ic_cyclone),
+                            contentDescription = "",
                             modifier = Modifier
                                 .fillMaxSize()
-                                .clip(CircleShape)
-                                .background(Color.White)
+                                .padding(4.dp)
                                 .clickable {
-                                    uiEvent(
-                                        WheelUiEvent.PerformSpin(
-                                            sessionId = uiState.spinConfigResponse.session.id
-                                        )
-                                    )
+                                    uiEvent(WheelUiEvent.PerformSpin(uiState.spinConfigResponse.session.id))
                                 }
-                        ) {
-                            Text(
-                                text = "Spin",
-                                fontWeight = FontWeight.Bold,
-                                style = MaterialTheme.typography.displayMedium,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
+                        )
                     }
                 }
             }
@@ -156,26 +150,38 @@ private fun WheelScreen(
 
 
 fun SpinConfig.toSpinWheelItems(): List<SpinWheelItem> {
-    val colors = listOf(
-        Color(0xFF3357FF),
-        Color(0xFFFF5733)
+    // Ensure that there are at least 12 rewards.
+    val requiredCount = 12
+    val newRewards: List<SpinConfig.Reward> = if (rewards.size >= requiredCount) {
+        rewards
+    } else {
+        val duplicated = mutableListOf<SpinConfig.Reward>()
+        while (duplicated.size < requiredCount) {
+            duplicated.addAll(rewards)
+        }
+        duplicated.take(requiredCount)
+    }
+
+    val totalRewards = newRewards.size
+    val numColors = max(2, (totalRewards + 1) / 2)
+
+    val baseColors = listOf(
+        Color(0xFF3BAF69),
+        Color(0xFFEFC25F),
+        Color(0xFF678CC8),
+        Color(0xFFDB5A5A)
     )
-    return this.reward.mapIndexed { index, offer ->
+
+    val colorsToUse = baseColors.take(min(numColors, baseColors.size))
+
+    return newRewards.mapIndexed { index, reward ->
+        val currentColor = colorsToUse[index % colorsToUse.size]
         SpinWheelItem(
-            identifier = offer.id,
-            brush = Brush.verticalGradient(
-                listOf(colors[index % colors.size], Color.White)
+            identifier = reward.id,
+            brush = Brush.linearGradient(
+                listOf(currentColor, currentColor)
             ),
-            content = {
-                Text(
-                    text = offer.title,
-                    style = MaterialTheme.typography.displaySmall,
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    overflow = TextOverflow.Clip,
-                    modifier = Modifier.width(120.dp)
-                )
-            }
+            title = reward.title
         )
     }
 }

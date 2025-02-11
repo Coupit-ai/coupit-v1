@@ -5,20 +5,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.min
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -26,8 +19,10 @@ import kotlin.math.sin
 @Composable
 internal fun SpinWheel(
     spinWheelState: SpinWheelState,
-    ringColor: Color = Color(0xFFFFD700),
-    indicatorColor: Color = Color(0xFFFF4444),
+    outerRingColor: Color = Color(0xFFFFD700),
+    pointerColor: Color = Color(0xFF008000),
+    pointerStrokeColor: Color = Color(0xFFFFA500),
+    pointerStrokeWidth: Float = 3.0f,
     centerComponent: @Composable () -> Unit
 ) {
     BoxWithConstraints(
@@ -35,11 +30,6 @@ internal fun SpinWheel(
             .fillMaxSize()
             .aspectRatio(1f)
     ) {
-        val wheelSize = min(maxWidth, maxHeight)
-
-        val triangleHeight = wheelSize * 0.10f
-        val triangleWidth = wheelSize * 0.10f
-        val centerComponentSize = wheelSize * 0.25f
 
         // Main Wheel
         Wheel(
@@ -56,12 +46,12 @@ internal fun SpinWheel(
             val strokeWidth = size.minDimension * 0.03f // 3% of wheel size
 
             drawCircle(
-                color = ringColor,
+                color = outerRingColor,
                 style = Stroke(width = strokeWidth),
                 radius = size.minDimension / 2
             )
             drawCircle(
-                color = ringColor.copy(alpha = 0.3f),
+                color = outerRingColor.copy(alpha = 0.3f),
                 style = Stroke(width = strokeWidth / 2),
                 radius = (size.minDimension / 2) - strokeWidth * 1.2f
             )
@@ -77,7 +67,7 @@ internal fun SpinWheel(
                 val x = centerX + dotsRadius * cos(angle).toFloat()
                 val y = centerY + dotsRadius * sin(angle).toFloat()
                 drawCircle(
-                    color = ringColor,
+                    color = outerRingColor,
                     radius = dotRadius,
                     center = Offset(x, y)
                 )
@@ -87,43 +77,9 @@ internal fun SpinWheel(
         // Center Component
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(centerComponentSize)
-                .align(Alignment.Center)
+            modifier = Modifier.align(Alignment.Center)
         ) {
-            centerComponent()
-        }
-
-        // Triangle indicator
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(triangleHeight)
-                .align(Alignment.TopCenter)
-        ) {
-            Canvas(
-                modifier = Modifier
-                    .size(width = triangleWidth, height = triangleHeight)
-                    .align(Alignment.Center)
-            ) {
-                val path = Path().apply {
-                    moveTo(size.width / 2, size.height)
-                    lineTo(0f, 0f)
-                    lineTo(size.width, 0f)
-                    close()
-                }
-
-                drawPath(
-                    path = path,
-                    color = indicatorColor
-                )
-
-                drawPath(
-                    path = path,
-                    color = Color.White.copy(alpha = 0.3f),
-                    style = Stroke(width = size.width * 0.1f)
-                )
-            }
+            WheelPointer { centerComponent() }
         }
     }
 }

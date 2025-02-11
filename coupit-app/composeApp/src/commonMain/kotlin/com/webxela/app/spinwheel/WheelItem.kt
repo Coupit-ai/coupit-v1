@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.Brush
 data class SpinWheelItem(
     val identifier: String,
     val brush: Brush,
-    val content: @Composable () -> Unit,
+    val title: String,
 )
 
 

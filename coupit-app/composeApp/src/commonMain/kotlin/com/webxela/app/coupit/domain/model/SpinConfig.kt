@@ -2,7 +2,7 @@ package com.webxela.app.coupit.domain.model
 
 data class SpinConfig(
     val session: Session,
-    val reward: List<Reward>
+    val rewards: List<Reward>
 ) {
     data class Session(
         val id: String,
