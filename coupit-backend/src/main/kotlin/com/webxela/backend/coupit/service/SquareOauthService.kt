@@ -1,6 +1,8 @@
 package com.webxela.backend.coupit.service
 
+import com.webxela.backend.coupit.api.dto.auth.MerchantResponse
 import com.webxela.backend.coupit.api.dto.auth.RevokeWebhookRequest
+import com.webxela.backend.coupit.api.mappper.MerchantMapper.toMerchantResponse
 import com.webxela.backend.coupit.api.mappper.SignupDtoMapper.toSignupRequest
 import com.webxela.backend.coupit.config.SquareConfig
 import com.webxela.backend.coupit.domain.exception.ApiError
@@ -148,5 +150,15 @@ class SquareOauthService(
             throw ApiError.InternalError("Failed to disconnect from square", ex)
 
         }
+    }
+
+    fun getLoggedInMerchant(): MerchantResponse {
+        val merchantId = utilityService.getCurrentLoginUser()?.username
+            ?: throw ApiError.Unauthorized("You are not authorized to perform this action.")
+
+        val merchant = merchantRepo.getMerchant(merchantId)
+            ?: throw ApiError.ResourceNotFound("Merchant not found")
+
+        return merchant.toMerchantResponse()
     }
 }
