@@ -2,7 +2,7 @@ package com.webxela.backend.coupit.service
 
 import com.webxela.backend.coupit.rest.dto.PaymentWebhookRequest
 import com.webxela.backend.coupit.rest.mappper.PaymentDtoMapper.toPayment
-import com.webxela.backend.coupit.config.SquareConfig
+import com.webxela.backend.coupit.config.DotEnvConfig
 import com.webxela.backend.coupit.domain.exception.ApiError
 import com.webxela.backend.coupit.domain.model.SpinSession
 import com.webxela.backend.coupit.infra.external.repo.OauthDataSourceAdapter
@@ -22,7 +22,7 @@ class SquarePaymentService(
     private val merchantRepo: MerchantRepoAdapter,
     private val paymentRepo: PaymentRepoAdapter,
     private val sessionRepo: SessionRepoAdapter,
-    private val squareConfig: SquareConfig,
+    private val dotEnvConfig: DotEnvConfig,
     private val utilityService: UtilityService,
     private val fcmService: FcmService,
     private val userRepo: UserRepoAdapter

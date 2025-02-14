@@ -4,7 +4,7 @@ import com.webxela.backend.coupit.rest.dto.auth.MerchantResponse
 import com.webxela.backend.coupit.rest.dto.auth.RevokeWebhookRequest
 import com.webxela.backend.coupit.rest.mappper.MerchantMapper.toMerchantResponse
 import com.webxela.backend.coupit.rest.mappper.SignupDtoMapper.toSignupRequest
-import com.webxela.backend.coupit.config.SquareConfig
+import com.webxela.backend.coupit.config.DotEnvConfig
 import com.webxela.backend.coupit.domain.exception.ApiError
 import com.webxela.backend.coupit.infra.external.repo.OauthDataSourceAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.MerchantRepoAdapter
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class SquareOauthService(
-    private val squareConfig: SquareConfig,
+    private val dotEnvConfig: DotEnvConfig,
     private val oauthDataSource: OauthDataSourceAdapter,
     private val merchantRepo: MerchantRepoAdapter,
     private val userAuthService: UserAuthService,
@@ -30,11 +30,11 @@ class SquareOauthService(
     }
 
     fun buildSquareOauthUrl(state: String): String {
-        return "${squareConfig.authorisationUri}?" +
-                "client_id=${squareConfig.clientId}&" +
+        return "${dotEnvConfig.authorisationUri}?" +
+                "client_id=${dotEnvConfig.clientId}&" +
                 "response_type=code&" +
-                "scope=${squareConfig.scopes.joinToString(",")}&" +
-                "redirect_uri=${squareConfig.redirectUri}&" +
+                "scope=${dotEnvConfig.scopes.joinToString(",")}&" +
+                "redirect_uri=${dotEnvConfig.redirectUri}&" +
                 "session=false&" +
                 "state=$state"
     }

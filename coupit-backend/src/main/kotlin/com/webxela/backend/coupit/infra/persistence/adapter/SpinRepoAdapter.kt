@@ -39,7 +39,6 @@ class SpinRepoAdapter(
     fun saveSpinResult(
         reward: Reward,
         session: SpinSession,
-        qrCode: String,
         expiresAt: Instant
     ): SpinResult {
         val managedReward = rewardJpaRepo.findById(reward.id!!).orElseThrow {
@@ -51,7 +50,6 @@ class SpinRepoAdapter(
         val spinResult = SpinEntity(
             reward = managedReward,
             session = managedSession,
-            qrCode = qrCode,
             expiresAt = expiresAt
         )
         return spinJpaRepo.save(spinResult).toSpinResult()

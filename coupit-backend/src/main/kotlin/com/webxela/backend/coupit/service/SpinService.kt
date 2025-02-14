@@ -1,5 +1,6 @@
 package com.webxela.backend.coupit.service
 
+import com.webxela.backend.coupit.config.DotEnvConfig
 import com.webxela.backend.coupit.rest.dto.SpinConfigResponse
 import com.webxela.backend.coupit.rest.dto.SpinResponse
 import com.webxela.backend.coupit.rest.mappper.SpinDtoMapper.toSpinConfig
@@ -24,7 +25,8 @@ class SpinService(
     private val spinRepo: SpinRepoAdapter,
     private val sessionRepo: SessionRepoAdapter,
     private val utilityService: UtilityService,
-    private val rewardRepo: RewardRepoAdapter
+    private val rewardRepo: RewardRepoAdapter,
+    private val dotEnvConfig: DotEnvConfig
 ) {
 
     companion object {
@@ -51,19 +53,17 @@ class SpinService(
         val randomReward = getRandomReward(rewards)
             ?: throw ApiError.BadRequest(message = "Error while trying to get rewards for you.")
 
-        val qrCode = generateQrCode(randomReward)
-
         try {
 
             val spinResult = spinRepo.saveSpinResult(
                 reward = randomReward,
-                qrCode = qrCode,
                 expiresAt = Instant.now().plus(
                     randomReward.validityHours.toLong(),
                     ChronoUnit.HOURS
                 ),
                 session = session
             )
+
 
             sessionRepo.markSessionAsUsed(sessionId)
             return spinResult.toSpinResponse()
@@ -162,8 +162,4 @@ class SpinService(
         return sessionData
     }
 
-    private fun generateQrCode(reward: Reward): String {
-        // QR code generation logic (to be implemented)
-        return reward.title + UUID.randomUUID().toString()
-    }
 }

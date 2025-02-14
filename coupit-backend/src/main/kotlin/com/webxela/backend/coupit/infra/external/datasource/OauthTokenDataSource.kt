@@ -5,27 +5,27 @@ import com.squareup.square.models.ObtainTokenRequest
 import com.squareup.square.models.ObtainTokenResponse
 import com.squareup.square.models.RevokeTokenRequest
 import com.squareup.square.utilities.WebhooksHelper
-import com.webxela.backend.coupit.config.SquareConfig
+import com.webxela.backend.coupit.config.DotEnvConfig
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.springframework.stereotype.Component
 
 @Component
-class OauthTokenDataSource(private val squareConfig: SquareConfig) {
+class OauthTokenDataSource(private val dotEnvConfig: DotEnvConfig) {
 
     companion object {
         val logger: Logger = LogManager.getLogger(OauthTokenDataSource::class.java)
     }
 
     fun exchangeAuthorizationCode(code: String): ObtainTokenResponse? {
-        val body = ObtainTokenRequest.Builder(squareConfig.clientId, "authorization_code")
+        val body = ObtainTokenRequest.Builder(dotEnvConfig.clientId, "authorization_code")
             .code(code)
-            .clientSecret(squareConfig.clientSecret)
-            .redirectUri(squareConfig.redirectUri)
+            .clientSecret(dotEnvConfig.clientSecret)
+            .redirectUri(dotEnvConfig.redirectUri)
             .shortLived(false)
             .build()
 
-        val client = squareConfig.squareClient()
+        val client = dotEnvConfig.squareClient()
         return try {
             client.oAuthApi.obtainToken(body)
         } catch (ex: Exception) {
@@ -35,7 +35,7 @@ class OauthTokenDataSource(private val squareConfig: SquareConfig) {
     }
 
     fun getMerchantInfo(merchantId: String, accessToken: String): Merchant? {
-        val client = squareConfig.squareClient(accessToken)
+        val client = dotEnvConfig.squareClient(accessToken)
         return try {
             client.merchantsApi.retrieveMerchant(merchantId).merchant
         } catch (ex: Exception) {
@@ -45,14 +45,14 @@ class OauthTokenDataSource(private val squareConfig: SquareConfig) {
     }
 
     fun exchangeRefreshToken(refreshToken: String): ObtainTokenResponse? {
-        val body = ObtainTokenRequest.Builder(squareConfig.clientId, "refresh_token")
+        val body = ObtainTokenRequest.Builder(dotEnvConfig.clientId, "refresh_token")
             .refreshToken(refreshToken)
-            .clientSecret(squareConfig.clientSecret)
-            .redirectUri(squareConfig.redirectUri)
+            .clientSecret(dotEnvConfig.clientSecret)
+            .redirectUri(dotEnvConfig.redirectUri)
             .shortLived(false)
             .build()
 
-        val client = squareConfig.squareClient()
+        val client = dotEnvConfig.squareClient()
         return try {
             client.oAuthApi.obtainToken(body)
         } catch (ex: Exception) {
@@ -63,14 +63,14 @@ class OauthTokenDataSource(private val squareConfig: SquareConfig) {
 
     fun revokeOauthToken(merchantId: String): Boolean {
         val body = RevokeTokenRequest.Builder()
-            .clientId(squareConfig.clientId)
+            .clientId(dotEnvConfig.clientId)
             .merchantId(merchantId)
             .revokeOnlyAccessToken(false)
             .build()
 
-        val client = squareConfig.squareClient()
+        val client = dotEnvConfig.squareClient()
         return try {
-            val response = client.oAuthApi.revokeToken(body, "Client ${squareConfig.clientSecret}")
+            val response = client.oAuthApi.revokeToken(body, "Client ${dotEnvConfig.clientSecret}")
             response.success
         } catch (ex: Exception) {
             false

@@ -9,17 +9,17 @@ import org.apache.logging.log4j.LogManager
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class SquareConfig {
+class DotEnvConfig {
 
     companion object {
-        private val logger = LogManager.getLogger(SquareConfig::class.java)
+        private val logger = LogManager.getLogger(DotEnvConfig::class.java)
     }
 
     private final val dotEnv = dotenv()
 
     val scopes = AppConstants.SQUARE_CLIENT_SCOPES
 
-    private val serverUrl = dotEnv["SERVER_URL"]
+    final val serverUrl = dotEnv["SERVER_URL"]
         ?: throw IllegalStateException("Environment variable SERVER_URL is missing")
 
     val clientId: String = dotEnv["SQUARE_OAUTH_CLIENT_ID"]

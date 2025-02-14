@@ -22,9 +22,6 @@ data class SpinEntity(
     @JoinColumn(name = "reward_id", nullable = false)
     val reward: RewardEntity,
 
-    @Column(nullable = false, unique = true)
-    val qrCode: String,
-
     @Column(nullable = false)
     val expiresAt: Instant,
 

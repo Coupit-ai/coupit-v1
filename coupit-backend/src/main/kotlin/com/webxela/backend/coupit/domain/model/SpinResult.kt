@@ -8,7 +8,6 @@ data class SpinResult(
     val session: SpinSession,
     val createdAt: Instant? = null,
     val reward: Reward,
-    val qrCode: String,
     val expiresAt: Instant,
     val claimed: Boolean? = null
 )
