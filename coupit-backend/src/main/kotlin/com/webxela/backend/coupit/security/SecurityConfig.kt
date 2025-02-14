@@ -29,6 +29,7 @@ class SecurityConfig(
                 authority
                     .requestMatchers(
                         "/api/v1/square/**",
+                        "/api/v1/pass/**"
 //                        "/api/v1/auth/**"
                     ).permitAll()
                     .requestMatchers(

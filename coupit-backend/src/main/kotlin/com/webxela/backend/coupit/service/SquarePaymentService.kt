@@ -1,7 +1,7 @@
 package com.webxela.backend.coupit.service
 
-import com.webxela.backend.coupit.api.dto.PaymentWebhookRequest
-import com.webxela.backend.coupit.api.mappper.PaymentDtoMapper.toPayment
+import com.webxela.backend.coupit.rest.dto.PaymentWebhookRequest
+import com.webxela.backend.coupit.rest.mappper.PaymentDtoMapper.toPayment
 import com.webxela.backend.coupit.config.SquareConfig
 import com.webxela.backend.coupit.domain.exception.ApiError
 import com.webxela.backend.coupit.domain.model.SpinSession
