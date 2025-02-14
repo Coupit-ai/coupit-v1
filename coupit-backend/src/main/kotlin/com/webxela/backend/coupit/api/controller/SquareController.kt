@@ -2,6 +2,7 @@ package com.webxela.backend.coupit.api.controller
 
 import com.webxela.backend.coupit.api.dto.PaymentWebhookRequest
 import com.webxela.backend.coupit.api.dto.auth.LogOutResponse
+import com.webxela.backend.coupit.api.dto.auth.MerchantResponse
 import com.webxela.backend.coupit.api.dto.auth.RedirectResponse
 import com.webxela.backend.coupit.api.dto.auth.RevokeWebhookRequest
 import com.webxela.backend.coupit.domain.exception.ApiResponse
@@ -92,5 +93,11 @@ class SquareController(
             squarePaymentService.handlePaymentWebhook(requestBody, signature)
         }
         return ResponseEntity.ok().build() // Return OK whatever happens
+    }
+
+    @GetMapping("/me")
+    fun getLoggedInUser(): ResponseEntity<ApiResponse<MerchantResponse>> {
+        val response = squareOauthService.getLoggedInMerchant()
+        return ResponseEntity.ok(ApiResponse.success(response))
     }
 }
