@@ -1,9 +1,9 @@
 package com.webxela.backend.coupit.service
 
-import com.webxela.backend.coupit.api.dto.RewardRequest
-import com.webxela.backend.coupit.api.dto.RewardResponse
-import com.webxela.backend.coupit.api.mappper.RewardDtoMapper.toReward
-import com.webxela.backend.coupit.api.mappper.RewardDtoMapper.toRewardResponse
+import com.webxela.backend.coupit.rest.dto.RewardRequest
+import com.webxela.backend.coupit.rest.dto.RewardResponse
+import com.webxela.backend.coupit.rest.mappper.RewardDtoMapper.toReward
+import com.webxela.backend.coupit.rest.mappper.RewardDtoMapper.toRewardResponse
 import com.webxela.backend.coupit.domain.exception.ApiError
 import com.webxela.backend.coupit.infra.persistence.adapter.MerchantRepoAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.RewardRepoAdapter
@@ -42,8 +42,4 @@ class RewardService(
         }
     }
 
-    @Transactional(readOnly = false)
-    fun updateReward() {
-
-    }
 }

@@ -1,9 +1,9 @@
 package com.webxela.backend.coupit.service
 
-import com.webxela.backend.coupit.api.dto.SpinConfigResponse
-import com.webxela.backend.coupit.api.dto.SpinResponse
-import com.webxela.backend.coupit.api.mappper.SpinDtoMapper.toSpinConfig
-import com.webxela.backend.coupit.api.mappper.SpinDtoMapper.toSpinResponse
+import com.webxela.backend.coupit.rest.dto.SpinConfigResponse
+import com.webxela.backend.coupit.rest.dto.SpinResponse
+import com.webxela.backend.coupit.rest.mappper.SpinDtoMapper.toSpinConfig
+import com.webxela.backend.coupit.rest.mappper.SpinDtoMapper.toSpinResponse
 import com.webxela.backend.coupit.domain.exception.ApiError
 import com.webxela.backend.coupit.domain.model.Reward
 import com.webxela.backend.coupit.domain.model.SpinSession
@@ -100,12 +100,6 @@ class SpinService(
         return null
     }
 
-
-    private fun generateQrCode(reward: Reward): String {
-        // QR code generation logic (to be implemented)
-        return reward.title + UUID.randomUUID().toString()
-    }
-
     @Transactional(readOnly = false)
     fun getSpinConfig(sessionId: UUID): SpinConfigResponse {
 
@@ -166,5 +160,10 @@ class SpinService(
             throw ApiError.BadRequest("You are not authorized to access this session.")
         }
         return sessionData
+    }
+
+    private fun generateQrCode(reward: Reward): String {
+        // QR code generation logic (to be implemented)
+        return reward.title + UUID.randomUUID().toString()
     }
 }

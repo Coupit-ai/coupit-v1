@@ -1,9 +1,9 @@
 package com.webxela.backend.coupit.service
 
-import com.webxela.backend.coupit.api.dto.auth.MerchantResponse
-import com.webxela.backend.coupit.api.dto.auth.RevokeWebhookRequest
-import com.webxela.backend.coupit.api.mappper.MerchantMapper.toMerchantResponse
-import com.webxela.backend.coupit.api.mappper.SignupDtoMapper.toSignupRequest
+import com.webxela.backend.coupit.rest.dto.auth.MerchantResponse
+import com.webxela.backend.coupit.rest.dto.auth.RevokeWebhookRequest
+import com.webxela.backend.coupit.rest.mappper.MerchantMapper.toMerchantResponse
+import com.webxela.backend.coupit.rest.mappper.SignupDtoMapper.toSignupRequest
 import com.webxela.backend.coupit.config.SquareConfig
 import com.webxela.backend.coupit.domain.exception.ApiError
 import com.webxela.backend.coupit.infra.external.repo.OauthDataSourceAdapter

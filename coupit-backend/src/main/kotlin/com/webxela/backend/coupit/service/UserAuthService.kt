@@ -1,12 +1,11 @@
 package com.webxela.backend.coupit.service
 
-import com.webxela.backend.coupit.api.dto.auth.LoginResponse
-import com.webxela.backend.coupit.api.dto.auth.SignupRequest
-import com.webxela.backend.coupit.api.dto.auth.SignupResponse
-import com.webxela.backend.coupit.api.mappper.SignupDtoMapper.toSignupResponse
-import com.webxela.backend.coupit.api.mappper.SignupDtoMapper.toUser
+import com.webxela.backend.coupit.rest.dto.auth.LoginResponse
+import com.webxela.backend.coupit.rest.dto.auth.SignupRequest
+import com.webxela.backend.coupit.rest.dto.auth.SignupResponse
+import com.webxela.backend.coupit.rest.mappper.SignupDtoMapper.toSignupResponse
+import com.webxela.backend.coupit.rest.mappper.SignupDtoMapper.toUser
 import com.webxela.backend.coupit.domain.exception.ApiError
-import com.webxela.backend.coupit.domain.model.User
 import com.webxela.backend.coupit.infra.persistence.adapter.UserRepoAdapter
 import com.webxela.backend.coupit.utils.JwtUtils
 import org.apache.logging.log4j.LogManager

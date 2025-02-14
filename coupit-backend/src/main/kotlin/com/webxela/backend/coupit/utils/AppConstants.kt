@@ -20,5 +20,6 @@ object AppConstants {
     const val PAYMENT_FCM_TITLE = "New Payment Received"
     const val PAYMENT_FCM_BODY = "A customer payment has been initiated. Tap to review the details and process the transaction."
 
+    const val P12_PASSWORD = "torO88mAp7k5HmMpeSVg2"
 
 }
