@@ -14,7 +14,6 @@ object SpinEntityMapper {
             id = this.id,
             createdAt = this.createdAt,
             reward = this.reward.toReward(),
-            qrCode = this.qrCode,
             expiresAt = this.expiresAt,
             claimed = this.claimed,
             session = this.session.toSpinSession()
@@ -25,7 +24,6 @@ object SpinEntityMapper {
         return SpinEntity(
             id = this.id,
             reward = this.reward.toRewardEntity(),
-            qrCode = this.qrCode,
             session = this.session.toSessionEntity(),
             expiresAt = this.expiresAt
         )

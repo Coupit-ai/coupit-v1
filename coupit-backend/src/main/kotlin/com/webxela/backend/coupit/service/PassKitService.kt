@@ -38,7 +38,7 @@ class PassKitService {
                 .setForegroundColor("rgb(255, 255, 255)")
                 .setBackgroundColor("rgb(255, 69, 0)")
                 .setLogoText("20% OFF")
-                .setBarcode("SAVE20", "PKBarcodeFormatQR", "iso-8859-1")
+                .setBarcode("coupit-932423472893498923", "PKBarcodeFormatQR", "iso-8859-1")
                 .addPrimaryField("offer", "Offer", "SAVE20")
                 .addSecondaryField("expires", "Expires", "2023-12-31")
                 .addAuxiliaryField("terms", "Terms", "One-time use only.")

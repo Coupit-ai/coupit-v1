@@ -15,7 +15,6 @@ object SpinDtoMapper {
             id = this.id!!,
             createdAt = this.createdAt!!,
             reward = this.reward.toRewardResponse(),
-            qrCode = this.qrCode,
             expiresAt = this.expiresAt,
             claimed = this.claimed!!
         )

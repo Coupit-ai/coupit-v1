@@ -7,7 +7,6 @@ data class SpinResponse(
     val id: UUID,
     val createdAt: Instant,
     val reward: RewardResponse,
-    val qrCode: String,
     val expiresAt: Instant,
     val claimed: Boolean
 )
