@@ -13,7 +13,10 @@ class RewardRepoAdapter(private val rewardJpaRepo: RewardJpaRepo) {
 
     @Transactional(readOnly = true)
     fun getAllRewards(merchantId: String): List<Reward> {
-        return rewardJpaRepo.findAll().map { it.toReward() }
+        return rewardJpaRepo
+            .findAll()
+            .filter { it.merchant.id == merchantId }
+            .map { it.toReward() }
     }
 
     @Transactional(readOnly = true)
