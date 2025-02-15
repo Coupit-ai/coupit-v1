@@ -19,12 +19,18 @@ class RewardController(
 ) {
 
     @PostMapping
-    fun createNewReward(
-        @RequestBody requestBody: List<RewardRequest>
-    ): ResponseEntity<ApiResponse<List<RewardResponse>>> {
-        val reward = rewardService.createNewRewards(requestBody)
+    fun createReward(
+        @RequestBody requestBody: RewardRequest
+    ): ResponseEntity<ApiResponse<RewardResponse>> {
+        val reward = rewardService.createReward(requestBody)
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(ApiResponse.success(reward))
+    }
+
+    @GetMapping
+    fun getAllRewards(): ResponseEntity<ApiResponse<List<RewardResponse>>> {
+        val rewards = rewardService.getAllRewards()
+        return ResponseEntity.ok(ApiResponse.success(rewards))
     }
 
     @GetMapping("/redeem/{spinId}")
