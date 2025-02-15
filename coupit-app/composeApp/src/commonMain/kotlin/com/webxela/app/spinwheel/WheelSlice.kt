@@ -37,16 +37,10 @@ internal fun WheelSlice(
 ) {
     val density = LocalDensity.current
     var canvasWidth by remember { mutableStateOf(0) }
-    // Compute the radius in pixels (assuming size is the diameter)
     val radiusPx = with(density) { (size / 2).toPx() }
 
-    // Manually convert the wedge angle (in degrees) to radians.
-    // theta = degrees * (PI / 180)
     val theta = degree * PI / 180.0
 
-    // Compute the centroid distance from the center in pixels.
-    // For a circular sector (wedge) the centroid is:
-    // d = (4 * R * sin(theta/2)) / (3 * theta)
     val centroidDistancePx = if (theta > 0) {
         (4 * radiusPx.toDouble() * sin(theta / 2)) / (3 * theta)
     } else {
@@ -66,10 +60,6 @@ internal fun WheelSlice(
                 useCenter = true,
             )
         }
-        // Place the text at the computed centroid of the wedge.
-        // 1. We align the container at the center of the canvas.
-        // 2. We offset it upward (negative y) by the computed amount so that it sits inside the wedge.
-        // 3. We rotate the text so that its baseline is perpendicular to the radial line.
         Box(
             modifier = Modifier
                 .align(Alignment.Center)

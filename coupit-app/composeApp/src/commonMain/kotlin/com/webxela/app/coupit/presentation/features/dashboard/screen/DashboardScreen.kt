@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.webxela.app.coupit.core.utils.AppConstant
+import com.webxela.app.coupit.presentation.component.SecondaryTopAppBar
 import dev.theolm.rinku.Rinku
 
 @Composable
@@ -48,20 +49,10 @@ private fun DashboardScreen(
     modifier: Modifier = Modifier,
     onNavigateToScannerScreen: () -> Unit
 ) {
-
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Dashboard",
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                ),
+            SecondaryTopAppBar(
+                title = "Dashboard",
                 actions = {
                     IconButton(onClick = onNavigateToScannerScreen) {
                         Icon(

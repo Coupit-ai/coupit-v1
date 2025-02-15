@@ -3,12 +3,11 @@ package com.webxela.app.coupit.presentation.features.home.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.mmk.kmpnotifier.notification.NotifierManager
-import com.webxela.app.coupit.core.domain.DeviceType
-import com.webxela.app.coupit.core.domain.getDeviceType
+import com.webxela.app.coupit.core.domain.onError
+import com.webxela.app.coupit.core.domain.onSuccess
+import com.webxela.app.coupit.core.presentation.toErrorMessage
 import com.webxela.app.coupit.core.utils.AppConstant
 import com.webxela.app.coupit.domain.usecase.DataStoreUseCase
-import com.webxela.app.coupit.domain.usecase.FirebaseUseCase
 import com.webxela.app.coupit.domain.usecase.SquareUseCase
 import dev.theolm.rinku.Rinku
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,29 +25,38 @@ class HomeViewModel(
     val homeUiState = _homeUiState.asStateFlow()
 
     fun onEvent(event: HomeUiEvent) {
-        when(event) {
-            is HomeUiEvent.CheckIfUserIsLoggedIn -> checkIfUserIsLoggedIn()
+        when (event) {
+            is HomeUiEvent.GetMerchantInfo -> getMerchantInfo()
         }
     }
 
-    private fun checkIfUserIsLoggedIn() = viewModelScope.launch {
+    private fun getMerchantInfo() = viewModelScope.launch {
         _homeUiState.update { it.copy(isLoading = true) }
-        dataStoreUseCase.getStringFromVault(AppConstant.SECURE_JWT_TOKEN)?.let { token ->
-            val isExpired = squareUseCase.checkIfJwtExpired(token)
-            if (isExpired) {
-                Logger.e("JWT token is invalid or expired, starting login flow")
-                dataStoreUseCase.deleteObject(AppConstant.SECURE_JWT_TOKEN)
-                Rinku.handleDeepLink("${AppConstant.DEEPLINK_URL}/oauth")
-                _homeUiState.update { it.copy(isLoading = false) }
-            } else {
-                Logger.i("User is already logged in")
-                _homeUiState.update { it.copy(isLoading = false) }
-            }
-        } ?: run {
-            Logger.e("Token not found, starting login flow")
+        squareUseCase.getJwtToken() ?: run {
+            Logger.e("User is not loggedIn, starting login flow")
             Rinku.handleDeepLink("${AppConstant.DEEPLINK_URL}/oauth")
             _homeUiState.update { it.copy(isLoading = false) }
         }
+        squareUseCase.getLoggedInUser()
+            .onSuccess { merchant ->
+                _homeUiState.update {
+                    it.copy(
+                        merchantResponse = merchant,
+                        isLoading = false
+                    )
+                }
+            }
+            .onError { error ->
+                _homeUiState.update {
+                    it.copy(
+                        errorMessage = error.toErrorMessage(),
+                        isLoading = false
+                    )
+                }
+                dataStoreUseCase.deleteObject(AppConstant.SECURE_JWT_TOKEN)
+                Rinku.handleDeepLink("${AppConstant.DEEPLINK_URL}/oauth")
+                Logger.e("Token is invalid or expired, starting login flow")
+            }
     }
 
 }

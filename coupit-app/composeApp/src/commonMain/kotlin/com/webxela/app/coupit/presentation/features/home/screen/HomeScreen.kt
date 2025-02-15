@@ -5,6 +5,8 @@ import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +34,6 @@ fun HomeScreenRoot(
 ) {
 
     val uiState by viewModel.homeUiState.collectAsStateWithLifecycle()
-
     HomeScreen(
         modifier = modifier,
         uiState = uiState,
@@ -50,10 +51,10 @@ private fun HomeScreen(
 ) {
 
     val errorHandler = LocalErrorHandler.current
-    var selectedItem by remember { mutableStateOf(drawerItems[0]) }
+    var selectedItem by remember { mutableStateOf(drawerItems[1]) }
 
     LaunchedEffect(Unit) {
-        uiEvent(HomeUiEvent.CheckIfUserIsLoggedIn)
+        uiEvent(HomeUiEvent.GetMerchantInfo)
     }
 
     LaunchedEffect(uiState.errorMessage) {
@@ -70,7 +71,9 @@ private fun HomeScreen(
                 MerchantDrawer(
                     drawerItems = drawerItems,
                     selectedItem = selectedItem,
-                    onItemSelect = { selectedItem = it }
+                    onItemSelect = { selectedItem = it },
+                    merchant = uiState.merchantResponse,
+                    isLoading = uiState.isLoading
                 )
             }
         }

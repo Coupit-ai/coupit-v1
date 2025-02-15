@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import com.webxela.app.coupit.presentation.component.SecondaryTopAppBar
 
 @Composable
 fun SettingScreenRoot(modifier: Modifier = Modifier) {
@@ -30,18 +31,7 @@ private fun SettingScreen(modifier: Modifier = Modifier) {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Merchant Settings",
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                )
-            )
+            SecondaryTopAppBar(title = "Settings")
         },
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow
     ) { innerPadding ->

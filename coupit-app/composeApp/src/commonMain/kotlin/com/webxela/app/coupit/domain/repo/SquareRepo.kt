@@ -3,6 +3,7 @@ package com.webxela.app.coupit.domain.repo
 import com.webxela.app.coupit.core.domain.ApiResponse
 import com.webxela.app.coupit.core.domain.DataError
 import com.webxela.app.coupit.domain.model.Connection
+import com.webxela.app.coupit.domain.model.Merchant
 
 interface SquareRepo {
 
@@ -10,7 +11,7 @@ interface SquareRepo {
 
     suspend fun revokeSquareConnection()
 
-    suspend fun checkIfJwtExpired(token: String): Boolean
-
     fun getJwtToken(): String?
+
+    suspend fun getLoggedInUser(): ApiResponse<Merchant, DataError.Remote>
 }
