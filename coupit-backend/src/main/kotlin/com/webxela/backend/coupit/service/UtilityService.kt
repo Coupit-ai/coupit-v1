@@ -13,7 +13,8 @@ class UtilityService(private val userRepo: UserRepoAdapter) {
 
     fun getCurrentLoginUser(): UserDetails? {
         val authState = SecurityContextHolder.getContext().authentication
-        if (authState != null) {
+        println(authState)
+        if (authState != null && authState.principal != "anonymousUser") {
             return (authState.principal as UserDetails)
         }
         return null

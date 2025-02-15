@@ -30,6 +30,7 @@ object RewardDtoMapper {
 
     fun RewardRequest.toReward(merchant: SquareMerchant): Reward {
         return Reward(
+            id = this.id,
             title = this.title,
             description = this.description,
             probability = this.probability,

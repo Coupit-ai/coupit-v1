@@ -31,7 +31,7 @@ class RewardRepoAdapter(private val rewardJpaRepo: RewardJpaRepo) {
     }
 
     @Transactional
-    fun createNewReward(reward: Reward): Reward {
+    fun createReward(reward: Reward): Reward {
         return rewardJpaRepo.saveAndFlush(reward.toRewardEntity()).toReward()
     }
 
