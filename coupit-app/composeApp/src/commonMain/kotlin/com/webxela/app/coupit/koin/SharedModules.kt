@@ -4,18 +4,22 @@ import com.webxela.app.coupit.core.data.HttpClientFactory
 import com.webxela.app.coupit.core.utils.AppConstant
 import com.webxela.app.coupit.data.local.DataStoreManager
 import com.webxela.app.coupit.data.remote.FirebaseManager
+import com.webxela.app.coupit.data.remote.RewardManager
 import com.webxela.app.coupit.data.remote.SpinManager
 import com.webxela.app.coupit.data.remote.SquareManager
 import com.webxela.app.coupit.data.repo.DataStoreRepoImpl
 import com.webxela.app.coupit.data.repo.FirebaseRepoImpl
+import com.webxela.app.coupit.data.repo.RewardRepoImpl
 import com.webxela.app.coupit.data.repo.SpinRepoImpl
 import com.webxela.app.coupit.data.repo.SquareRepoImpl
 import com.webxela.app.coupit.domain.repo.DataStoreRepo
 import com.webxela.app.coupit.domain.repo.FirebaseRepo
+import com.webxela.app.coupit.domain.repo.RewardRepo
 import com.webxela.app.coupit.domain.repo.SpinRepo
 import com.webxela.app.coupit.domain.repo.SquareRepo
 import com.webxela.app.coupit.domain.usecase.DataStoreUseCase
 import com.webxela.app.coupit.domain.usecase.FirebaseUseCase
+import com.webxela.app.coupit.domain.usecase.RewardUseCase
 import com.webxela.app.coupit.domain.usecase.SpinUseCase
 import com.webxela.app.coupit.domain.usecase.SquareUseCase
 import com.webxela.app.coupit.presentation.features.auth.viewmodel.AuthViewModel
@@ -45,21 +49,24 @@ val sharedModule = module {
     singleOf(::SquareManager)
     singleOf(::DataStoreManager)
     singleOf(::FirebaseManager)
+    singleOf(::RewardManager)
 
     singleOf(::SpinRepoImpl).bind<SpinRepo>()
     singleOf(::SquareRepoImpl).bind<SquareRepo>()
     singleOf(::DataStoreRepoImpl).bind<DataStoreRepo>()
     singleOf(::FirebaseRepoImpl).bind<FirebaseRepo>()
+    singleOf(::RewardRepoImpl).bind<RewardRepo>()
 
     singleOf(::SpinUseCase)
     singleOf(::SquareUseCase)
     singleOf(::DataStoreUseCase)
     singleOf(::FirebaseUseCase)
-
-    singleOf(::FirebaseService)
+    singleOf(::RewardUseCase)
 
     viewModelOf(::WheelViewModel)
     viewModelOf(::RewardViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::AuthViewModel)
+
+    singleOf(::FirebaseService)
 }

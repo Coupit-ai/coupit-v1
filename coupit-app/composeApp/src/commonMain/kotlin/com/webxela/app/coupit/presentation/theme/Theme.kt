@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import com.materialkolor.DynamicMaterialTheme
 
+
 internal val LocalThemeIsDark = compositionLocalOf { mutableStateOf(true) }
 
 @Composable
@@ -26,7 +27,7 @@ internal fun AppTheme(content: @Composable () -> Unit) {
         DynamicMaterialTheme(
             useDarkTheme = isDark,
             typography = AppTypography(),
-            seedColor = Color.Green,
+            seedColor = Color.DarkGray,
             content = { Surface(content = content) }
         )
     }
