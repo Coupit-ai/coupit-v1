@@ -69,7 +69,7 @@ private fun RewardManagerScreen(
     val gridState = rememberLazyGridState()
     val errorHandler = LocalErrorHandler.current
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(uiState.rewardResponse) {
         uiEvent(RewardUiEvent.GetAllRewards)
     }
 
@@ -89,22 +89,9 @@ private fun RewardManagerScreen(
                 showDialog = false
                 selectedReward = null
             },
-            onSaveClicked = { title, description, probability, validityHours ->
-                selectedReward?.let { reward ->
-                    uiEvent(
-                        RewardUiEvent.CreateReward(
-                            reward.copy(
-                                id = reward.id,
-                                title = title,
-                                description = description,
-                                probability = probability.toDoubleOrNull()
-                                    ?: reward.probability,
-                                validityHours = validityHours.toIntOrNull()
-                                    ?: reward.validityHours
-                            )
-                        )
-                    )
-                }
+            onSaveClicked = { reward ->
+                Logger.e("Reward: $reward")
+                uiEvent(RewardUiEvent.CreateReward(reward))
             }
         )
     }
@@ -145,13 +132,18 @@ private fun RewardManagerScreen(
                         .padding(innerPadding)
                         .clip(RoundedCornerShape(16.dp))
                 ) {
-                    items(uiState.allRewardResponse, key = { it.id!! }) { reward ->
+                    items(
+                        uiState.allRewardResponse,
+                        key = { it.id!! }
+                    ) { reward ->
                         RewardsCard(
                             reward = reward,
                             onCardClick = {
-                                Logger.e(reward.toString())
                                 selectedReward = reward
                                 showDialog = true
+                            },
+                            onDelete = {
+//                                uiEvent(RewardUiEvent.DeleteReward(reward))
                             }
                         )
                     }

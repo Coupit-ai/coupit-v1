@@ -1,6 +1,7 @@
 package com.webxela.app.coupit.presentation.features.reward.component
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,12 +32,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.webxela.app.coupit.domain.model.Reward
 
+
 @Composable
 fun RewardDialog(
     modifier: Modifier = Modifier,
     reward: Reward? = null,
     onDismiss: () -> Unit,
-    onSaveClicked: (title: String, description: String, probability: String, validityHours: String) -> Unit
+    onSaveClicked: (reward: Reward) -> Unit
 ) {
     var title by remember { mutableStateOf(reward?.title.orEmpty()) }
     var description by remember { mutableStateOf(reward?.description.orEmpty()) }
@@ -87,20 +89,23 @@ fun RewardDialog(
                     OutlinedTextField(
                         value = title,
                         onValueChange = { title = it },
-                        label = { Text("Title") },
+                        label = { Text("Title", style = MaterialTheme.typography.bodyLarge) },
                         modifier = Modifier.fillMaxWidth(),
                         enabled = !isEditMode || isEditing,
-                        colors = textFieldColors
+                        colors = textFieldColors,
+                        maxLines = 1,
+                        textStyle = MaterialTheme.typography.titleMedium
                     )
 
                     OutlinedTextField(
                         value = description,
                         onValueChange = { description = it },
-                        label = { Text("Description") },
+                        label = { Text("Description", style = MaterialTheme.typography.bodyLarge) },
                         modifier = Modifier.fillMaxWidth(),
                         maxLines = 3,
                         enabled = !isEditMode || isEditing,
-                        colors = textFieldColors
+                        colors = textFieldColors,
+                        textStyle = MaterialTheme.typography.titleMedium
                     )
 
                     OutlinedTextField(
@@ -108,11 +113,18 @@ fun RewardDialog(
                         onValueChange = {
                             if (it.isEmpty() || it.toFloatOrNull() != null) probability = it
                         },
-                        label = { Text("Probability (1-100)") },
+                        label = {
+                            Text(
+                                "Probability (1-100)",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         modifier = Modifier.fillMaxWidth(),
                         enabled = !isEditMode || isEditing,
-                        colors = textFieldColors
+                        colors = textFieldColors,
+                        maxLines = 1,
+                        textStyle = MaterialTheme.typography.titleMedium
                     )
 
                     OutlinedTextField(
@@ -120,11 +132,18 @@ fun RewardDialog(
                         onValueChange = {
                             if (it.isEmpty() || it.toIntOrNull() != null) validityHours = it
                         },
-                        label = { Text("Validity (hours)") },
+                        label = {
+                            Text(
+                                "Validity (hours)",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth(),
                         enabled = !isEditMode || isEditing,
-                        colors = textFieldColors
+                        colors = textFieldColors,
+                        maxLines = 1,
+                        textStyle = MaterialTheme.typography.titleMedium
                     )
                 }
             }
@@ -137,10 +156,17 @@ fun RewardDialog(
                 Button(onClick = onDismiss) {
                     Text("Cancel")
                 }
-                if (!isEditMode || isEditing) {
+                if (!isEditMode || !isEditing) {
                     Button(
                         onClick = {
-                            onSaveClicked(title, description, probability, validityHours)
+                            val newReward = Reward(
+                                id = reward?.id,
+                                title = title,
+                                description = description,
+                                probability = probability.toDouble(),
+                                validityHours = validityHours.toInt()
+                            )
+                            onSaveClicked(newReward)
                             onDismiss()
                         }
                     ) {
