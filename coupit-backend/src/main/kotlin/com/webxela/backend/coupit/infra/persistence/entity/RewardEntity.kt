@@ -24,5 +24,8 @@ data class RewardEntity(
     val description: String,
 
     @Column(nullable = false)
-    val validityHours: Int
+    val validityHours: Int,
+
+    @Column(nullable = false)
+    val discountCode: String
 )

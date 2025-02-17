@@ -7,5 +7,6 @@ data class RewardRequest(
     val title: String,
     val description: String,
     val probability: Double,
-    val validityHours: Int
+    val validityHours: Int,
+    val discountCode: String
 )
