@@ -1,6 +1,7 @@
 package com.webxela.backend.coupit.infra.persistence.entity
 
 import jakarta.persistence.*
+import java.time.Instant
 import java.util.UUID
 
 @Entity
@@ -27,5 +28,8 @@ data class RewardEntity(
     val validityHours: Int,
 
     @Column(nullable = false)
-    val discountCode: String
+    val discountCode: String,
+
+    @Column(nullable = false)
+    val createdAt: Instant = Instant.now()
 )

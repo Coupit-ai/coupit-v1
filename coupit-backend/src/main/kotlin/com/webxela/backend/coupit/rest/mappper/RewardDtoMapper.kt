@@ -16,7 +16,8 @@ object RewardDtoMapper {
             description = this.description,
             probability = this.probability,
             validityHours = this.validityHours,
-            discountCode = this.discountCode
+            discountCode = this.discountCode,
+            createdAt = this.createdAt!!
         )
     }
 

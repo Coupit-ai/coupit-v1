@@ -1,5 +1,6 @@
 package com.webxela.backend.coupit.domain.model
 
+import java.time.Instant
 import java.util.UUID
 
 data class Reward(
@@ -9,5 +10,6 @@ data class Reward(
     val description: String,
     val probability: Double,
     val validityHours: Int,
-    val discountCode: String
+    val discountCode: String,
+    val createdAt: Instant? = null
 )

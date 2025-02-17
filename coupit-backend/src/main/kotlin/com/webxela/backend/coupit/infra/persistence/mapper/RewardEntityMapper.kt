@@ -15,7 +15,8 @@ object RewardEntityMapper {
             probability = this.probability,
             validityHours = this.validityHours,
             discountCode = this.discountCode,
-            merchant = this.merchant.toSquareMerchant()
+            merchant = this.merchant.toSquareMerchant(),
+            createdAt = this.createdAt
         )
     }
 
