@@ -50,7 +50,7 @@ class RewardController(
         @PathVariable rewardId: UUID
     ): ResponseEntity<ApiResponse<RewardDeleteResponse>> {
         rewardService.deleteReward(rewardId)
-        val response = RewardDeleteResponse("Reward deleted successfully.")
+        val response = RewardDeleteResponse("Reward $rewardId deleted successfully.")
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
