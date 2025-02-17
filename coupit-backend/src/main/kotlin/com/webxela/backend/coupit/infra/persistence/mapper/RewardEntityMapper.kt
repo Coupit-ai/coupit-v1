@@ -14,16 +14,19 @@ object RewardEntityMapper {
             description = this.description,
             probability = this.probability,
             validityHours = this.validityHours,
+            discountCode = this.discountCode,
             merchant = this.merchant.toSquareMerchant()
         )
     }
 
     fun Reward.toRewardEntity(): RewardEntity {
         return RewardEntity(
+            id = this.id,
             title = this.title,
             description = this.description,
             probability = this.probability,
             validityHours = this.validityHours,
+            discountCode = this.discountCode,
             merchant = this.merchant.toMerchantEntity()
         )
     }

@@ -6,6 +6,7 @@ import com.webxela.backend.coupit.rest.dto.SpinResponse
 import com.webxela.backend.coupit.rest.mappper.SpinDtoMapper.toSpinConfig
 import com.webxela.backend.coupit.rest.mappper.SpinDtoMapper.toSpinResponse
 import com.webxela.backend.coupit.domain.exception.ApiError
+import com.webxela.backend.coupit.domain.exception.ApiResponse
 import com.webxela.backend.coupit.domain.model.Reward
 import com.webxela.backend.coupit.domain.model.SpinSession
 import com.webxela.backend.coupit.infra.persistence.adapter.RewardRepoAdapter
@@ -13,6 +14,7 @@ import com.webxela.backend.coupit.infra.persistence.adapter.SessionRepoAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.SpinRepoAdapter
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant

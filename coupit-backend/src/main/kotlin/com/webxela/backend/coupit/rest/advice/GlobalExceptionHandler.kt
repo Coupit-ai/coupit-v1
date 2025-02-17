@@ -49,7 +49,7 @@ class GlobalExceptionHandler {
         logger.error(ex.message, ex)
         val response = ApiResponse.error<Nothing>(
             status = HttpStatus.INTERNAL_SERVER_ERROR,
-            message = "Error while parsing json response.",
+            message = "Error while processing json response.",
             exception = ex.message
         )
         return ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR)
@@ -60,7 +60,7 @@ class GlobalExceptionHandler {
         logger.error(ex.message, ex)
         val response = ApiResponse.error<Nothing>(
             status = HttpStatus.INTERNAL_SERVER_ERROR,
-            message = "Error while parsing your request.",
+            message = "Error while processing your request.",
             exception = ex.message
         )
         return ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR)

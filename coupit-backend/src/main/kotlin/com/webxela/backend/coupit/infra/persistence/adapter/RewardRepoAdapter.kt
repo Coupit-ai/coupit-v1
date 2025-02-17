@@ -33,15 +33,19 @@ class RewardRepoAdapter(private val rewardJpaRepo: RewardJpaRepo) {
         return rewards
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     fun createReward(reward: Reward): Reward {
         return rewardJpaRepo.saveAndFlush(reward.toRewardEntity()).toReward()
     }
 
-    fun createRewardInBatch(rewards: List<Reward>): List<Reward> {
-        return rewardJpaRepo.saveAllAndFlush(
-            rewards.map { it.toRewardEntity() }
-        ).map { it.toReward() }
+    @Transactional(readOnly = false)
+    fun deleteAllRewards(rewardId: UUID) {
+        val reward = rewardJpaRepo.findById(rewardId).orElse(null)
+        rewardJpaRepo.delete(reward)
     }
 
+    @Transactional(readOnly = false)
+    fun updateReward(reward: Reward): Reward {
+        return rewardJpaRepo.saveAndFlush(reward.toRewardEntity()).toReward()
+    }
 }

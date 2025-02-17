@@ -10,6 +10,7 @@ import com.webxela.backend.coupit.infra.persistence.adapter.RewardRepoAdapter
 import org.apache.logging.log4j.LogManager
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 
 
 @Service
@@ -51,6 +52,44 @@ class RewardService(
         } catch (ex: Exception) {
             logger.error("Error while fetching rewards", ex)
             throw ApiError.InternalError("Something went wrong while fetching rewards", ex)
+        }
+    }
+
+    @Transactional(readOnly = false)
+    fun deleteReward(rewardId: UUID) {
+        utilityService.getCurrentLoginUser()
+            ?: throw ApiError.Unauthorized("You are not authorized to perform this action.")
+
+        rewardRepo.getReward(rewardId)
+            ?: throw ApiError.ResourceNotFound("Invalid reward Id")
+
+        try {
+            rewardRepo.deleteAllRewards(rewardId)
+        } catch (ex: Exception) {
+            logger.error("Error while deleting rewards", ex)
+            throw ApiError.InternalError("Something went wrong while deleting rewards", ex)
+        }
+    }
+
+    @Transactional(readOnly = false)
+    fun updateReward(rewardRequest: RewardRequest): RewardResponse {
+        val user = utilityService.getCurrentLoginUser()
+            ?: throw ApiError.Unauthorized("You are not authorized to perform this action.")
+
+        val merchant = merchantRepo.getMerchant(user.username) ?: run {
+            throw ApiError.ResourceNotFound("Something went wrong, Please login again")
+        }
+
+        rewardRequest.id?.let {
+            rewardRepo.getReward(it) ?: throw ApiError.ResourceNotFound("Reward doesn't exist")
+        } ?: throw ApiError.ResourceNotFound("Reward doesn't exist")
+
+        try {
+            val reward = rewardRepo.updateReward(rewardRequest.toReward(merchant))
+            return reward.toRewardResponse()
+        } catch (ex: Exception) {
+            logger.error("Error while updating reward", ex)
+            throw ApiError.InternalError("Something went wrong while updating reward", ex)
         }
     }
 
