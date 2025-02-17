@@ -8,5 +8,6 @@ data class RewardUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val allRewardResponse: List<Reward> = emptyList(),
-    val rewardResponse: Reward? = null
+    val rewardResponse: Reward? = null,
+    val rewardDeleteResponse: String? = null
 )

@@ -13,7 +13,9 @@ object RewardDtoMapper {
                 description = reward.description,
                 probability = reward.probability,
                 title = reward.title,
-                validityHours = reward.validityHours
+                validityHours = reward.validityHours,
+                discountCode = reward.discountCode,
+                createdAt = reward.createdAt
             )
         }
     }
@@ -24,7 +26,9 @@ object RewardDtoMapper {
             description = this.data.description,
             probability = this.data.probability,
             title = this.data.title,
-            validityHours = this.data.validityHours
+            validityHours = this.data.validityHours,
+            discountCode = this.data.discountCode,
+            createdAt = this.data.createdAt
         )
     }
 
@@ -34,7 +38,8 @@ object RewardDtoMapper {
             description = this.description,
             probability = this.probability,
             title = this.title,
-            validityHours = this.validityHours
+            validityHours = this.validityHours,
+            discountCode = this.discountCode
         )
     }
 

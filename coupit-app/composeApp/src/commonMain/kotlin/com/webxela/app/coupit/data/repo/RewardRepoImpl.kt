@@ -20,4 +20,9 @@ class RewardRepoImpl(private val rewardManager: RewardManager): RewardRepo {
         return rewardManager.createReward(reward.toRewardRequest()).map { it.toReward() }
     }
 
+    override suspend fun deleteReward(rewardId: String): ApiResponse<String, DataError.Remote> {
+        val response = rewardManager.deleteReward(rewardId)
+        return response.map { it.data.message }
+    }
+
 }

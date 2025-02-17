@@ -15,4 +15,7 @@ class RewardUseCase(private val rewardRepo: RewardRepo) {
         return rewardRepo.createReward(reward)
     }
 
+    suspend fun deleteReward(rewardId: String): ApiResponse<String, DataError.Remote> {
+        return rewardRepo.deleteReward(rewardId)
+    }
 }

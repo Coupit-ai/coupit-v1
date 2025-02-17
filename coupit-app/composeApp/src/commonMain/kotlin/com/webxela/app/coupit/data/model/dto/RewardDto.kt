@@ -26,6 +26,10 @@ data class RewardDto(
         @SerialName("title")
         val title: String,
         @SerialName("validityHours")
-        val validityHours: Int
+        val validityHours: Int,
+        @SerialName("discountCode")
+        val discountCode: String,
+        @SerialName("createdAt")
+        val createdAt: String
     )
 }

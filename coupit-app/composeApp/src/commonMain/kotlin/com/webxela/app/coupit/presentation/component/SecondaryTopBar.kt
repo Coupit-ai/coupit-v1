@@ -35,7 +35,8 @@ fun SecondaryTopAppBar(
             Text(
                 text = title,
                 style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1
             )
         },
         colors = colors,
