@@ -30,6 +30,7 @@ class RewardViewModel(
             is RewardUiEvent.CreateReward -> createReward(event.reward)
             is RewardUiEvent.GetAllRewards -> getAllRewards()
             is RewardUiEvent.DeleteReward -> deleteReward(event.rewardId)
+            is RewardUiEvent.ClearErrorMessage -> _rewardUiState.update { it.copy(errorMessage = null) }
         }
     }
 

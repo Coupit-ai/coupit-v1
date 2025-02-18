@@ -25,8 +25,6 @@ data class SpinResultDto(
         val createdAt: String,
         @SerialName("expiresAt")
         val expiresAt: String,
-        @SerialName("qrCode")
-        val qrCode: String,
         @SerialName("reward")
         val reward: Reward
     ) {

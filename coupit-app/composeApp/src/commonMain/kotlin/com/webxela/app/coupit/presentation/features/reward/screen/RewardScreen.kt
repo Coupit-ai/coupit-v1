@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.webxela.app.coupit.core.presentation.navigation.LocalErrorHandler
+import com.webxela.app.coupit.core.utils.AppConstant
 import com.webxela.app.coupit.presentation.component.SecondaryTopAppBar
 import com.webxela.app.coupit.presentation.features.reward.viewmodel.RewardUiEvent
 import com.webxela.app.coupit.presentation.features.reward.viewmodel.RewardUiState
@@ -121,7 +122,7 @@ private fun RewardScreen(
 
                     val logoPainter = painterResource(Res.drawable.ic_qrcode_scanner)
 
-                    val qrcodePainter : Painter = rememberQrCodePainter(uiState.spinResponse.qrCode) {
+                    val qrcodePainter : Painter = rememberQrCodePainter("${AppConstant.BASE_URL}/pass/${uiState.spinResponse.id}") {
                         logo {
                             painter = logoPainter
                             padding = QrLogoPadding.Natural(.1f)

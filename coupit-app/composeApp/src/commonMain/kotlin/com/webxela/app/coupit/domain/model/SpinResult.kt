@@ -6,7 +6,6 @@ data class SpinResult(
     val claimed: Boolean,
     val createdAt: String,
     val expiresAt: String,
-    val qrCode: String,
     val reward: Reward
 ) {
     data class Reward(

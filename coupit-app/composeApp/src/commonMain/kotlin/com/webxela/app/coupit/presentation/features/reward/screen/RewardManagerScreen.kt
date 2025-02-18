@@ -63,6 +63,7 @@ private fun RewardManagerScreen(
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let {
             errorHandler.showError(it)
+            uiEvent(RewardUiEvent.ClearErrorMessage)
         }
     }
 
@@ -81,7 +82,7 @@ private fun RewardManagerScreen(
     }
 
     Scaffold(
-        topBar = { SecondaryTopAppBar(title = "Rewards Manager") },
+        topBar = { SecondaryTopAppBar(title = "Rewards") },
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         floatingActionButton = {
             AddRewardButton(

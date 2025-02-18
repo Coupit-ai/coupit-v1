@@ -11,7 +11,6 @@ object SpinResultDtoMapper {
             createdAt = this.data.createdAt,
             expiresAt = this.data.expiresAt,
             claimed = this.data.claimed,
-            qrCode = this.data.qrCode,
             reward = this.data.reward.toSpinReward()
         )
     }
