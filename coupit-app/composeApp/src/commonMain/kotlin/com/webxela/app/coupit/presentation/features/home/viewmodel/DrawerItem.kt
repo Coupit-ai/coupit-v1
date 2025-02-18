@@ -26,7 +26,7 @@ val drawerItems = listOf(
     ),
     DrawerItem(
         icon = Icons.Default.LocalOffer,
-        title = "Manage Rewards",
+        title = "Rewards",
         type = DrawerItemType.REWARD_MANAGER
     ),
     DrawerItem(
