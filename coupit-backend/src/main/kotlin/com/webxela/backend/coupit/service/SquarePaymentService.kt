@@ -36,7 +36,7 @@ class SquarePaymentService(
     fun handlePaymentWebhook(
         requestBody: PaymentWebhookRequest,
         signature: String
-    ) {
+    ): String {
         try {
 //            val mapper = jacksonObjectMapper()
 //            val stringifiedBody = mapper.writeValueAsString(requestBody)
@@ -57,11 +57,13 @@ class SquarePaymentService(
 
             } else {
                 logger.error("Received invalid payment webhook")
-                return
+                return "Invalid payment webhook"
             }
         } catch (ex: Exception) {
             logger.error("Failed to handle payment webhook: ${ex.message}", ex)
+            return "Failed to handle payment webhook"
         }
+        return "Payment webhook processed successfully"
     }
 
     @Transactional(readOnly = false)
