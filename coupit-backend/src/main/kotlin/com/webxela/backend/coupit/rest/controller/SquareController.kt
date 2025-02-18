@@ -90,9 +90,10 @@ class SquareController(
     ): ResponseEntity<String> {
         val signature = "" // TODO: remove this line
         if (requestBody.data.objectX.payment.status == "COMPLETED") {
-            squarePaymentService.handlePaymentWebhook(requestBody, signature)
+            val response = squarePaymentService.handlePaymentWebhook(requestBody, signature)
+            return ResponseEntity.ok(response)
         }
-        return ResponseEntity.ok().build() // Return OK whatever happens
+        return ResponseEntity.ok("Something went wrong") // Return OK whatever happens
     }
 
     @GetMapping("/me")
