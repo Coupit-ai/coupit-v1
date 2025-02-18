@@ -1,5 +1,6 @@
 package com.webxela.backend.coupit.infra.persistence.adapter
 
+import com.webxela.backend.coupit.domain.enum.RewardState
 import com.webxela.backend.coupit.domain.model.Reward
 import com.webxela.backend.coupit.infra.persistence.mapper.RewardEntityMapper.toReward
 import com.webxela.backend.coupit.infra.persistence.mapper.RewardEntityMapper.toRewardEntity
@@ -15,7 +16,7 @@ class RewardRepoAdapter(private val rewardJpaRepo: RewardJpaRepo) {
     fun getAllRewards(merchantId: String): List<Reward> {
         return rewardJpaRepo
             .findAll()
-            .filter { it.merchant.id == merchantId }
+            .filter { it.merchant.id == merchantId && it.state == RewardState.ACTIVE }
             .map { it.toReward() }
     }
 
@@ -39,9 +40,10 @@ class RewardRepoAdapter(private val rewardJpaRepo: RewardJpaRepo) {
     }
 
     @Transactional(readOnly = false)
-    fun deleteAllRewards(rewardId: UUID) {
+    fun deleteReward(rewardId: UUID) {
         val reward = rewardJpaRepo.findById(rewardId).orElse(null)
-        rewardJpaRepo.delete(reward)
+        val newReward = reward.copy(state = RewardState.DELETED)
+        rewardJpaRepo.saveAndFlush(newReward)
     }
 
     @Transactional(readOnly = false)

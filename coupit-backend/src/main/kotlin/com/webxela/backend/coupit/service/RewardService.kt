@@ -64,7 +64,7 @@ class RewardService(
             ?: throw ApiError.ResourceNotFound("Invalid reward Id")
 
         try {
-            rewardRepo.deleteAllRewards(rewardId)
+            rewardRepo.deleteReward(rewardId)
         } catch (ex: Exception) {
             logger.error("Error while deleting rewards", ex)
             throw ApiError.InternalError("Something went wrong while deleting rewards", ex)
