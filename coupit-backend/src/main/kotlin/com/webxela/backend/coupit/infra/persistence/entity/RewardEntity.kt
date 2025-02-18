@@ -1,5 +1,6 @@
 package com.webxela.backend.coupit.infra.persistence.entity
 
+import com.webxela.backend.coupit.domain.enum.RewardState
 import jakarta.persistence.*
 import java.time.Instant
 import java.util.UUID
@@ -31,5 +32,9 @@ data class RewardEntity(
     val discountCode: String,
 
     @Column(nullable = false)
-    val createdAt: Instant = Instant.now()
+    val createdAt: Instant = Instant.now(),
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    val state: RewardState = RewardState.ACTIVE
 )
