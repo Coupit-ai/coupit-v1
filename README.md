@@ -24,27 +24,27 @@ Coupit is a customer incentive platform designed to enhance the shopping experie
 ## System Flow
 
 1. **Customer Purchase:**
-   - A customer completes a purchase at a participating retail store.
+    - A customer completes a purchase at a participating retail store.
 
 2. **Spin Wheel Activation:**
-   - After the payment is processed, a digital spin wheel is activated on the POS system.
-   - The customer is offered the chance to spin the wheel.
+    - After the payment is processed, a digital spin wheel is activated on the POS system.
+    - The customer is offered the chance to spin the wheel.
 
 3. **Server-Side Reward Determination:**
-   - Once the wheel is spun, the reward is determined on the server using a secure random generation algorithm to ensure fairness and security.
-   - The determined reward is then stored in the backend associated with the transaction.
+    - Once the wheel is spun, the reward is determined on the server using a secure random generation algorithm to ensure fairness and security.
+    - The determined reward is then stored in the backend associated with the transaction.
 
 4. **QR Code Generation:**
-   - A unique QR code is generated for the reward.
-   - The QR code is displayed on the POS system for the customer to scan.
+    - A unique QR code is generated for the reward.
+    - The QR code is displayed on the POS system for the customer to scan.
 
 5. **Reward Redemption:**
-   - The customer scans the QR code using their iPhone.
-   - Upon scanning, they are prompted to save the reward as a digital pass in their Apple Wallet.
-   - The QR code system incorporates a limited validity period to mitigate misuse.
+    - The customer scans the QR code using their iPhone.
+    - Upon scanning, they are prompted to save the reward as a digital pass in their Apple Wallet.
+    - The QR code system incorporates a limited validity period to mitigate misuse.
 
 6. **Future Purchase & Reward Usage:**
-   - When the customer returns to the store, they can redeem the stored reward during subsequent purchases.
+    - When the customer returns to the store, they can redeem the stored reward during subsequent purchases.
 
 ## Security Considerations
 - **Secure API Calls:** All API requests are authenticated using JWT tokens, ensuring that all interactions are secure and encrypted.
