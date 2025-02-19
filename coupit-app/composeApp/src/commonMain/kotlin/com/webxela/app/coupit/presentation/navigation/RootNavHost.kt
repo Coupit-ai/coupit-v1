@@ -58,7 +58,14 @@ fun RootNavHost(
                 token = auth.token,
                 state = auth.state,
                 error = auth.error,
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateToHomeScreen = {
+                    navController.navigate(NavDestinations.Home) {
+                        launchSingleTop = true
+                        popUpTo(NavDestinations.Home) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
 

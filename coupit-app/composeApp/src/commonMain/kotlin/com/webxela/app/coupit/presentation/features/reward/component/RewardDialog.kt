@@ -46,7 +46,11 @@ fun RewardDialog(
 ) {
     var title by remember { mutableStateOf(reward?.title.orEmpty()) }
     var description by remember { mutableStateOf(reward?.description.orEmpty()) }
-    var probability by remember { mutableStateOf((reward?.probability?.times(100))?.toString().orEmpty()) }
+    var probability by remember {
+        mutableStateOf(
+            (reward?.probability?.times(100))?.toString().orEmpty()
+        )
+    }
     var validityHours by remember { mutableStateOf(reward?.validityHours?.toString().orEmpty()) }
     var discountCode by remember { mutableStateOf(reward?.discountCode.orEmpty()) }
     var isEditing by remember { mutableStateOf(false) }
@@ -94,7 +98,9 @@ fun RewardDialog(
             ) {
                 OutlinedTextField(
                     value = title,
-                    onValueChange = { title = it },
+                    onValueChange = {
+                        if (it.length <= 25) title = it
+                    },
                     label = { Text("Title") },
                     modifier = textFieldModifier,
                     enabled = textFieldEnabled,
@@ -180,7 +186,7 @@ fun RewardDialog(
                                     probability = probability.toDoubleOrNull()?.div(100) ?: 0.0,
                                     validityHours = validityHours.toIntOrNull() ?: 0,
                                     discountCode = discountCode,
-                                    createdAt = null
+                                    createdAt = reward?.createdAt,
                                 )
                             )
                             onDismiss()

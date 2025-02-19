@@ -35,6 +35,11 @@ object AppInitializer : KoinComponent {
                 super.onNotificationClicked(data)
                 firebaseService.handleNotificationPayload(data)
             }
+
+            override fun onPayloadData(data: PayloadData) {
+                super.onPayloadData(data)
+                firebaseService.handleNotificationPayload(data)
+            }
         })
     }
 }

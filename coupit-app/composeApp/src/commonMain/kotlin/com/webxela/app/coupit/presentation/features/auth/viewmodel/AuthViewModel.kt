@@ -13,6 +13,7 @@ import com.webxela.app.coupit.domain.usecase.DataStoreUseCase
 import com.webxela.app.coupit.domain.usecase.FirebaseUseCase
 import com.webxela.app.coupit.domain.usecase.SquareUseCase
 import com.webxela.app.coupit.presentation.features.firebase.FirebaseService
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -35,9 +36,9 @@ class AuthViewModel(
             is AuthUiEvent.ResetErrorMessage -> _authUiState.update { it.copy(errorMessage = null) }
             is AuthUiEvent.ResetConnectionResp -> _authUiState.update { it.copy(connectionResponse = null) }
             is AuthUiEvent.HandleOauthDeeplink -> handleOauthDeeplink(
-                event.token,
-                event.state,
-                event.error
+                token = event.token,
+                state = event.state,
+                error = event.error
             )
         }
     }
@@ -100,7 +101,12 @@ class AuthViewModel(
                 _authUiState.update {
                     it.copy(
                         connectionResponse = connection,
-//                        isLoading = false
+                    )
+                }
+                delay(15000)
+                _authUiState.update {
+                    it.copy(
+                        isLoading = false
                     )
                 }
             }

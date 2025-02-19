@@ -28,11 +28,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.webxela.app.coupit.core.presentation.navigation.LocalErrorHandler
 import com.webxela.app.coupit.presentation.component.LoadingButton
 import com.webxela.app.coupit.presentation.features.auth.viewmodel.AuthUiEvent
 import com.webxela.app.coupit.presentation.features.auth.viewmodel.AuthUiState
 import com.webxela.app.coupit.presentation.features.auth.viewmodel.AuthViewModel
-import com.webxela.app.coupit.core.presentation.navigation.LocalErrorHandler
 import com.webxela.app.coupit.presentation.theme.LARGE_CORNER_RADIUS
 import com.webxela.app.coupit.presentation.theme.SMALL_CORNER_RADIUS
 import org.koin.compose.viewmodel.koinViewModel
@@ -44,18 +44,17 @@ fun RootAuthScreen(
     token: String?,
     state: String?,
     error: String?,
-    onNavigateBack: () -> Unit
+    onNavigateToHomeScreen: () -> Unit
 ) {
     val uiState by viewModel.authUiState.collectAsStateWithLifecycle()
-
     AuthScreen(
         modifier = modifier,
         token = token,
         state = state,
         error = error,
         uiState = uiState,
-        uiEvent = viewModel::onEvent,
-        onNavigateBack = onNavigateBack
+        onEvent = viewModel::onEvent,
+        onNavigateToHomeScreen = onNavigateToHomeScreen
     )
 }
 
@@ -66,71 +65,43 @@ private fun AuthScreen(
     state: String?,
     error: String?,
     uiState: AuthUiState,
-    uiEvent: (AuthUiEvent) -> Unit,
-    onNavigateBack: () -> Unit,
+    onEvent: (AuthUiEvent) -> Unit,
+    onNavigateToHomeScreen: () -> Unit
 ) {
-
     val uriHandler = LocalUriHandler.current
     val errorHandler = LocalErrorHandler.current
 
     LaunchedEffect(uiState.errorMessage) {
-        uiState.errorMessage?.let {
-            errorHandler.showError(it)
-        }
+        uiState.errorMessage?.let { errorHandler.showError(it) }
     }
-
     LaunchedEffect(uiState.isLoading) {
-        if (uiState.isLoading) uiEvent(AuthUiEvent.ResetErrorMessage)
+        if (uiState.isLoading) onEvent(AuthUiEvent.ResetErrorMessage)
     }
-
-    LaunchedEffect(key1 = token, key2 = state, key3 = error) {
-        uiEvent(AuthUiEvent.HandleOauthDeeplink(token, state, error))
+    LaunchedEffect(token, state, error) {
+        onEvent(AuthUiEvent.HandleOauthDeeplink(token, state, error))
     }
-
     LaunchedEffect(uiState.oauthFlowResponse) {
-        if (uiState.oauthFlowResponse) onNavigateBack()
+        if (uiState.oauthFlowResponse) onNavigateToHomeScreen()
     }
-
     LaunchedEffect(uiState.connectionResponse) {
         uiState.connectionResponse?.redirectUri?.let { uri ->
             uriHandler.openUri(uri)
-            uiEvent(AuthUiEvent.ResetConnectionResp)
+            onEvent(AuthUiEvent.ResetConnectionResp)
         }
     }
-
-    val buttonColor by animateColorAsState(
-        targetValue = if (uiState.errorMessage.isNullOrBlank()) {
-            MaterialTheme.colorScheme.primary
-        } else {
-            MaterialTheme.colorScheme.errorContainer
-        },
-        animationSpec = tween(500),
-        label = "Button Color Animation"
-    )
-
-    val textColor by animateColorAsState(
-        targetValue = if (uiState.errorMessage.isNullOrBlank()) {
-            MaterialTheme.colorScheme.onPrimary
-        } else {
-            MaterialTheme.colorScheme.onErrorContainer
-        },
-        animationSpec = tween(500),
-        label = "Text Color Animation"
-    )
 
     Surface(
         modifier = modifier
             .fillMaxWidth(.8f)
             .requiredSizeIn(minWidth = 350.dp)
             .padding(16.dp),
-        shape = RoundedCornerShape(LARGE_CORNER_RADIUS),
+        shape = RoundedCornerShape(LARGE_CORNER_RADIUS)
     ) {
         Column(
             modifier = Modifier.padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
             Card(
                 shape = CircleShape,
                 modifier = Modifier
@@ -138,7 +109,6 @@ private fun AuthScreen(
                     .aspectRatio(1f)
                     .padding(bottom = 16.dp)
             ) {}
-
             Text(
                 text = "Login with Square",
                 fontSize = 20.sp,
@@ -155,20 +125,46 @@ private fun AuthScreen(
                     .padding(bottom = 24.dp)
                     .alpha(.6f)
             )
-
-            LoadingButton(
-                onClick = { uiEvent(AuthUiEvent.ConnectWithSquare) },
-                text = if (uiState.errorMessage.isNullOrBlank()) "Continue with Square"
-                else "Failed, Try Again",
-                loading = uiState.isLoading,
-                shape = RoundedCornerShape(SMALL_CORNER_RADIUS),
-                textStyle = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = buttonColor,
-                    contentColor = textColor
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
+            SquareLoginButton(uiState = uiState, onEvent = onEvent)
         }
     }
+}
+
+@Composable
+private fun SquareLoginButton(
+    uiState: AuthUiState,
+    onEvent: (AuthUiEvent) -> Unit
+) {
+    val buttonColor by animateColorAsState(
+        targetValue = if (uiState.errorMessage.isNullOrBlank())
+            MaterialTheme.colorScheme.primary
+        else MaterialTheme.colorScheme.errorContainer,
+        animationSpec = tween(500),
+        label = "Button Color Animation"
+    )
+
+    val textColor by animateColorAsState(
+        targetValue = if (uiState.errorMessage.isNullOrBlank())
+            MaterialTheme.colorScheme.onPrimary
+        else MaterialTheme.colorScheme.onErrorContainer,
+        animationSpec = tween(500),
+        label = "Text Color Animation"
+    )
+
+    LoadingButton(
+        onClick = { onEvent(AuthUiEvent.ConnectWithSquare) },
+        text = if (uiState.errorMessage.isNullOrBlank())
+            "Continue with Square"
+        else "Failed, Try Again",
+        loading = uiState.isLoading,
+        shape = RoundedCornerShape(SMALL_CORNER_RADIUS),
+        textStyle = MaterialTheme.typography.titleMedium.copy(
+            fontWeight = FontWeight.Medium
+        ),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = buttonColor,
+            contentColor = textColor
+        ),
+        modifier = Modifier.fillMaxWidth()
+    )
 }

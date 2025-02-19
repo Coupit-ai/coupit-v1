@@ -15,7 +15,7 @@ object RewardDtoMapper {
                 title = reward.title,
                 validityHours = reward.validityHours,
                 discountCode = reward.discountCode,
-                createdAt = reward.createdAt
+                createdAt = reward.createdAt,
             )
         }
     }

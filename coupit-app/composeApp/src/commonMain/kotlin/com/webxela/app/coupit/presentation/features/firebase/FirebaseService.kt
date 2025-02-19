@@ -19,6 +19,7 @@ class FirebaseService(private val firebaseUseCase: FirebaseUseCase) {
     }
 
     fun handleNotificationPayload(data: PayloadData) {
+        NotifierManager.getLocalNotifier().removeAll()
         Logger.i("Notification clicked, Notification payloadData: $data")
         data.let { payload ->
             val sessionId: String = payload.getValue("sessionId").toString()
@@ -26,7 +27,6 @@ class FirebaseService(private val firebaseUseCase: FirebaseUseCase) {
                 url = "${AppConstant.DEEPLINK_URL}/nav/wheel?sessionId=$sessionId"
             )
         }
-        NotifierManager.getLocalNotifier().removeAll()
     }
 
 }
