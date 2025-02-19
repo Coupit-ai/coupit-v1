@@ -14,24 +14,17 @@ class RewardRepoAdapter(private val rewardJpaRepo: RewardJpaRepo) {
 
     @Transactional(readOnly = true)
     fun getAllRewards(merchantId: String): List<Reward> {
-        return rewardJpaRepo
+        val reward =  rewardJpaRepo
             .findAll()
             .filter { it.merchant.id == merchantId && it.state == RewardState.ACTIVE }
             .map { it.toReward() }
+        rewardJpaRepo.flush()
+        return reward
     }
 
     @Transactional(readOnly = true)
     fun getReward(rewardId: UUID): Reward? {
         return rewardJpaRepo.findById(rewardId).map { it.toReward() }.orElse(null)
-    }
-
-    @Transactional(readOnly = true)
-    fun getRewardsByMerchantId(merchantId: String): List<Reward> {
-        val rewards = rewardJpaRepo.findAll()
-            .filter { it.merchant.id == merchantId }
-            .map { it.toReward() }
-        rewardJpaRepo.flush()
-        return rewards
     }
 
     @Transactional(readOnly = false)

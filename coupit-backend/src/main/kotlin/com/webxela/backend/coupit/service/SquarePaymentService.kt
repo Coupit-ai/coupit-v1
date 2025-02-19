@@ -53,7 +53,10 @@ class SquarePaymentService(
 
                 savePaymentAndCreateSession(requestBody)?.let { sessionId ->
                     sendFcmNotification(sessionId, requestBody.merchantId)
-                } ?: logger.error("failed to send FCM notification")
+                } ?: kotlin.run {
+                    logger.error("failed to send FCM notification")
+                    return "Failed to save payment and create session"
+                }
 
             } else {
                 logger.error("Received invalid payment webhook")

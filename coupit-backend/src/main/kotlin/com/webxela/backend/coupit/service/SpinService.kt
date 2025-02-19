@@ -1,25 +1,23 @@
 package com.webxela.backend.coupit.service
 
 import com.webxela.backend.coupit.config.DotEnvConfig
-import com.webxela.backend.coupit.rest.dto.SpinConfigResponse
-import com.webxela.backend.coupit.rest.dto.SpinResponse
-import com.webxela.backend.coupit.rest.mappper.SpinDtoMapper.toSpinConfig
-import com.webxela.backend.coupit.rest.mappper.SpinDtoMapper.toSpinResponse
 import com.webxela.backend.coupit.domain.exception.ApiError
-import com.webxela.backend.coupit.domain.exception.ApiResponse
 import com.webxela.backend.coupit.domain.model.Reward
 import com.webxela.backend.coupit.domain.model.SpinSession
 import com.webxela.backend.coupit.infra.persistence.adapter.RewardRepoAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.SessionRepoAdapter
 import com.webxela.backend.coupit.infra.persistence.adapter.SpinRepoAdapter
+import com.webxela.backend.coupit.rest.dto.SpinConfigResponse
+import com.webxela.backend.coupit.rest.dto.SpinResponse
+import com.webxela.backend.coupit.rest.mappper.SpinDtoMapper.toSpinConfig
+import com.webxela.backend.coupit.rest.mappper.SpinDtoMapper.toSpinResponse
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.UUID
+import java.util.*
 import kotlin.random.Random
 
 @Service
@@ -45,7 +43,7 @@ class SpinService(
             return spinResult.toSpinResponse()
         }
 
-        val rewards = rewardRepo.getRewardsByMerchantId(session.merchant.id)
+        val rewards = rewardRepo.getAllRewards(session.merchant.id)
 
         // Check if there is at least one reward available
         if (rewards.isEmpty()) {
@@ -106,7 +104,7 @@ class SpinService(
     fun getSpinConfig(sessionId: UUID): SpinConfigResponse {
 
         val sessionData = getSessionIfValid(sessionId)
-        val rewards = rewardRepo.getRewardsByMerchantId(sessionData.merchant.id)
+        val rewards = rewardRepo.getAllRewards(sessionData.merchant.id)
 
         if (rewards.size < 2) {
             logger.error("There are less than 2 rewards configured.")
