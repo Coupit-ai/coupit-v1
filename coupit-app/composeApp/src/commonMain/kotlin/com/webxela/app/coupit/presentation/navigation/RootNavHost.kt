@@ -73,6 +73,7 @@ fun RootNavHost(
             val wheel = backstackEntry.toRoute<NavDestinations.Wheel>()
             WheelScreenRoot(
                 sessionId = wheel.sessionId,
+                navigateBack = { navController.popBackStack() },
                 navigateToRewardScreen = { spinId ->
                     navController.navigate(NavDestinations.Reward(spinId)) {
                         launchSingleTop = true

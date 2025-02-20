@@ -16,10 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-class HomeViewModel(
-    private val dataStoreUseCase: DataStoreUseCase,
-    private val squareUseCase: SquareUseCase
-) : ViewModel() {
+class HomeViewModel(private val squareUseCase: SquareUseCase) : ViewModel() {
 
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState = _homeUiState.asStateFlow()
@@ -53,9 +50,6 @@ class HomeViewModel(
                         isLoading = false
                     )
                 }
-                dataStoreUseCase.deleteObject(AppConstant.SECURE_JWT_TOKEN)
-                Rinku.handleDeepLink("${AppConstant.DEEPLINK_URL}/oauth")
-                Logger.e("Token is invalid or expired, starting login flow")
             }
     }
 

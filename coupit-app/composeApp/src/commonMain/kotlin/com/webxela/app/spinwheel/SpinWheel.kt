@@ -24,7 +24,7 @@ internal fun SpinWheel(
     modifier: Modifier = Modifier,
     outerRingColor: Color = Color(0xFFFFD700),
     pointerColor: Color = Color(0xFF000000),
-    pointerStrokeColor: Color = Color(0xFF171717),
+    pointerStrokeColor: Color = Color(0xFFEDEADE),
     pointerStrokeWidth: Float = 3.0f,
     centerComponent: @Composable () -> Unit
 ) {

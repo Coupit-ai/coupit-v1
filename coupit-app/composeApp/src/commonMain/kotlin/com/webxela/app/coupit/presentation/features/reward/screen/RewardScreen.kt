@@ -91,6 +91,7 @@ private fun RewardScreen(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         topBar = {
            SecondaryTopAppBar(
                title = "Reward",

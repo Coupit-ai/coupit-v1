@@ -20,6 +20,7 @@ class WheelViewModel(private val spinUseCase: SpinUseCase) : ViewModel() {
         when (event) {
             is WheelUiEvent.GetWheelConfig -> getWheelConfig(event.sessionId)
             is WheelUiEvent.PerformSpin -> performSpin(event.sessionId)
+            is WheelUiEvent.ClearErrorMessage -> _wheelUiState.update { it.copy(errorMessage = null) }
         }
     }
 

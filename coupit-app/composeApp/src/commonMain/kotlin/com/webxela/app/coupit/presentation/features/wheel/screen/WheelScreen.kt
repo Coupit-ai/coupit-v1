@@ -1,14 +1,15 @@
 package com.webxela.app.coupit.presentation.features.wheel.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,12 +18,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.webxela.app.coupit.core.presentation.navigation.LocalErrorHandler
 import com.webxela.app.coupit.domain.model.SpinConfig
+import com.webxela.app.coupit.presentation.component.ErrorDialog
 import com.webxela.app.coupit.presentation.features.wheel.viewmodel.WheelUiEvent
 import com.webxela.app.coupit.presentation.features.wheel.viewmodel.WheelUiState
 import com.webxela.app.coupit.presentation.features.wheel.viewmodel.WheelViewModel
@@ -42,7 +46,8 @@ fun WheelScreenRoot(
     modifier: Modifier = Modifier,
     sessionId: String?,
     viewModel: WheelViewModel = koinViewModel(),
-    navigateToRewardScreen: (String) -> Unit
+    navigateToRewardScreen: (spinId: String) -> Unit,
+    navigateBack: () -> Unit
 ) {
     val uiState by viewModel.wheelUiState.collectAsStateWithLifecycle()
     WheelScreen(
@@ -50,7 +55,8 @@ fun WheelScreenRoot(
         uiState = uiState,
         uiEvent = viewModel::onEvent,
         sessionId = sessionId,
-        navigateToRewardScreen = navigateToRewardScreen
+        navigateToRewardScreen = navigateToRewardScreen,
+        navigateBack = navigateBack
     )
 }
 
@@ -60,7 +66,8 @@ private fun WheelScreen(
     uiState: WheelUiState,
     uiEvent: (WheelUiEvent) -> Unit,
     sessionId: String?,
-    navigateToRewardScreen: (String) -> Unit
+    navigateToRewardScreen: (spinId: String) -> Unit,
+    navigateBack: () -> Unit
 ) {
     val errorHandler = LocalErrorHandler.current
     var spinItemToId by remember { mutableStateOf("") }
@@ -70,15 +77,21 @@ private fun WheelScreen(
         uiEvent(WheelUiEvent.GetWheelConfig(sessionId))
     }
 
-    LaunchedEffect(uiState.errorMessage) {
-        uiState.errorMessage?.let { errorHandler.showError(it) }
-    }
-
     LaunchedEffect(uiState.spinResponse) {
         uiState.spinResponse?.let {
             spinItemToId = it.reward.id
             spinId = it.id
         }
+    }
+
+    uiState.errorMessage?.let {
+        ErrorDialog(
+            errorMessage = it,
+            onDismiss = {
+                uiEvent(WheelUiEvent.ClearErrorMessage)
+                navigateBack()
+            }
+        )
     }
 
     Scaffold { innerPadding ->
@@ -110,12 +123,12 @@ private fun WheelScreen(
                         outerRingColor = MaterialTheme.colorScheme.error,
                         spinWheelState = spinState
                     ) {
-                        Image(
-                            painter = painterResource(Res.drawable.ic_cyclone),
-                            contentDescription = "",
+                        Box(
+                            contentAlignment = Alignment.Center,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(4.dp)
+                                .clip(CircleShape)
                                 .clickable {
                                     uiEvent(
                                         WheelUiEvent.PerformSpin(
@@ -123,7 +136,14 @@ private fun WheelScreen(
                                         )
                                     )
                                 }
-                        )
+                        ) {
+                            Text(
+                                text = "SPIN",
+                                color = Color.White,
+                                fontWeight = FontWeight.SemiBold,
+                                style = MaterialTheme.typography.headlineMedium
+                            )
+                        }
                     }
                 }
             }
@@ -147,7 +167,12 @@ fun SpinConfig.toSpinWheelItems(): List<SpinWheelItem> {
     return newRewards.mapIndexed { i, r ->
         SpinWheelItem(
             identifier = r.id,
-            brush = Brush.linearGradient(listOf(colorsToUse[i % colorsToUse.size], colorsToUse[i % colorsToUse.size])),
+            brush = Brush.linearGradient(
+                listOf(
+                    colorsToUse[i % colorsToUse.size],
+                    colorsToUse[i % colorsToUse.size]
+                )
+            ),
             title = r.title
         )
     }
