@@ -1,6 +1,7 @@
 package com.webxela.backend.coupit.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.webxela.backend.coupit.infra.persistence.adapter.SpinRepoAdapter
 import com.webxela.backend.coupit.utils.AppConstants
 import com.webxela.backend.coupit.utils.ApplePassBuilder
 import org.bouncycastle.jce.provider.BouncyCastleProvider
@@ -8,11 +9,12 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import java.io.*
 import java.security.*
+import java.util.UUID
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
 @Service
-class PassKitService {
+class PassKitService(private val spinRepo: SpinRepoAdapter) {
 
     private val objectMapper = ObjectMapper()
     private val passTemplateDir by lazy {
@@ -26,7 +28,11 @@ class PassKitService {
         File.createTempFile("pass", ".pkpass")
     }
 
-    fun createPass(): File {
+    fun createPass(spinId: UUID): File {
+
+        spinRepo.getSpinById(spinId)
+            ?: throw RuntimeException("Cannot generate pass for non-existent reward")
+
         try {
             // Build the ApplePass
             val applePass = ApplePassBuilder()

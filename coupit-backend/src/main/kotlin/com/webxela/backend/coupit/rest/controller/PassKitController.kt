@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 
 @RestController
@@ -17,9 +18,9 @@ class PassKitController(private val passKitService: PassKitService) {
 
     @GetMapping("/{spinId}", produces = ["application/vnd.apple.pkpass"])
     fun generatePass(
-        @PathVariable spinId: String
+        @PathVariable spinId: UUID
     ): ResponseEntity<FileSystemResource> {
-        val passFile = passKitService.createPass()
+        val passFile = passKitService.createPass(spinId)
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"pass.pkpass\"")
             .contentType(MediaType.parseMediaType("application/vnd.apple.pkpass"))
