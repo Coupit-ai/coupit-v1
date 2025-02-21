@@ -15,7 +15,6 @@ koin = "4.0.1"
 coil = "3.0.4"
 kvault = "1.12.0"
 materialIconsExtended = "1.7.3"
-windowSizeClass = "1.8.0-alpha03"
 materialKolor = "2.0.2"
 multiplatformSettings = "1.3.0"
 kotlinx-datetime = "0.6.1"
@@ -33,7 +32,7 @@ google-services = "4.4.2"
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-uitest-testManifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "androidx-uiTest" }
 androidx-uitest-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "androidx-uiTest" }
-material3-window-size = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "windowSizeClass" }
+material3-window-size = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "compose" }
 mirzemehdi-kmpnotifier = { module = "io.github.mirzemehdi:kmpnotifier", version.ref = "kmpnotifier" }
 material-kolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
 sascha-kase64 = { module = "de.peilicke.sascha:kase64", version.ref = "kase64" }
