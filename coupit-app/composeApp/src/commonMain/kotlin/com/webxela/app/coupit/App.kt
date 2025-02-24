@@ -7,12 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.mmk.kmpnotifier.notification.NotifierManager
 import com.webxela.app.coupit.core.presentation.navigation.ErrorHandler
 import com.webxela.app.coupit.core.presentation.navigation.LocalErrorHandler
+import com.webxela.app.coupit.presentation.component.ConnectivityDialog
 import com.webxela.app.coupit.presentation.navigation.NavDestinations
 import com.webxela.app.coupit.presentation.navigation.RootNavHost
 import com.webxela.app.coupit.presentation.theme.AppTheme
+import dev.jordond.connectivity.compose.rememberConnectivityState
 import kotlinx.coroutines.launch
 
 @Composable
@@ -20,10 +21,18 @@ internal fun App() {
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
+    val state = rememberConnectivityState {
+        autoStart = true
+    }
+
     CompositionLocalProvider(LocalErrorHandler provides ErrorHandler { message ->
         coroutineScope.launch { snackBarHostState.showSnackbar(message) }
     }) {
         AppTheme {
+            ConnectivityDialog(
+                connectivityState = state,
+                retryClicked = { state.forceCheck() }
+            )
             Scaffold(snackbarHost = { SnackbarHost(snackBarHostState) }) {
                 RootNavHost(startDestination = NavDestinations.Home)
             }

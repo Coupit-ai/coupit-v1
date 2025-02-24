@@ -69,7 +69,6 @@ private fun WheelScreen(
     navigateToRewardScreen: (spinId: String) -> Unit,
     navigateBack: () -> Unit
 ) {
-    val errorHandler = LocalErrorHandler.current
     var spinItemToId by remember { mutableStateOf("") }
     var spinId by remember { mutableStateOf("") }
 
