@@ -1,15 +1,16 @@
 package com.webxela.app.coupit.presentation.features.wheel.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,10 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.webxela.app.coupit.core.presentation.navigation.LocalErrorHandler
 import com.webxela.app.coupit.domain.model.SpinConfig
 import com.webxela.app.coupit.presentation.component.ErrorDialog
 import com.webxela.app.coupit.presentation.features.wheel.viewmodel.WheelUiEvent
@@ -33,8 +34,9 @@ import com.webxela.app.coupit.presentation.features.wheel.viewmodel.WheelViewMod
 import com.webxela.app.spinwheel.SpinWheel
 import com.webxela.app.spinwheel.SpinWheelItem
 import com.webxela.app.spinwheel.rememberSpinWheelState
+import com.webxela.app.spinwheel.util.AutoResizedText
 import coupit.composeapp.generated.resources.Res
-import coupit.composeapp.generated.resources.ic_cyclone
+import coupit.composeapp.generated.resources.wheel_bg
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.math.max
@@ -92,56 +94,66 @@ private fun WheelScreen(
             }
         )
     }
-
     Scaffold { innerPadding ->
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = modifier.fillMaxSize().padding(innerPadding)
-        ) {
-            if (uiState.isLoading) CircularProgressIndicator()
-            if (uiState.spinConfigResponse != null) {
-                val wheelItems = uiState.spinConfigResponse.toSpinWheelItems()
-                val spinState = rememberSpinWheelState(
-                    items = wheelItems,
-                    onSpinningFinished = {
-                        navigateToRewardScreen(spinId)
-                        spinItemToId = ""
-                    },
-                    stopNbTurn = 15f,
-                    stopDuration = 10.seconds
-                )
-                LaunchedEffect(spinItemToId) {
-                    if (spinItemToId.isNotEmpty()) spinState.stopWheelAt(spinItemToId)
-                }
-                Box(
-                    modifier = modifier
-                        .fillMaxSize(0.5f)
-                        .aspectRatio(1f)
-                ) {
-                    SpinWheel(
-                        outerRingColor = MaterialTheme.colorScheme.error,
-                        spinWheelState = spinState
+        Box(modifier = modifier.fillMaxSize()) {
+            Image(
+                painter = painterResource(Res.drawable.wheel_bg),
+                contentScale = ContentScale.Crop,
+                contentDescription = "Wheel background",
+                modifier = Modifier.fillMaxSize()
+            )
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                if (uiState.isLoading) CircularProgressIndicator()
+                if (uiState.spinConfigResponse != null) {
+                    val wheelItems = uiState.spinConfigResponse.toSpinWheelItems()
+                    val spinState = rememberSpinWheelState(
+                        items = wheelItems,
+                        onSpinningFinished = {
+                            navigateToRewardScreen(spinId)
+                            spinItemToId = ""
+                        },
+                        stopNbTurn = 15f,
+                        stopDuration = 10.seconds
+                    )
+                    LaunchedEffect(spinItemToId) {
+                        if (spinItemToId.isNotEmpty()) spinState.stopWheelAt(spinItemToId)
+                    }
+                    Box(
+                        modifier = Modifier
+                            .size(435.dp)
+                            .aspectRatio(1f)
                     ) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(4.dp)
-                                .clip(CircleShape)
-                                .clickable {
-                                    uiEvent(
-                                        WheelUiEvent.PerformSpin(
-                                            uiState.spinConfigResponse.session.id
-                                        )
-                                    )
-                                }
+                        SpinWheel(
+                            outerRingColor = MaterialTheme.colorScheme.error,
+                            spinWheelState = spinState
                         ) {
-                            Text(
-                                text = "SPIN",
-                                color = Color.White,
-                                fontWeight = FontWeight.SemiBold,
-                                style = MaterialTheme.typography.headlineMedium
-                            )
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(4.dp)
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        uiEvent(
+                                            WheelUiEvent.PerformSpin(
+                                                uiState.spinConfigResponse.session.id
+                                            )
+                                        )
+                                    }
+                            ) {
+                                AutoResizedText(
+                                    text = "SPIN",
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.headlineMedium.copy(
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                )
+                            }
                         }
                     }
                 }
@@ -160,7 +172,9 @@ fun SpinConfig.toSpinWheelItems(): List<SpinWheelItem> {
     val totalRewards = newRewards.size
     val numColors = max(2, (totalRewards + 1) / 2)
     val baseColors = listOf(
-        Color(0xFF3BAF69), Color(0xFFEFC25F), Color(0xFF678CC8), Color(0xFFDB5A5A)
+        Color(0xFF40BDCA),
+        Color(0xFFCB655F),
+        Color(0xFFFEC93D)
     )
     val colorsToUse = baseColors.take(min(numColors, baseColors.size))
     return newRewards.mapIndexed { i, r ->

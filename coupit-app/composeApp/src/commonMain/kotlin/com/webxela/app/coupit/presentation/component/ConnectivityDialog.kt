@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import dev.jordond.connectivity.Connectivity
 import dev.jordond.connectivity.compose.ConnectivityState
+import kotlinx.coroutines.delay
 
 @Composable
 fun ConnectivityDialog(
@@ -38,7 +40,10 @@ fun ConnectivityDialog(
     LaunchedEffect(connectivityState.status) {
         showConnectivitySheet = when (connectivityState.status) {
             is Connectivity.Status.Connected -> false
-            else -> true
+            else -> {
+                delay(2000)
+                true
+            }
         }
     }
 
@@ -77,7 +82,7 @@ fun ConnectivityDialog(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Button(onClick = {}) {
+                    Button(onClick = retryClicked) {
                         Text("Try Again")
                     }
                 }

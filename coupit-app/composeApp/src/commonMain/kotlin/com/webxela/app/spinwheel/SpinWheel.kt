@@ -51,11 +51,11 @@ internal fun SpinWheel(
                 }
         )
 
-        // Decorative Ring
-        DecorationRing(
-            outerRingColor = outerRingColor,
-            config = wheelConfig
-        )
+//        // Decorative Ring
+//        DecorationRing(
+//            outerRingColor = outerRingColor,
+//            config = wheelConfig
+//        )
 
         // Center Component with Pointer
         Box(

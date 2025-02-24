@@ -37,8 +37,8 @@ fun WheelPointer(
 
     val imageVector = ImageVector.Builder(
         name = "WheelPointer",
-        defaultWidth = 200.dp,
-        defaultHeight = 200.dp,
+        defaultWidth = 100.dp,
+        defaultHeight = 100.dp,
         viewportWidth = 100f,
         viewportHeight = 100f
     ).apply {
