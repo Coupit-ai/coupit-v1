@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.LocalOffer
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
@@ -19,28 +20,35 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import co.touchlab.kermit.Logger
 import com.webxela.app.coupit.core.presentation.navigation.LocalErrorHandler
 import com.webxela.app.coupit.domain.model.Reward
 import com.webxela.app.coupit.presentation.component.SecondaryTopAppBar
+import com.webxela.app.coupit.presentation.component.ScreenPlaceholder
 import com.webxela.app.coupit.presentation.features.reward.component.RewardContent
 import com.webxela.app.coupit.presentation.features.reward.component.RewardDialog
 import com.webxela.app.coupit.presentation.features.reward.viewmodel.RewardUiEvent
 import com.webxela.app.coupit.presentation.features.reward.viewmodel.RewardUiState
+import com.webxela.app.coupit.presentation.features.reward.viewmodel.RewardValidator
 import com.webxela.app.coupit.presentation.features.reward.viewmodel.RewardViewModel
+import com.webxela.app.coupit.presentation.features.reward.viewmodel.ValidatorEvent
+import com.webxela.app.coupit.presentation.features.reward.viewmodel.ValidatorState
 import org.koin.compose.viewmodel.koinViewModel
 
 
 @Composable
 fun RewardManagerScreenRoot(
     modifier: Modifier = Modifier,
-    viewModel: RewardViewModel = koinViewModel()
+    viewModel: RewardViewModel = koinViewModel(),
+    validator: RewardValidator = koinViewModel()
 ) {
+    val validatorState by validator.state.collectAsStateWithLifecycle()
     val uiState by viewModel.rewardUiState.collectAsStateWithLifecycle()
     RewardManagerScreen(
         modifier = modifier,
         uiState = uiState,
-        uiEvent = viewModel::onEvent
+        uiEvent = viewModel::onEvent,
+        validatorState = validatorState,
+        validatorEvent = validator::onEvent
     )
 }
 
@@ -49,7 +57,9 @@ fun RewardManagerScreenRoot(
 private fun RewardManagerScreen(
     modifier: Modifier = Modifier,
     uiState: RewardUiState,
-    uiEvent: (RewardUiEvent) -> Unit
+    uiEvent: (RewardUiEvent) -> Unit,
+    validatorState: ValidatorState,
+    validatorEvent: (ValidatorEvent) -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var selectedReward by remember { mutableStateOf<Reward?>(null) }
@@ -69,18 +79,20 @@ private fun RewardManagerScreen(
 
     if (showDialog) {
         RewardDialog(
+            validatorState = validatorState,
+            validatorEvent = validatorEvent,
             reward = selectedReward,
             onDismiss = {
                 showDialog = false
                 selectedReward = null
             },
             onSaveClicked = { reward ->
-                Logger.e("Reward: $reward")
                 uiEvent(RewardUiEvent.CreateReward(reward))
+                showDialog = false
+                selectedReward = null
             }
         )
     }
-
     Scaffold(
         topBar = { SecondaryTopAppBar(title = "Rewards") },
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
@@ -93,19 +105,28 @@ private fun RewardManagerScreen(
             )
         }
     ) { padding ->
-        RewardContent(
-            modifier = modifier,
-            padding = padding,
-            uiState = uiState,
-            gridState = gridState,
-            onRewardClick = { reward ->
-                selectedReward = reward
-                showDialog = true
-            },
-            onDeleteReward = { rewardId ->
-                uiEvent(RewardUiEvent.DeleteReward(rewardId))
-            }
-        )
+        if (uiState.allRewardResponse.isEmpty()) {
+            ScreenPlaceholder(
+                title = "No Rewards Yet",
+                description = "Create your first reward by clicking the + button",
+                icon = Icons.Default.LocalOffer,
+                modifier = modifier.padding(padding)
+            )
+        } else {
+            RewardContent(
+                modifier = modifier,
+                padding = padding,
+                uiState = uiState,
+                gridState = gridState,
+                onRewardClick = { reward ->
+                    selectedReward = reward
+                    showDialog = true
+                },
+                onDeleteReward = { rewardId ->
+                    uiEvent(RewardUiEvent.DeleteReward(rewardId))
+                }
+            )
+        }
     }
 }
 

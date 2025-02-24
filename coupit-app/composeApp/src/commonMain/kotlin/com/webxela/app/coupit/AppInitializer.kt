@@ -1,11 +1,10 @@
-package com.webxela.app.coupit.koin
+package com.webxela.app.coupit
 
-import co.touchlab.kermit.Logger
 import com.mmk.kmpnotifier.notification.NotifierManager
 import com.mmk.kmpnotifier.notification.PayloadData
-import com.webxela.app.coupit.core.utils.AppConstant
+import com.webxela.app.coupit.koin.platformModule
+import com.webxela.app.coupit.koin.sharedModule
 import com.webxela.app.coupit.presentation.features.firebase.FirebaseService
-import dev.theolm.rinku.Rinku
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin

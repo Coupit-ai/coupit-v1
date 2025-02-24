@@ -4,13 +4,9 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
@@ -32,24 +28,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import com.webxela.app.coupit.domain.model.Reward
+import com.webxela.app.coupit.presentation.features.reward.viewmodel.ValidatorEvent
+import com.webxela.app.coupit.presentation.features.reward.viewmodel.ValidatorState
 
 
 @Composable
 fun RewardDialog(
     modifier: Modifier = Modifier,
     reward: Reward? = null,
+    validatorState: ValidatorState,
     onDismiss: () -> Unit,
-    onSaveClicked: (reward: Reward) -> Unit
+    onSaveClicked: (reward: Reward) -> Unit,
+    validatorEvent: (ValidatorEvent) -> Unit
 ) {
     var title by remember { mutableStateOf(reward?.title.orEmpty()) }
     var description by remember { mutableStateOf(reward?.description.orEmpty()) }
     var probability by remember {
-        mutableStateOf(
-            (reward?.probability?.times(100))?.toString().orEmpty()
-        )
+        mutableStateOf((reward?.probability?.times(100))?.toString().orEmpty())
     }
     var validityHours by remember { mutableStateOf(reward?.validityHours?.toString().orEmpty()) }
     var discountCode by remember { mutableStateOf(reward?.discountCode.orEmpty()) }
@@ -94,12 +92,13 @@ fun RewardDialog(
         text = {
             Column(
                 modifier = Modifier.padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 OutlinedTextField(
                     value = title,
                     onValueChange = {
-                        if (it.length <= 25) title = it
+                        title = it
+                        validatorEvent(ValidatorEvent.ValidateTitle(it))
                     },
                     label = { Text("Title") },
                     modifier = textFieldModifier,
@@ -107,26 +106,42 @@ fun RewardDialog(
                     colors = textFieldColors,
                     maxLines = 1,
                     textStyle = commonTextFieldStyle,
-                    shape = MaterialTheme.shapes.medium
+                    shape = MaterialTheme.shapes.medium,
+                    isError = validatorState.titleError != null,
+                    supportingText = {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            validatorState.titleError?.let { Text(it) }
+                            Text("${title.length}/25", textAlign = TextAlign.Right)
+                        }
+                    }
                 )
 
                 OutlinedTextField(
                     value = description,
-                    onValueChange = { description = it },
+                    onValueChange = {
+                        description = it
+                        validatorEvent(ValidatorEvent.ValidateDescription(it))
+                    },
                     label = { Text("Description") },
                     modifier = textFieldModifier,
                     enabled = textFieldEnabled,
                     colors = textFieldColors,
                     maxLines = 3,
                     textStyle = commonTextFieldStyle,
-                    shape = MaterialTheme.shapes.medium
+                    shape = MaterialTheme.shapes.medium,
+                    isError = validatorState.descriptionError != null,
+                    supportingText = { validatorState.descriptionError?.let { Text(it) } }
                 )
 
                 OutlinedTextField(
                     value = probability,
                     onValueChange = {
-                        if (it.isEmpty() || (it.toFloatOrNull()?.let { it in 0f..100f } == true)) {
+                        if (it.isEmpty() || (it.toFloatOrNull() != null)) {
                             probability = it
+                            validatorEvent(ValidatorEvent.ValidateProbability(it))
                         }
                     },
                     label = { Text("Probability (1-100%)") },
@@ -136,14 +151,17 @@ fun RewardDialog(
                     colors = textFieldColors,
                     maxLines = 1,
                     textStyle = commonTextFieldStyle,
-                    shape = MaterialTheme.shapes.medium
+                    shape = MaterialTheme.shapes.medium,
+                    isError = validatorState.probabilityError != null,
+                    supportingText = { validatorState.probabilityError?.let { Text(it) } }
                 )
 
                 OutlinedTextField(
                     value = validityHours,
                     onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull()?.let { it in 0..720 } == true)) {
+                        if (it.isEmpty() || it.toIntOrNull() != null) {
                             validityHours = it
+                            validatorEvent(ValidatorEvent.ValidateValidityHours(it))
                         }
                     },
                     label = { Text("Validity (hours)") },
@@ -153,19 +171,26 @@ fun RewardDialog(
                     colors = textFieldColors,
                     maxLines = 1,
                     textStyle = commonTextFieldStyle,
-                    shape = MaterialTheme.shapes.medium
+                    shape = MaterialTheme.shapes.medium,
+                    isError = validatorState.validityHoursError != null,
+                    supportingText = { validatorState.validityHoursError?.let { Text(it) } }
                 )
 
                 OutlinedTextField(
                     value = discountCode,
-                    onValueChange = { discountCode = it },
+                    onValueChange = {
+                        discountCode = it
+                        validatorEvent(ValidatorEvent.ValidateDiscountCode(it))
+                    },
                     label = { Text("Discount Code") },
                     modifier = textFieldModifier,
                     enabled = textFieldEnabled,
                     colors = textFieldColors,
                     maxLines = 1,
                     textStyle = commonTextFieldStyle,
-                    shape = MaterialTheme.shapes.medium
+                    shape = MaterialTheme.shapes.medium,
+                    isError = validatorState.discountCodeError != null,
+                    supportingText = { validatorState.discountCodeError?.let { Text(it) } }
                 )
             }
         },
@@ -174,22 +199,34 @@ fun RewardDialog(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.animateContentSize()
             ) {
-                Button(onClick = onDismiss) { Text("Cancel") }
+                Button(onClick = {
+                    validatorEvent(ValidatorEvent.ClearErrors)
+                    onDismiss()
+                }) {
+                    Text("Cancel")
+                }
                 if (!isEditMode || isEditing) {
                     Button(
                         onClick = {
-                            onSaveClicked(
-                                Reward(
-                                    id = reward?.id,
-                                    title = title,
-                                    description = description,
-                                    probability = probability.toDoubleOrNull()?.div(100) ?: 0.0,
-                                    validityHours = validityHours.toIntOrNull() ?: 0,
-                                    discountCode = discountCode,
-                                    createdAt = reward?.createdAt,
+                            val hasErrors = validatorState.run {
+                                titleError != null || descriptionError != null ||
+                                        probabilityError != null || validityHoursError != null ||
+                                        discountCodeError != null
+                            }
+                            if (!hasErrors) {
+                                onSaveClicked(
+                                    Reward(
+                                        id = reward?.id,
+                                        title = title,
+                                        description = description,
+                                        probability = probability.toDoubleOrNull()?.div(100) ?: 0.0,
+                                        validityHours = validityHours.toIntOrNull() ?: 0,
+                                        discountCode = discountCode,
+                                        createdAt = reward?.createdAt,
+                                    )
                                 )
-                            )
-                            onDismiss()
+                                onDismiss()
+                            }
                         }
                     ) {
                         Text(if (isEditMode) "Update" else "Create")

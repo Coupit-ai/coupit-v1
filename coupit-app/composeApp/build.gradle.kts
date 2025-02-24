@@ -70,6 +70,9 @@ kotlin {
             implementation(libs.material.kolor)
             api(libs.mirzemehdi.kmpnotifier)
             implementation("network.chaintech:qr-kit:3.0.6")
+            implementation(libs.connectivity.core)
+            implementation(libs.connectivity.device)
+            implementation(libs.connectivity.compose.device)
         }
 
         commonTest.dependencies {

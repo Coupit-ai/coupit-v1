@@ -1,5 +1,6 @@
 package com.webxela.app.coupit.koin
 
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.webxela.app.coupit.core.data.HttpClientFactory
 import com.webxela.app.coupit.core.utils.AppConstant
 import com.webxela.app.coupit.data.local.DataStoreManager
@@ -25,6 +26,7 @@ import com.webxela.app.coupit.domain.usecase.SquareUseCase
 import com.webxela.app.coupit.presentation.features.auth.viewmodel.AuthViewModel
 import com.webxela.app.coupit.presentation.features.firebase.FirebaseService
 import com.webxela.app.coupit.presentation.features.home.viewmodel.HomeViewModel
+import com.webxela.app.coupit.presentation.features.reward.viewmodel.RewardValidator
 import com.webxela.app.coupit.presentation.features.reward.viewmodel.RewardViewModel
 import com.webxela.app.coupit.presentation.features.wheel.viewmodel.WheelViewModel
 import org.koin.core.module.Module
@@ -67,6 +69,7 @@ val sharedModule = module {
     viewModelOf(::RewardViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::AuthViewModel)
+    viewModelOf(::RewardValidator)
 
     singleOf(::FirebaseService)
 }

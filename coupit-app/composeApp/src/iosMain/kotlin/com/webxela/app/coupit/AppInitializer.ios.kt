@@ -1,4 +1,4 @@
-package com.webxela.app.coupit.koin
+package com.webxela.app.coupit
 
 import com.mmk.kmpnotifier.notification.NotifierManager
 import com.mmk.kmpnotifier.notification.configuration.NotificationPlatformConfiguration
