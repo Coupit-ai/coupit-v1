@@ -83,7 +83,7 @@ class RewardService(
         rewardRepo.getReward(rewardId) ?: throw ApiError.ResourceNotFound("Reward doesn't exist")
 
         try {
-            val reward = rewardRepo.updateReward(rewardRequest.toReward(merchant))
+            val reward = rewardRepo.updateReward(rewardId, rewardRequest.toReward(merchant))
             return reward.toRewardResponse()
         } catch (ex: Exception) {
             logger.error("Error while updating reward", ex)
