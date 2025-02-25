@@ -44,4 +44,4 @@ out/
 .env
 
 ### firebase config ###
-**resources/firebase-admin-config.json
+**/resources/firebase-admin-config.json
