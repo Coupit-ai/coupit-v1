@@ -5,12 +5,16 @@ import com.webxela.backend.coupit.domain.model.Reward
 import com.webxela.backend.coupit.infra.persistence.mapper.RewardEntityMapper.toReward
 import com.webxela.backend.coupit.infra.persistence.mapper.RewardEntityMapper.toRewardEntity
 import com.webxela.backend.coupit.infra.persistence.repo.RewardJpaRepo
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Component
 class RewardRepoAdapter(private val rewardJpaRepo: RewardJpaRepo) {
+
+    companion object { val logger: Logger = LogManager.getLogger(RewardRepoAdapter::class.java) }
 
     @Transactional(readOnly = true)
     fun getAllRewards(merchantId: String): List<Reward> {
@@ -36,6 +40,11 @@ class RewardRepoAdapter(private val rewardJpaRepo: RewardJpaRepo) {
     fun deleteReward(rewardId: UUID) {
         val reward = rewardJpaRepo.findById(rewardId).orElse(null)
         val newReward = reward.copy(state = RewardState.DELETED)
+        try {
+            rewardJpaRepo.deleteById(rewardId)
+        } catch (ex: Exception) {
+            logger.warn("Error while deleting reward: ${ex.message}")
+        }
         rewardJpaRepo.saveAndFlush(newReward)
     }
 
