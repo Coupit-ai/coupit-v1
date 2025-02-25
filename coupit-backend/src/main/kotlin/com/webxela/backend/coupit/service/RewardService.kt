@@ -72,7 +72,7 @@ class RewardService(
     }
 
     @Transactional(readOnly = false)
-    fun updateReward(rewardRequest: RewardRequest): RewardResponse {
+    fun updateReward(rewardId: UUID, rewardRequest: RewardRequest): RewardResponse {
         val user = utilityService.getCurrentLoginUser()
             ?: throw ApiError.Unauthorized("You are not authorized to perform this action.")
 
@@ -80,9 +80,7 @@ class RewardService(
             throw ApiError.ResourceNotFound("Something went wrong, Please login again")
         }
 
-        rewardRequest.id?.let {
-            rewardRepo.getReward(it) ?: throw ApiError.ResourceNotFound("Reward doesn't exist")
-        } ?: throw ApiError.ResourceNotFound("Reward doesn't exist")
+        rewardRepo.getReward(rewardId) ?: throw ApiError.ResourceNotFound("Reward doesn't exist")
 
         try {
             val reward = rewardRepo.updateReward(rewardRequest.toReward(merchant))
