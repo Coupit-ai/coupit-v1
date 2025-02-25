@@ -54,12 +54,13 @@ class RewardController(
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
-    @PutMapping
+    @PutMapping("/{rewardId}")
     fun updateReward(
+        @PathVariable rewardId: UUID,
         @RequestBody requestBody: RewardRequest
     ): ResponseEntity<ApiResponse<RewardResponse>> {
         rewardValidator.validate(requestBody)
-        val reward = rewardService.updateReward(requestBody)
+        val reward = rewardService.updateReward(rewardId, requestBody)
         return ResponseEntity.ok(ApiResponse.success(reward))
     }
 
