@@ -108,7 +108,7 @@ class SpinService(
 
         if (rewards.size < 2) {
             logger.error("There are less than 2 rewards configured.")
-            throw ApiError.ResourceNotFound("There should be at least 2 rewards configured, configure rewards please")
+            throw ApiError.ResourceNotFound("At least two rewards must be configured. Please configure the rewards.")
         }
         return rewards.toSpinConfig(sessionData)
 
