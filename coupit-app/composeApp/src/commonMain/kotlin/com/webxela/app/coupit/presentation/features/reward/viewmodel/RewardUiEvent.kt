@@ -9,4 +9,5 @@ sealed interface RewardUiEvent {
     data class CreateReward(val reward: Reward): RewardUiEvent
     data class DeleteReward(val rewardId: String): RewardUiEvent
     data object ClearErrorMessage: RewardUiEvent
+    data class UpdateReward(val rewardId: String, val reward: Reward): RewardUiEvent
 }

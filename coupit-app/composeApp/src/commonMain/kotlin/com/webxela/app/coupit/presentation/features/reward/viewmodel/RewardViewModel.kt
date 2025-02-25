@@ -31,6 +31,7 @@ class RewardViewModel(
             is RewardUiEvent.GetAllRewards -> getAllRewards()
             is RewardUiEvent.DeleteReward -> deleteReward(event.rewardId)
             is RewardUiEvent.ClearErrorMessage -> _rewardUiState.update { it.copy(errorMessage = null) }
+            is RewardUiEvent.UpdateReward -> updateReward(event.rewardId, event.reward)
         }
     }
 
@@ -54,6 +55,23 @@ class RewardViewModel(
     private fun createReward(reward: Reward) = viewModelScope.launch {
         setLoading(true)
         rewardUseCase.createReward(reward)
+            .onSuccess { rewardResp ->
+                _rewardUiState.update {
+                    it.copy(rewardResponse = rewardResp)
+                }
+                setLoading(false)
+            }
+            .onError { error ->
+                _rewardUiState.update {
+                    it.copy(errorMessage = error.toErrorMessage())
+                }
+                setLoading(false)
+            }
+    }
+
+    private fun updateReward(rewardId: String, reward: Reward) = viewModelScope.launch {
+        setLoading(true)
+        rewardUseCase.updateReward(rewardId, reward)
             .onSuccess { rewardResp ->
                 _rewardUiState.update {
                     it.copy(rewardResponse = rewardResp)

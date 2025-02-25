@@ -34,7 +34,6 @@ object RewardDtoMapper {
 
     fun Reward.toRewardRequest(): RewardRequest {
         return RewardRequest(
-            id = this.id,
             description = this.description,
             probability = this.probability,
             title = this.title,

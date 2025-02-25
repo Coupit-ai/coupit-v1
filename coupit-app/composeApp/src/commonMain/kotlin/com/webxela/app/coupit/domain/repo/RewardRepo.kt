@@ -11,4 +11,6 @@ interface RewardRepo {
     suspend fun createReward(reward: Reward): ApiResponse<Reward, DataError.Remote>
 
     suspend fun deleteReward(rewardId: String): ApiResponse<String, DataError.Remote>
+
+    suspend fun updateReward(rewardId: String, reward: Reward): ApiResponse<Reward, DataError.Remote>
 }

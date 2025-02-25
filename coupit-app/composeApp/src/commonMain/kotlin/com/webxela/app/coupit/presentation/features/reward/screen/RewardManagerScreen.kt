@@ -90,6 +90,13 @@ private fun RewardManagerScreen(
                 uiEvent(RewardUiEvent.CreateReward(reward))
                 showDialog = false
                 selectedReward = null
+            },
+            onUpdateClicked = { rewardId, reward ->
+                rewardId?.let { id ->
+                    uiEvent(RewardUiEvent.UpdateReward(id, reward))
+                    showDialog = false
+                    selectedReward = null
+                } ?: errorHandler.showError("Something went wrong while updating the reward")
             }
         )
     }

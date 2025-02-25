@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
 import com.webxela.app.coupit.domain.model.Reward
 import com.webxela.app.coupit.presentation.features.reward.viewmodel.ValidatorEvent
 import com.webxela.app.coupit.presentation.features.reward.viewmodel.ValidatorState
@@ -42,6 +43,7 @@ fun RewardDialog(
     validatorState: ValidatorState,
     onDismiss: () -> Unit,
     onSaveClicked: (reward: Reward) -> Unit,
+    onUpdateClicked: (rewardId: String?, reward: Reward) -> Unit,
     validatorEvent: (ValidatorEvent) -> Unit
 ) {
     var title by remember { mutableStateOf(reward?.title.orEmpty()) }
@@ -214,17 +216,19 @@ fun RewardDialog(
                                         discountCodeError != null
                             }
                             if (!hasErrors) {
-                                onSaveClicked(
-                                    Reward(
-                                        id = reward?.id,
-                                        title = title,
-                                        description = description,
-                                        probability = probability.toDoubleOrNull()?.div(100) ?: 0.0,
-                                        validityHours = validityHours.toIntOrNull() ?: 0,
-                                        discountCode = discountCode,
-                                        createdAt = reward?.createdAt,
-                                    )
+                                val newReward = Reward(
+                                    id = null,
+                                    title = title,
+                                    description = description,
+                                    probability = probability.toDoubleOrNull()?.div(100) ?: 0.0,
+                                    validityHours = validityHours.toIntOrNull() ?: 0,
+                                    discountCode = discountCode,
+                                    createdAt = reward?.createdAt,
                                 )
+                                if (isEditMode) {
+                                    Logger.e("RewardDialog Reward: ${reward.toString()}")
+                                    onUpdateClicked(reward?.id, newReward)
+                                } else onSaveClicked(newReward)
                                 onDismiss()
                             }
                         }

@@ -25,4 +25,11 @@ class RewardRepoImpl(private val rewardManager: RewardManager): RewardRepo {
         return response.map { it.data.message }
     }
 
+    override suspend fun updateReward(
+        rewardId: String,
+        reward: Reward
+    ): ApiResponse<Reward, DataError.Remote> {
+        return rewardManager.updateReward(rewardId, reward.toRewardRequest()).map { it.toReward() }
+    }
+
 }
