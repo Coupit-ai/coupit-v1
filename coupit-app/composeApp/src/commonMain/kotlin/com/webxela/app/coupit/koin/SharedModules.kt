@@ -1,8 +1,6 @@
 package com.webxela.app.coupit.koin
 
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.webxela.app.coupit.core.data.HttpClientFactory
-import com.webxela.app.coupit.core.utils.AppConstant
 import com.webxela.app.coupit.data.local.DataStoreManager
 import com.webxela.app.coupit.data.remote.FirebaseManager
 import com.webxela.app.coupit.data.remote.RewardManager

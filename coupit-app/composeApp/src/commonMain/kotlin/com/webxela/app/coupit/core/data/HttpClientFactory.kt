@@ -21,13 +21,18 @@ internal object HttpClientFactory {
         engine: HttpClientEngine,
         jwtTokenProvider: () -> String?
     ): HttpClient {
-        return HttpClient(CIO) {
-            followRedirects = false
+        return HttpClient(engine) {
+            followRedirects = true
             install(DefaultRequest) {
                 jwtTokenProvider()?.let { token ->
                     header("Authorization", "Bearer $token")
                 }
             }
+//            engine {
+//                https {
+//                    serverName = "api.coupit.ai"
+//                }
+//            }
             install(ContentNegotiation) {
                 json(
                     json = Json {

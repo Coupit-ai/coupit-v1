@@ -13,7 +13,6 @@
         android:name=".CoupitApp"
         android:icon="@mipmap/ic_launcher"
         android:label="Coupit"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@android:style/Theme.Material.NoActionBar">
         <activity
             android:name=".AppActivity"
