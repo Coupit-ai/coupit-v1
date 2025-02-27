@@ -28,13 +28,13 @@ class SecurityConfig(
             .authorizeHttpRequests { authority ->
                 authority
                     .requestMatchers(
-                        "/api/v1/square/**",
-                        "/api/v1/pass/**"
-//                        "/api/v1/auth/**"
+                        "/v1/square/**",
+                        "/v1/pass/**"
+//                        "/v1/auth/**"
                     ).permitAll()
                     .requestMatchers(
-                        "/oauth/revoke",
-//                        "/auth/logout"
+                        "**/oauth/revoke",
+//                        "**/auth/logout"
                     ).authenticated()
                     .anyRequest().authenticated()
             }

@@ -13,7 +13,7 @@ import java.util.UUID
 
 
 @RestController
-@RequestMapping("/api/v1/pass")
+@RequestMapping("/v1/pass")
 class PassKitController(private val passKitService: PassKitService) {
 
     @GetMapping("/{spinId}", produces = ["application/vnd.apple.pkpass"])
