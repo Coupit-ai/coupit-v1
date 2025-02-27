@@ -1,5 +1,6 @@
 package com.webxela.app.coupit.presentation.features.home.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -18,13 +19,17 @@ import com.webxela.app.coupit.domain.model.Merchant
 
 
 @Composable
-fun DrawerFooter(merchant: Merchant?) {
+fun DrawerFooter(
+    modifier: Modifier = Modifier,
+    merchant: Merchant?,
+    onNavigateToProfile: () -> Unit
+) {
     Column {
         HorizontalDivider()
         ListItem(
             leadingContent = {
                 ProfileIconPlaceHolder(
-                    profileName = merchant?.businessName ?: "X",
+                    profileName = merchant?.businessName ?: "x",
                     modifier = Modifier.size(40.dp)
                 )
             },
@@ -45,7 +50,8 @@ fun DrawerFooter(merchant: Merchant?) {
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(Icons.Default.MoreVert, "More Options")
                 }
-            }
+            },
+            modifier = modifier.clickable { onNavigateToProfile() }
         )
     }
 }

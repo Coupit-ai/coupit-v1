@@ -23,4 +23,7 @@ sealed interface NavDestinations {
         val state: String?,
         val error: String?
     ): NavDestinations
+
+    @Serializable
+    data object Profile: NavDestinations
 }

@@ -19,4 +19,8 @@ class SquareUseCase(private val squareRepo: SquareRepo) {
     suspend fun getLoggedInUser(): ApiResponse<Merchant, DataError.Remote> {
         return squareRepo.getLoggedInUser()
     }
+
+    suspend fun logout(): ApiResponse<String, DataError.Remote> {
+        return squareRepo.logout()
+    }
 }

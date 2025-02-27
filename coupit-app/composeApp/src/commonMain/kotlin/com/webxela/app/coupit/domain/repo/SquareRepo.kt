@@ -14,4 +14,6 @@ interface SquareRepo {
     fun getJwtToken(): String?
 
     suspend fun getLoggedInUser(): ApiResponse<Merchant, DataError.Remote>
+
+    suspend fun logout(): ApiResponse<String, DataError.Remote>
 }

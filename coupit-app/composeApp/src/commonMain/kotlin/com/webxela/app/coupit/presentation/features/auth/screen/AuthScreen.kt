@@ -38,7 +38,7 @@ import com.webxela.app.coupit.presentation.theme.SMALL_CORNER_RADIUS
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun RootAuthScreen(
+fun AuthScreenRoot(
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = koinViewModel(),
     token: String?,

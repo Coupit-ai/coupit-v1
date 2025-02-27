@@ -34,7 +34,8 @@ fun DrawerHomeScreen(
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
     uiEvent: (HomeUiEvent) -> Unit,
-    onNavigateToScanner: () -> Unit
+    onNavigateToScanner: () -> Unit,
+    onNavigateToProfile: () -> Unit
 ) {
 
     var selectedItem by remember { mutableStateOf(drawerItems[1]) }
@@ -55,7 +56,10 @@ fun DrawerHomeScreen(
                         onItemSelect = { selectedItem = it },
                         modifier = Modifier.weight(1f)
                     )
-                    DrawerFooter(uiState.merchantResponse)
+                    DrawerFooter(
+                        merchant = uiState.merchantResponse,
+                        onNavigateToProfile = onNavigateToProfile
+                    )
                 }
             }
         }

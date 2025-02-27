@@ -73,7 +73,8 @@ kotlin {
             implementation(libs.connectivity.core)
             implementation(libs.connectivity.device)
             implementation(libs.connectivity.compose.device)
-            implementation(libs.multiplatform.settings.no.arg)        }
+            implementation(libs.multiplatform.settings.no.arg)
+        }
 
         commonTest.dependencies {
             implementation(kotlin("test"))
@@ -121,6 +122,7 @@ android {
 
 //https://developer.android.com/develop/ui/compose/testing#setup
 dependencies {
+    implementation(libs.androidx.material3.android)
     androidTestImplementation(libs.androidx.uitest.junit4)
     debugImplementation(libs.androidx.uitest.testManifest)
 }

@@ -1,6 +1,5 @@
 package com.webxela.app.coupit.presentation.features.home.screen
 
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,14 +18,16 @@ import org.koin.compose.viewmodel.koinViewModel
 fun HomeScreenRoot(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = koinViewModel(),
-    onNavigateToScanner: () -> Unit
+    onNavigateToScanner: () -> Unit,
+    onNavigateToProfile: () -> Unit
 ) {
     val uiState by viewModel.homeUiState.collectAsStateWithLifecycle()
     HomeScreen(
         modifier = modifier,
         uiState = uiState,
         uiEvent = viewModel::onEvent,
-        onNavigateToScanner = onNavigateToScanner
+        onNavigateToScanner = onNavigateToScanner,
+        onNavigateToProfile = onNavigateToProfile
     )
 }
 
@@ -35,7 +36,8 @@ private fun HomeScreen(
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
     uiEvent: (HomeUiEvent) -> Unit,
-    onNavigateToScanner: () -> Unit
+    onNavigateToScanner: () -> Unit,
+    onNavigateToProfile: () -> Unit
 ) {
 
     val errorHandler = LocalErrorHandler.current
@@ -63,7 +65,8 @@ private fun HomeScreen(
             modifier = modifier,
             uiState = uiState,
             uiEvent = uiEvent,
-            onNavigateToScanner = onNavigateToScanner
+            onNavigateToScanner = onNavigateToScanner,
+            onNavigateToProfile = onNavigateToProfile
         )
     }
 }

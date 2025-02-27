@@ -33,4 +33,8 @@ class SquareRepoImpl(
         return squareManager.getLoggedInUser().map { it.toMerchant() }
     }
 
+    override suspend fun logout(): ApiResponse<String, DataError.Remote> {
+        return squareManager.logout().map { it.data.message }
+    }
+
 }

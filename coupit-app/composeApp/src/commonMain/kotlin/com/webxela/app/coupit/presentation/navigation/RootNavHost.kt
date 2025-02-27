@@ -5,7 +5,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,9 +14,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.webxela.app.coupit.presentation.features.auth.screen.RootAuthScreen
-import com.webxela.app.coupit.presentation.features.dashboard.screen.DashboardScreenRoot
+import com.webxela.app.coupit.presentation.features.auth.screen.AuthScreenRoot
 import com.webxela.app.coupit.presentation.features.home.screen.HomeScreenRoot
+import com.webxela.app.coupit.presentation.features.profile.screen.ProfileScreenRoot
 import com.webxela.app.coupit.presentation.features.reward.screen.RewardScreenRoot
 import com.webxela.app.coupit.presentation.features.scanner.screen.ScannerScreenRoot
 import com.webxela.app.coupit.presentation.features.wheel.screen.WheelScreenRoot
@@ -42,9 +41,10 @@ fun RootNavHost(
     ) {
 
         composable<NavDestinations.Home> {
-            HomeScreenRoot {
-                navController.navigate(NavDestinations.Scanner)
-            }
+            HomeScreenRoot(
+                onNavigateToScanner = { navController.navigate(NavDestinations.Scanner) },
+                onNavigateToProfile = { navController.navigate(NavDestinations.Profile) }
+            )
         }
 
         dialog<NavDestinations.Auth>(
@@ -54,7 +54,7 @@ fun RootNavHost(
             )
         ) { backStackEntry ->
             val auth = backStackEntry.toRoute<NavDestinations.Auth>()
-            RootAuthScreen(
+            AuthScreenRoot(
                 token = auth.token,
                 state = auth.state,
                 error = auth.error,
@@ -104,6 +104,16 @@ fun RootNavHost(
                         popUpTo(NavDestinations.Home) {
                             inclusive = false
                         }
+                    }
+                }
+            )
+        }
+
+        dialog<NavDestinations.Profile> {
+            ProfileScreenRoot(
+                onNavigateToHome = {
+                    navController.navigate(NavDestinations.Home) {
+                        launchSingleTop = true
                     }
                 }
             )

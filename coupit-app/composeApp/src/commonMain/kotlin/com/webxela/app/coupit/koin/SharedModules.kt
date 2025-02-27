@@ -25,6 +25,7 @@ import com.webxela.app.coupit.domain.usecase.SquareUseCase
 import com.webxela.app.coupit.presentation.features.auth.viewmodel.AuthViewModel
 import com.webxela.app.coupit.presentation.features.firebase.FirebaseService
 import com.webxela.app.coupit.presentation.features.home.viewmodel.HomeViewModel
+import com.webxela.app.coupit.presentation.features.profile.viewmodel.ProfileViewModel
 import com.webxela.app.coupit.presentation.features.reward.viewmodel.RewardValidator
 import com.webxela.app.coupit.presentation.features.reward.viewmodel.RewardViewModel
 import com.webxela.app.coupit.presentation.features.wheel.viewmodel.WheelViewModel
@@ -45,7 +46,8 @@ val sharedModule = module {
             jwtTokenProvider = { get<SquareUseCase>().getJwtToken() }
         )
     }
-    single<Settings> { Settings() }
+
+    single { Settings() }
 
     singleOf(::SpinManager)
     singleOf(::SquareManager)
@@ -70,6 +72,7 @@ val sharedModule = module {
     viewModelOf(::HomeViewModel)
     viewModelOf(::AuthViewModel)
     viewModelOf(::RewardValidator)
+    viewModelOf(::ProfileViewModel)
 
     singleOf(::FirebaseService)
 }

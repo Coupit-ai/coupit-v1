@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
@@ -20,7 +21,8 @@ import com.webxela.app.coupit.presentation.component.AutoResizedText
 fun ProfileIconPlaceHolder(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-    profileName: String
+    profileName: String,
+    style: TextStyle = MaterialTheme.typography.titleLarge
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -32,11 +34,10 @@ fun ProfileIconPlaceHolder(
         AutoResizedText(
             profileName.capitalize(Locale.current).first().toString(),
             color = MaterialTheme.colorScheme.onTertiaryContainer,
-            style = MaterialTheme.typography.titleLarge
-                .copy(
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Medium
-                )
+            style = style.copy(
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Medium
+            )
         )
     }
 }
