@@ -6,7 +6,7 @@ interface DataStoreRepo {
 
     fun getStringFromVault(key: String): String?
 
-    fun checkIfObjectExists(key: String): Boolean
+    fun clearAllObjects(): Boolean
 
     fun deleteObject(key: String): Boolean
 }

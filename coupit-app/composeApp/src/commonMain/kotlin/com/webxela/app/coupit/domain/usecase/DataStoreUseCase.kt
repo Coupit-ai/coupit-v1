@@ -12,8 +12,8 @@ class DataStoreUseCase(private val dataStoreRepo: DataStoreRepo) {
         return dataStoreRepo.getStringFromVault(key)
     }
 
-    fun checkIfObjectExists(key: String): Boolean {
-        return dataStoreRepo.checkIfObjectExists(key)
+    fun clearAllObjects(): Boolean {
+        return dataStoreRepo.clearAllObjects()
     }
 
     fun deleteObject(key: String): Boolean {

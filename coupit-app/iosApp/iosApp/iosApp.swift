@@ -1,5 +1,7 @@
 import UIKit
-import Rinku
+import ComposeApp
+import FirebaseCore
+import FirebaseMessaging
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,19 +18,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window.makeKeyAndVisible()
         }
         // Initialize FCM
-        FirebaseApp.configure()
-        AppInitializer.shared.startFcmListeners()
+       FirebaseApp.configure()
+       AppInitializer.shared.startFcmListeners()
         return true
     }
 
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-         Messaging.messaging().apnsToken = deviceToken
+        Messaging.messaging().apnsToken = deviceToken
     }
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) async -> UIBackgroundFetchResult {
-         NotifierManager.shared.onApplicationDidReceiveRemoteNotification(userInfo: userInfo)
-         return UIBackgroundFetchResult.newData
+        NotifierManager.shared.onApplicationDidReceiveRemoteNotification(userInfo: userInfo)
+        return UIBackgroundFetchResult.newData
     }
 
     func application(

@@ -1,5 +1,6 @@
 package com.webxela.app.coupit.koin
 
+import com.russhwolf.settings.Settings
 import com.webxela.app.coupit.core.data.HttpClientFactory
 import com.webxela.app.coupit.data.local.DataStoreManager
 import com.webxela.app.coupit.data.remote.FirebaseManager
@@ -44,6 +45,7 @@ val sharedModule = module {
             jwtTokenProvider = { get<SquareUseCase>().getJwtToken() }
         )
     }
+    single<Settings> { Settings() }
 
     singleOf(::SpinManager)
     singleOf(::SquareManager)

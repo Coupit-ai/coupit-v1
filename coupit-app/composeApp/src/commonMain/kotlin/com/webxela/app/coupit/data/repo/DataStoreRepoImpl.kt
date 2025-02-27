@@ -13,8 +13,8 @@ class DataStoreRepoImpl(private val dataStoreManager: DataStoreManager) : DataSt
         return dataStoreManager.getStringFromVault(key)
     }
 
-    override fun checkIfObjectExists(key: String): Boolean {
-        return dataStoreManager.checkIfObjectExists(key)
+    override fun clearAllObjects(): Boolean {
+        return dataStoreManager.clearAll()
     }
 
     override fun deleteObject(key: String): Boolean {

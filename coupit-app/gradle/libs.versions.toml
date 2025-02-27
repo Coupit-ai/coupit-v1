@@ -13,15 +13,14 @@ androidx-lifecycle = "2.9.0-alpha03"
 kotlinx-serialization = "1.8.0"
 koin = "4.0.1"
 coil = "3.0.4"
-kvault = "1.12.0"
 materialIconsExtended = "1.7.3"
 materialKolor = "2.0.2"
 multiplatformSettings = "1.3.0"
-kotlinx-datetime = "0.6.1"
+kotlinx-datetime = "0.6.2"
 composeIcons = "1.1.1"
 composeNavigation = "2.8.0-alpha10"
 qrose = "1.0.1"
-rinkuComposeExt = "1.3.2"
+rinku = "1.3.5"
 google-services = "4.4.2"
 connectivity = "1.2.0"
 
@@ -36,6 +35,7 @@ androidx-uitest-junit4 = { module = "androidx.compose.ui:ui-test-junit4", versio
 material3-window-size = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "compose" }
 mirzemehdi-kmpnotifier = { module = "io.github.mirzemehdi:kmpnotifier", version.ref = "kmpnotifier" }
 material-kolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
+multiplatform-settings-no-arg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
 sascha-kase64 = { module = "de.peilicke.sascha:kase64", version.ref = "kase64" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
@@ -58,15 +58,14 @@ koin-compose-vm = { module = "io.insert-koin:koin-compose-viewmodel", version.re
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 coil = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil" }
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
-liftric-kvault = { module = "com.liftric:kvault", version.ref = "kvault" }
 material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 composeIcons-fontAwesome = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "composeIcons" }
 androidx-compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "composeNavigation"}
 alexzhirkevich-qrose = { module = "io.github.alexzhirkevich:qrose", version.ref = "qrose"}
-theolm-rinku = { module = "dev.theolm:rinku", version.ref = "rinkuComposeExt" }
-theolm-rinku-compose-ext = { module = "dev.theolm:rinku-compose-ext", version.ref = "rinkuComposeExt" }
+theolm-rinku = { module = "dev.theolm:rinku", version.ref = "rinku" }
+theolm-rinku-compose-ext = { module = "dev.theolm:rinku-compose-ext", version.ref = "rinku" }
 connectivity-core = { module = "dev.jordond.connectivity:connectivity-core", version.ref = "connectivity" }
 connectivity-device = { module = "dev.jordond.connectivity:connectivity-device", version.ref = "connectivity" }
 connectivity-compose-device = { module = "dev.jordond.connectivity:connectivity-compose-device", version.ref = "connectivity" }

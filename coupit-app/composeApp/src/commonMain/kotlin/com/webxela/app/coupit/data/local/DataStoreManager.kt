@@ -1,22 +1,40 @@
 package com.webxela.app.coupit.data.local
 
-import com.liftric.kvault.KVault
+import co.touchlab.kermit.Logger
+import com.russhwolf.settings.Settings
 
-class DataStoreManager(private val kVault: KVault) {
+class DataStoreManager(private val settings: Settings) {
 
     fun saveStringInVault(key: String, value: String): Boolean {
-        return kVault.set(key = key, stringValue = value)
+        return try {
+            settings.putString(key, value)
+            true
+        } catch (e: Exception) {
+            Logger.e("Error while saving key $key")
+            false
+        }
     }
 
     fun getStringFromVault(key: String): String? {
-        return kVault.string(forKey = key)
-    }
-
-    fun checkIfObjectExists(key: String): Boolean {
-        return kVault.existsObject(forKey = key)
+        return settings.getStringOrNull(key)
     }
 
     fun deleteObject(key: String): Boolean {
-        return kVault.deleteObject(forKey = key)
+        return if (settings.hasKey(key)) {
+            settings.remove(key)
+            true
+        } else {
+            false
+        }
+    }
+
+    fun clearAll(): Boolean {
+        return try {
+            settings.clear()
+            true
+        } catch (e: Exception) {
+            Logger.e("Error while deleting all key value pairs")
+            false
+        }
     }
 }

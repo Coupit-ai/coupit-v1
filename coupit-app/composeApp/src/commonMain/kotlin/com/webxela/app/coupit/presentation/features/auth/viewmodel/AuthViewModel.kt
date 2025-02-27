@@ -94,10 +94,11 @@ class AuthViewModel(
         val oauthState = Uuid.random().toString()
         squareUseCase.connectWithSquare(oauthState)
             .onSuccess { connection ->
-                dataStoreUseCase.saveStringInVault(
+                val p = dataStoreUseCase.saveStringInVault(
                     key = AppConstant.SECURE_OAUTH_STATE,
                     value = oauthState
                 )
+                Logger.w(p.toString())
                 _authUiState.update {
                     it.copy(
                         connectionResponse = connection,

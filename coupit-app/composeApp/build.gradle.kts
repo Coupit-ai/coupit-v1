@@ -25,6 +25,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
+            freeCompilerArgs += listOf("-Xbinary=bundleId=com.webxela.app.coupit")
             baseName = "ComposeApp"
             isStatic = true
             export(libs.theolm.rinku)
@@ -64,7 +65,6 @@ kotlin {
             implementation(libs.alexzhirkevich.qrose)
             api(libs.theolm.rinku)
             implementation(libs.theolm.rinku.compose.ext)
-            implementation(libs.liftric.kvault)
             implementation(libs.material.icons.extended)
             implementation(libs.sascha.kase64)
             implementation(libs.material.kolor)
@@ -73,7 +73,7 @@ kotlin {
             implementation(libs.connectivity.core)
             implementation(libs.connectivity.device)
             implementation(libs.connectivity.compose.device)
-        }
+            implementation(libs.multiplatform.settings.no.arg)        }
 
         commonTest.dependencies {
             implementation(kotlin("test"))
