@@ -2,22 +2,25 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <!-- Add this for camera permissions -->
+    <!-- Camera permissions -->
     <key>NSCameraUsageDescription</key>
     <string>This app requires access to the camera to scan QR codes.</string>
+
+    <!-- Photo library permissions -->
     <key>NSPhotoLibraryUsageDescription</key>
     <string>This app requires access to your photo library to scan QR codes from images.</string>
 
+    <!-- Disable minimum frame duration on phone -->
     <key>CADisableMinimumFrameDurationOnPhone</key>
     <true/>
 
+    <!-- Enable background modes for remote notifications -->
     <key>UIBackgroundModes</key>
     <array>
         <string>remote-notification</string>
     </array>
 
-
-    <!-- Add this for `coupit://` URL scheme -->
+    <!-- URL scheme for the app -->
     <key>CFBundleURLTypes</key>
     <array>
         <dict>
@@ -29,5 +32,9 @@
             <string>com.webxela.app.coupit</string>
         </dict>
     </array>
+
+    <!-- Disable Firebase App Delegate Proxy -->
+    <key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
 </dict>
 </plist>

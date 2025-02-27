@@ -25,7 +25,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-            freeCompilerArgs += listOf("-Xbinary=bundleId=com.webxela.app.coupit")
+            freeCompilerArgs += listOf("-Xbinary=bundleId=com.webxela.app.coupit.iosApp")
             baseName = "ComposeApp"
             isStatic = true
             export(libs.theolm.rinku)
@@ -69,7 +69,7 @@ kotlin {
             implementation(libs.sascha.kase64)
             implementation(libs.material.kolor)
             api(libs.mirzemehdi.kmpnotifier)
-            implementation("network.chaintech:qr-kit:3.0.6")
+            implementation(libs.qr.kit)
             implementation(libs.connectivity.core)
             implementation(libs.connectivity.device)
             implementation(libs.connectivity.compose.device)
