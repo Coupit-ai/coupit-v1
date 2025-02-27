@@ -28,15 +28,15 @@ class DotEnvConfig {
     val clientSecret: String = dotEnv["SQUARE_OAUTH_CLIENT_SECRET"]
         ?: throw IllegalStateException("Environment variable SQUARE_OAUTH_CLIENT_SECRET is missing")
 
-    val redirectUri: String = "$serverUrl/api/v1/square/oauth/callback"
+    val redirectUri: String = "$serverUrl/v1/square/oauth/callback"
 
     val revokeOauthSign: String = dotEnv["SQUARE_REVOKE_OAUTH_SIGN"]
         ?: throw IllegalStateException("Environment variable SQUARE_WEBHOOK_SIGN is missing")
-    val revokeWebhookUrl = "$serverUrl/api/v1/square/webhook/revoke"
+    val revokeWebhookUrl = "$serverUrl/v1/square/webhook/revoke"
 
     val paymentWebhookSign: String = dotEnv["SQUARE_PAYMENT_WEBHOOK_SIGN"]
         ?: throw IllegalStateException("Environment variable SQUARE_PAYMENT_WEBHOOK_SIGN is missing")
-    val paymentWebhookUrl = "$serverUrl/api/v1/square/webhook/payment"
+    val paymentWebhookUrl = "$serverUrl/v1/square/webhook/payment"
 
     val clientEnvironment: Environment by lazy {
         when (dotEnv["SQUARE_ENVIRONMENT"]?.lowercase()) {

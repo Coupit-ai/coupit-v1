@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/api/v1/reward")
+@RequestMapping("/v1/reward")
 class RewardController(
     private val rewardService: RewardService,
     private val spinService: SpinService,

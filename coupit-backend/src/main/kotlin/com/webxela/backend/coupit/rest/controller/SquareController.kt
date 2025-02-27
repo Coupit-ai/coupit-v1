@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/api/v1/square")
+@RequestMapping("/v1/square")
 class SquareController(
     private val squareOauthService: SquareOauthService,
     private val squarePaymentService: SquarePaymentService,
