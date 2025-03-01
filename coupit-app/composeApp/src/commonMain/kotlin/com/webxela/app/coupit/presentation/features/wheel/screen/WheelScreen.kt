@@ -1,10 +1,12 @@
 package com.webxela.app.coupit.presentation.features.wheel.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -125,8 +127,9 @@ private fun WheelScreen(
                     }
                     Box(
                         modifier = Modifier
-                            .size(435.dp)
+                            .size(542.dp)
                             .aspectRatio(1f)
+                            .offset(x = 8.dp, y = -47.dp)
                     ) {
                         SpinWheel(
                             outerRingColor = MaterialTheme.colorScheme.error,
@@ -162,7 +165,7 @@ private fun WheelScreen(
     }
 }
 
-fun SpinConfig.toSpinWheelItems(): List<SpinWheelItem> {
+private fun SpinConfig.toSpinWheelItems(): List<SpinWheelItem> {
     val requiredCount = 12
     val newRewards = if (rewards.size >= requiredCount) rewards else {
         val duplicated = mutableListOf<SpinConfig.Reward>()
