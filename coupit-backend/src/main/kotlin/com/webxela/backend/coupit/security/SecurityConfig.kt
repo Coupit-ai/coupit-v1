@@ -33,8 +33,8 @@ class SecurityConfig(
 //                        "/v1/auth/**"
                     ).permitAll()
                     .requestMatchers(
-                        "**/oauth/revoke",
-//                        "**/auth/logout"
+                        "/v1/square/oauth/revoke",
+//                        "/**/auth/logout"
                     ).authenticated()
                     .anyRequest().authenticated()
             }
