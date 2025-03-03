@@ -7,7 +7,7 @@ fun getRewardPassPage(passkitUrl: String): String {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-            <title>Your Reward Pass</title>
+            <title>Your Coupit Reward</title>
             <style>
                 :root {
                     --primary-color: #0066cc;
@@ -212,7 +212,7 @@ fun getRewardPassPage(passkitUrl: String): String {
                     </button>
                     
                     <div class="footer">
-                        Simply present at checkout
+                        © 2025 Coupit. All rights reserved. 
                     </div>
                 </div>
             </div>
