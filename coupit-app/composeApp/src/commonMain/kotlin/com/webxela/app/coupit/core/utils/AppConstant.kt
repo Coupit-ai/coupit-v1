@@ -2,7 +2,7 @@ package com.webxela.app.coupit.core.utils
 
 object AppConstant {
 
-    const val BASE_URL = "https://api.coupit.ai/api/v1"
+    const val BASE_URL = "https://api.coupit.ai/v1"
     const val DEEPLINK_URL = "coupit://callback"
     const val SECURE_JWT_TOKEN = "secure_jwt_token"
     const val SECURE_OAUTH_STATE = "secure_oauth_state"
