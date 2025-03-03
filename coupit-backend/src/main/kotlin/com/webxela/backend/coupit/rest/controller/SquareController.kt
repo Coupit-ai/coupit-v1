@@ -9,8 +9,8 @@ import com.webxela.backend.coupit.domain.exception.ApiResponse
 import com.webxela.backend.coupit.service.SquareOauthService
 import com.webxela.backend.coupit.service.SquarePaymentService
 import com.webxela.backend.coupit.service.UtilityService
-import com.webxela.backend.coupit.rest.static.getOauthRedirectPage
 import org.apache.logging.log4j.LogManager
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -58,11 +58,11 @@ class SquareController(
             }
         }
         logger.info("Redirecting OAuth flow to $redirectUri")
-        val html = getOauthRedirectPage(redirectUri)
-        return ResponseEntity.ok()
-            .header("Content-Type", "text/html")
-            .body(html)
+        return ResponseEntity.status(HttpStatus.FOUND)
+            .header("Location", redirectUri)
+            .build()
     }
+
 
     @PostMapping("/webhook/revoke")
     fun handleLogoutWebhook(
