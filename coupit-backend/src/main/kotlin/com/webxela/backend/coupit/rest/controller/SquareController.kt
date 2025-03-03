@@ -9,9 +9,8 @@ import com.webxela.backend.coupit.domain.exception.ApiResponse
 import com.webxela.backend.coupit.service.SquareOauthService
 import com.webxela.backend.coupit.service.SquarePaymentService
 import com.webxela.backend.coupit.service.UtilityService
-import com.webxela.backend.coupit.utils.getOauthRedirectPage
+import com.webxela.backend.coupit.rest.static.getOauthRedirectPage
 import org.apache.logging.log4j.LogManager
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

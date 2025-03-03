@@ -1,5 +1,6 @@
 package com.webxela.backend.coupit.rest.controller
 
+import com.webxela.backend.coupit.rest.static.getRewardPassPage
 import com.webxela.backend.coupit.service.PassKitService
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -15,7 +16,7 @@ import java.util.*
 @RequestMapping("/v1/pass")
 class PassKitController(private val passKitService: PassKitService) {
 
-    @GetMapping("/{spinId}", produces = ["application/vnd.apple.pkpass"])
+    @GetMapping("/generate/{spinId}", produces = ["application/vnd.apple.pkpass"])
     fun generatePass(@PathVariable spinId: UUID): ResponseEntity<ByteArray> {
         val passData = passKitService.generateRewardPass(spinId)
         return ResponseEntity.ok()
@@ -23,4 +24,14 @@ class PassKitController(private val passKitService: PassKitService) {
             .contentType(MediaType.parseMediaType("application/vnd.apple.pkpass"))
             .body(passData)
     }
+
+    @GetMapping("/{spinId}")
+    fun getPassPage(@PathVariable spinId: UUID): ResponseEntity<String> {
+        val passkitUrl = "/v1/pass/generate/$spinId"
+        val html = getRewardPassPage(passkitUrl)
+        return ResponseEntity.ok()
+            .contentType(MediaType.TEXT_HTML)
+            .body(html)
+    }
+
 }
