@@ -38,9 +38,7 @@ dependencies {
     implementation("com.squareup:square:43.0.0.20250123")
     implementation("com.auth0:java-jwt:4.4.0")
     implementation("com.google.firebase:firebase-admin:9.4.3")
-    implementation("org.bouncycastle:bcpkix-jdk15on:1.70")
-    implementation("commons-codec:commons-codec:1.18.0")
-    api("de.brendamour:jpasskit:0.4.1")
+    implementation("de.brendamour:jpasskit:0.4.1")
 }
 
 kotlin {

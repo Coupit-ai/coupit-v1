@@ -23,3 +23,22 @@ spring:
 firebase:
   config:
     path: firebase-admin-config.json
+
+
+passkit:
+  certificate:
+    path: classpath:certificates/passkit-certificate.p12
+    password: torO88mAp7k5HmMpeSVg2
+  wwdr:
+    certificate:
+      path: classpath:certificates/AppleWWDRCA.cer
+  template:
+    directory: classpath:passkit/templates/reward
+  pass:
+    typeIdentifier: pass.com.webxela.app.coupit
+  team:
+    identifier: HYW7PCTCZG
+  organization:
+    name: Webxela
+  webservice:
+    url: https://api.coupit.ai/v1/passes
