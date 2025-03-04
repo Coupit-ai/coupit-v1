@@ -42,7 +42,7 @@ fun RootNavHost(
 
         composable<NavDestinations.Home> {
             HomeScreenRoot(
-                onNavigateToScanner = { navController.navigate(NavDestinations.Scanner) },
+//                onNavigateToScanner = { navController.navigate(NavDestinations.Scanner) },
                 onNavigateToProfile = { navController.navigate(NavDestinations.Profile) }
             )
         }

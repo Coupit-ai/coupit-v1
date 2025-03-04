@@ -18,7 +18,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun HomeScreenRoot(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = koinViewModel(),
-    onNavigateToScanner: () -> Unit,
+//    onNavigateToScanner: () -> Unit,
     onNavigateToProfile: () -> Unit
 ) {
     val uiState by viewModel.homeUiState.collectAsStateWithLifecycle()
@@ -26,7 +26,7 @@ fun HomeScreenRoot(
         modifier = modifier,
         uiState = uiState,
         uiEvent = viewModel::onEvent,
-        onNavigateToScanner = onNavigateToScanner,
+//        onNavigateToScanner = onNavigateToScanner,
         onNavigateToProfile = onNavigateToProfile
     )
 }
@@ -36,7 +36,7 @@ private fun HomeScreen(
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
     uiEvent: (HomeUiEvent) -> Unit,
-    onNavigateToScanner: () -> Unit,
+//    onNavigateToScanner: () -> Unit,
     onNavigateToProfile: () -> Unit
 ) {
 
@@ -58,14 +58,14 @@ private fun HomeScreen(
             modifier = modifier,
             uiState = uiState,
             uiEvent = uiEvent,
-            onNavigateToScanner = onNavigateToScanner
+//            onNavigateToScanner = onNavigateToScanner
         )
 
         else -> DrawerHomeScreen(
             modifier = modifier,
             uiState = uiState,
             uiEvent = uiEvent,
-            onNavigateToScanner = onNavigateToScanner,
+//            onNavigateToScanner = onNavigateToScanner,
             onNavigateToProfile = onNavigateToProfile
         )
     }
