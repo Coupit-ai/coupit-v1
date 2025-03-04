@@ -1,0 +1,9 @@
+platform :ios, '17.0'
+source 'https://cdn.cocoapods.org/'
+
+target 'iosApp' do
+    use_frameworks!
+    pod 'composeApp', :path => '../composeApp'
+#     pod 'Firebase/Core'
+#     pod 'Firebase/Messaging'
+end

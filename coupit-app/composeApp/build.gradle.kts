@@ -9,22 +9,31 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.kotlinCocoapods)
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(11)
     androidTarget {
         //https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-test.html
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    cocoapods {
+        version = "1.0"
+        summary = "Kotlin Multiplatform App for iOS"
+        homepage = "https://coupit.ai"
+        license = "MIT"
+        authors = "Ark"
+        ios.deploymentTarget = "17.0"  // Ensure it's compatible with your iOS app
+        podfile = project.file("../iosApp/Podfile")
+
+        framework {
             freeCompilerArgs += listOf("-Xbinary=bundleId=com.webxela.app.coupit.iosApp")
             baseName = "ComposeApp"
             isStatic = true
