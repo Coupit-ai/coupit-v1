@@ -78,6 +78,7 @@ internal fun WheelSlice(
                 .width(maxTextWidthDp)
         ) {
             AutoResizedText(
+                color = Color.Black,
                 text = content,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -85,7 +86,7 @@ internal fun WheelSlice(
                 style = TextStyle(
                     fontSize = 24.sp,
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Bold
                 ),
                 minFontSize = 8f
             )

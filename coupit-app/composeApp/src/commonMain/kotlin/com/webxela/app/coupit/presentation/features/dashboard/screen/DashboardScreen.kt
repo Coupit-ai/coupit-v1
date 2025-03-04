@@ -21,11 +21,11 @@ import com.webxela.app.coupit.presentation.component.SecondaryTopAppBar
 @Composable
 fun DashboardScreenRoot(
     modifier: Modifier = Modifier,
-    onNavigateToScannerScreen: () -> Unit
+//    onNavigateToScannerScreen: () -> Unit
 ) {
     DashboardScreen(
         modifier = modifier,
-        onNavigateToScannerScreen = onNavigateToScannerScreen
+//        onNavigateToScannerScreen = onNavigateToScannerScreen
     )
 }
 
@@ -33,20 +33,20 @@ fun DashboardScreenRoot(
 @Composable
 private fun DashboardScreen(
     modifier: Modifier = Modifier,
-    onNavigateToScannerScreen: () -> Unit
+//    onNavigateToScannerScreen: () -> Unit
 ) {
     Scaffold(
         topBar = {
             SecondaryTopAppBar(
                 title = "Dashboard",
-                actions = {
-                    IconButton(onClick = onNavigateToScannerScreen) {
-                        Icon(
-                            imageVector = Icons.Default.QrCodeScanner,
-                            contentDescription = "Scanner"
-                        )
-                    }
-                }
+//                actions = {
+//                    IconButton(onClick = onNavigateToScannerScreen) {
+//                        Icon(
+//                            imageVector = Icons.Default.QrCodeScanner,
+//                            contentDescription = "Scanner"
+//                        )
+//                    }
+//                }
             )
         },
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow

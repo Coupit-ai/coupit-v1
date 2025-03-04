@@ -34,7 +34,7 @@ fun DrawerHomeScreen(
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
     uiEvent: (HomeUiEvent) -> Unit,
-    onNavigateToScanner: () -> Unit,
+//    onNavigateToScanner: () -> Unit,
     onNavigateToProfile: () -> Unit
 ) {
 
@@ -65,7 +65,8 @@ fun DrawerHomeScreen(
         }
     ) {
         when (selectedItem.type) {
-            DrawerItemType.DASHBOARD -> DashboardScreenRoot { onNavigateToScanner() }
+            DrawerItemType.DASHBOARD -> DashboardScreenRoot()
+//            { onNavigateToScanner() }
             DrawerItemType.REWARD_MANAGER -> RewardManagerScreenRoot()
             DrawerItemType.SETTING -> SettingScreenRoot()
         }

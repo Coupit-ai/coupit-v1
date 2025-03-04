@@ -23,7 +23,7 @@ internal fun AppTheme(content: @Composable () -> Unit) {
         SystemAppearance(!isDark)
 
         DynamicMaterialTheme(
-            useDarkTheme = isDark,
+            useDarkTheme = true,
             typography = AppTypography(),
             seedColor = Color.Green,
             content = { Surface(content = content) }

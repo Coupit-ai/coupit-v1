@@ -29,7 +29,7 @@ fun BottomNavHomeScreen(
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
     uiEvent: (HomeUiEvent) -> Unit,
-    onNavigateToScanner: () -> Unit
+//    onNavigateToScanner: () -> Unit
 ) {
 
     var selectedItem by remember { mutableStateOf(drawerItems[0]) }
@@ -51,7 +51,10 @@ fun BottomNavHomeScreen(
     ) {
         Box(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
             when (selectedItem.type) {
-                DrawerItemType.DASHBOARD -> DashboardScreenRoot { onNavigateToScanner() }
+                DrawerItemType.DASHBOARD -> DashboardScreenRoot()
+//                {
+//                    onNavigateToScanner()
+//                }
                 DrawerItemType.REWARD_MANAGER -> RewardManagerScreenRoot()
                 DrawerItemType.SETTING -> SettingScreenRoot()
             }
