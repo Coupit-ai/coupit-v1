@@ -16,9 +16,7 @@ Pods/
 *.jks
 *.gpg
 *yarn.lock
-/composeApp/google-services.json
 # CocoaPods
 Podfile.lock
 *.xcworkspace/
 DerivedData/
-
