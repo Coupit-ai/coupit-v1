@@ -30,11 +30,11 @@ kotlin {
         homepage = "https://coupit.ai"
         license = "MIT"
         authors = "Ark"
-        ios.deploymentTarget = "17.0"  // Ensure it's compatible with your iOS app
+        ios.deploymentTarget = "16.0"  // Ensure it's compatible with your iOS app
         podfile = project.file("../iosApp/Podfile")
 
         framework {
-            freeCompilerArgs += listOf("-Xbinary=bundleId=com.webxela.app.coupit.iosApp")
+            freeCompilerArgs += listOf("-Xbinary=bundleId=com.webxela.app.coupit.ios")
             baseName = "ComposeApp"
             isStatic = true
             export(libs.theolm.rinku)
