@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -237,45 +238,43 @@ private fun RewardScreen(
 
                     // Right section - Reward details
                     Column(
+                        verticalArrangement = Arrangement.SpaceEvenly,
                         modifier = Modifier
                             .weight(0.55f)
                             .fillMaxHeight()
                             .verticalScroll(rememberScrollState())
                     ) {
-                        AnimatedVisibility(
-                            visible = true,
-                            enter = fadeIn() + expandVertically()
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.tertiary
+                            ),
+                            elevation = CardDefaults.cardElevation(8.dp)
                         ) {
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.tertiary
-                                ),
-                                elevation = CardDefaults.cardElevation(8.dp)
+                            Column(
+                                modifier = Modifier.fillMaxWidth().padding(32.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
                             ) {
-                                Column(
-                                    modifier = Modifier.fillMaxWidth().padding(32.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Text(
-                                        text = "Congratulations!",
-                                        style = MaterialTheme.typography.headlineLarge,
-                                        fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.onTertiary
-                                    )
+                                Text(
+                                    text = "Congratulations!",
+                                    style = MaterialTheme.typography.headlineLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onTertiary
+                                )
 
-                                    Spacer(Modifier.height(16.dp))
+                                Spacer(Modifier.height(16.dp))
 
-                                    Text(
-                                        text = spinResult.reward.title,
-                                        style = MaterialTheme.typography.displaySmall,
-                                        fontWeight = FontWeight.Bold,
-                                        textAlign = TextAlign.Center,
-                                        color = MaterialTheme.colorScheme.onTertiary
-                                    )
-                                }
+                                Text(
+                                    text = spinResult.reward.title,
+                                    style = MaterialTheme.typography.displaySmall,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.onTertiary
+                                )
                             }
                         }
+
 
                         Spacer(modifier = Modifier.height(32.dp))
 

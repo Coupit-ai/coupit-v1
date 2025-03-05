@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "540885482629",
-    "project_id": "coupit-dev",
-    "storage_bucket": "coupit-dev.firebasestorage.app"
+    "project_number": "28104780843",
+    "project_id": "coupit-5fd88",
+    "storage_bucket": "coupit-5fd88.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:540885482629:android:76f2e5d42d3fb5a46a3dec",
+        "mobilesdk_app_id": "1:28104780843:android:0cf878d1fff4c370e44e6e",
         "android_client_info": {
           "package_name": "com.webxela.app.coupit"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCg0ytJ8ukEq_ZS7jK6KhY55nS43PZkmIU"
+          "current_key": "AIzaSyB2qi1PtkPKveY0QOpbnaXf1DLvclDQolo"
         }
       ],
       "services": {
