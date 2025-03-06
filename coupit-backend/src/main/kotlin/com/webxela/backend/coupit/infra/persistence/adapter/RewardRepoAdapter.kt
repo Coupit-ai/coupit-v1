@@ -48,11 +48,9 @@ class RewardRepoAdapter(
     fun deleteReward(rewardId: UUID) {
         val reward = rewardJpaRepo.findById(rewardId).orElse(null)
         val newReward = reward.copy(state = RewardState.DELETED)
-        try {
-            // try removing the reward which are not associated with any spin
+        val spin = spinJpaRepo.findAllByRewardId(rewardId)
+        if (spin.isEmpty()) {
             rewardJpaRepo.deleteById(rewardId)
-        } catch (ex: Exception) {
-            logger.warn("Error while deleting reward: ${ex.message}")
         }
         rewardJpaRepo.saveAndFlush(newReward)
     }
