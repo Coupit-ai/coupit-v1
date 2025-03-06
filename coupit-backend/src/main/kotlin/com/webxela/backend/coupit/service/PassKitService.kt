@@ -50,7 +50,8 @@ class PassKitService(
             title = spin.reward.title,
             expiryDate = spin.expiresAt,
             spinId = spin.id!!,
-            discountCode = spin.reward.discountCode
+            discountCode = spin.reward.discountCode,
+            storeName = spin.reward.merchant.businessName
         )
 
         // Get the template folder
@@ -70,8 +71,14 @@ class PassKitService(
         title: String,
         expiryDate: Instant,
         spinId: UUID,
-        discountCode: String
+        discountCode: String,
+        storeName: String
     ): PKPass {
+        val formatter = java.time.format.DateTimeFormatter
+            .ofPattern("MMM dd, yyyy")
+            .withZone(java.time.ZoneId.systemDefault())
+        val formattedExpiry = formatter.format(expiryDate)
+
         return PKPass.builder()
             .pass(
                 PKGenericPass.builder()
@@ -84,15 +91,15 @@ class PassKitService(
                     )
                     .headerFieldBuilder(
                         PKField.builder()
-                            .key("Code")
-                            .label("DISCOUNT CODE")
-                            .value("$discountCode hours")
+                            .key("expiry")
+                            .label("EXPIRES")
+                            .value(formattedExpiry)
                     )
                     .auxiliaryFieldBuilder(
                         PKField.builder()
-                            .key("expiry")
-                            .label("EXPIRES")
-                            .value(expiryDate.toString())
+                            .key("Code")
+                            .label("DISCOUNT CODE")
+                            .value(discountCode)
                     )
             )
             .barcodeBuilder(
@@ -109,9 +116,12 @@ class PassKitService(
             .webServiceURL(URI(webServiceUrl).toURL())
             .authenticationToken(UUID.randomUUID().toString())
             .logoText("Coupit")
+            .expirationDate(expiryDate)
+            .organizationName(storeName)
             .description("Coupit Reward")
-            .backgroundColor(Color.decode("#1E90FF"))
-            .foregroundColor(Color.WHITE)
+            .backgroundColor(Color.decode("#2C3E50"))
+            .foregroundColor(Color.decode("#ECF0F1"))
+            .labelColor(Color.decode("#3498DB"))
             .build()
     }
 }
