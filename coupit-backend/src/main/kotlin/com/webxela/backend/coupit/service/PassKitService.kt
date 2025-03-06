@@ -50,7 +50,7 @@ class PassKitService(
             title = spin.reward.title,
             expiryDate = spin.expiresAt,
             spinId = spin.id!!,
-            validityHours = spin.reward.validityHours,
+            discountCode = spin.reward.discountCode
         )
 
         // Get the template folder
@@ -70,12 +70,12 @@ class PassKitService(
         title: String,
         expiryDate: Instant,
         spinId: UUID,
-        validityHours: Int
+        discountCode: String
     ): PKPass {
         return PKPass.builder()
             .pass(
                 PKGenericPass.builder()
-                    .passType(PKPassType.PKStoreCard)
+                    .passType(PKPassType.PKCoupon)
                     .primaryFieldBuilder(
                         PKField.builder()
                             .key("title")
@@ -84,9 +84,9 @@ class PassKitService(
                     )
                     .headerFieldBuilder(
                         PKField.builder()
-                            .key("validity")
-                            .label("VALID FOR")
-                            .value("$validityHours hours")
+                            .key("Code")
+                            .label("DISCOUNT CODE")
+                            .value("$discountCode hours")
                     )
                     .auxiliaryFieldBuilder(
                         PKField.builder()
