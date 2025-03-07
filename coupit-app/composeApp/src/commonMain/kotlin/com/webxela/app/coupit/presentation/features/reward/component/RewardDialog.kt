@@ -55,7 +55,9 @@ fun RewardDialog(
     var probability by remember {
         mutableStateOf((reward?.probability?.times(100))?.toString().orEmpty())
     }
-    var validityHours by remember { mutableStateOf(reward?.validityHours?.toString().orEmpty()) }
+    var validityDays by remember {
+        mutableStateOf(reward?.validityHours?.div(24)?.toString().orEmpty())
+    }
     var discountCode by remember { mutableStateOf(reward?.discountCode.orEmpty()) }
     var isEditing by remember { mutableStateOf(false) }
 
@@ -165,14 +167,14 @@ fun RewardDialog(
                 )
 
                 OutlinedTextField(
-                    value = validityHours,
+                    value = validityDays,
                     onValueChange = {
-                        if (it.isEmpty() || it.toIntOrNull() != null) {
-                            validityHours = it
+                        if (it.isEmpty() || (it.toIntOrNull() != null)) {
+                            validityDays = it
                             validatorEvent(ValidatorEvent.ValidateValidityHours(it))
                         }
                     },
-                    label = { Text("Validity (hours)") },
+                    label = { Text("Validity (days, max 30)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = textFieldModifier,
                     enabled = textFieldEnabled,
@@ -181,7 +183,14 @@ fun RewardDialog(
                     textStyle = commonTextFieldStyle,
                     shape = MaterialTheme.shapes.medium,
                     isError = validatorState.validityHoursError != null,
-                    supportingText = { validatorState.validityHoursError?.let { Text(it) } }
+                    supportingText = {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            validatorState.validityHoursError?.let { Text(it) }
+                        }
+                    }
                 )
 
                 OutlinedTextField(
@@ -227,7 +236,7 @@ fun RewardDialog(
                                     title = title,
                                     description = description,
                                     probability = probability.toDoubleOrNull()?.div(100) ?: 0.0,
-                                    validityHours = validityHours.toIntOrNull() ?: 0,
+                                    validityHours = validityDays.toIntOrNull()?.times(24) ?: 0,
                                     discountCode = discountCode,
                                     createdAt = reward?.createdAt,
                                 )

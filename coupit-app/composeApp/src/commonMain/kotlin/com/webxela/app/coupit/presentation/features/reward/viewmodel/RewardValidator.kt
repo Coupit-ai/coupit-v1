@@ -64,8 +64,8 @@ class RewardValidator : ViewModel() {
             hoursValue == null -> _state.update {
                 it.copy(validityHoursError = "Invalid hours value")
             }
-            hoursValue !in 0..720 -> _state.update {
-                it.copy(validityHoursError = "Hours must be between 0 and 720")
+            hoursValue !in 0..30 -> _state.update {
+                it.copy(validityHoursError = "Hours must be between 1 and 30 days")
             }
             else -> _state.update { it.copy(validityHoursError = null) }
         }

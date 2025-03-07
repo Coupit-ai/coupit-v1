@@ -25,14 +25,19 @@ data class SpinWheelState(
     private val onSpinningFinished: (() -> Unit)? = null,
 ) {
     internal val rotation = Animatable(0f)
+    private var isSpinning = false
+
+    fun isSpinning(): Boolean = isSpinning
 
     fun stopWheelAt(identifier: String) {
+        if (isSpinning) return
 
         val identifiers = wheelItems.map { it.identifier }
         val sectionToStop = identifiers.indexOf(identifier).takeIf { it != -1 }
             ?: throw IndexOutOfBoundsException("Section $identifiers does not exist.")
 
         scope.launch {
+            isSpinning = true
             val destinationDegree = getDegreeFromSectionWithRandom(wheelItems, sectionToStop)
 
             rotation.animateTo(
@@ -42,6 +47,7 @@ data class SpinWheelState(
                     easing = EaseOutCubic
                 )
             )
+            isSpinning = false
             onSpinningFinished?.invoke()
         }
     }

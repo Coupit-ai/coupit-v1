@@ -86,7 +86,7 @@ internal fun WheelSlice(
                 style = TextStyle(
                     fontSize = 24.sp,
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Medium
                 ),
                 minFontSize = 8f
             )

@@ -22,7 +22,7 @@ import kotlin.math.sin
 internal fun SpinWheel(
     spinWheelState: SpinWheelState,
     modifier: Modifier = Modifier,
-    outerRingColor: Color = Color(0xFFFFD700),
+    outerRingColor: Color = Color(0xFFFF6868),
     pointerColor: Color = Color(0xFF000000),
     pointerStrokeColor: Color = Color(0xFFEDEADE),
     pointerStrokeWidth: Float = 3.0f,
@@ -51,11 +51,11 @@ internal fun SpinWheel(
                 }
         )
 
-//        // Decorative Ring
-//        DecorationRing(
-//            outerRingColor = outerRingColor,
-//            config = wheelConfig
-//        )
+        // Decorative Ring
+        DecorationRing(
+            outerRingColor = outerRingColor,
+            config = wheelConfig
+        )
 
         // Center Component with Pointer
         Box(

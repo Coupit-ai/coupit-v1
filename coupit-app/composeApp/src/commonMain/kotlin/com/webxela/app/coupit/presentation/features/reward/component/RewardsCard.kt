@@ -91,7 +91,7 @@ fun RewardsCard(
                     color = MaterialTheme.colorScheme.primary
                 )
                 RewardInfoChip(
-                    text = "${reward.validityHours}h validity",
+                    text = "${reward.validityHours / 24} days validity",
                     color = MaterialTheme.colorScheme.secondary
                 )
             }

@@ -98,12 +98,6 @@ private fun WheelScreen(
     }
     Scaffold { innerPadding ->
         Box(modifier = modifier.fillMaxSize()) {
-            Image(
-                painter = painterResource(Res.drawable.wheel_bg),
-                contentScale = ContentScale.Crop,
-                contentDescription = "Wheel background",
-                modifier = Modifier.fillMaxSize()
-            )
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -127,14 +121,10 @@ private fun WheelScreen(
                     }
                     Box(
                         modifier = Modifier
-                            .size(542.dp)
+                            .fillMaxSize(0.5f)
                             .aspectRatio(1f)
-                            .offset(x = 8.dp, y = -47.dp)
                     ) {
-                        SpinWheel(
-                            outerRingColor = MaterialTheme.colorScheme.error,
-                            spinWheelState = spinState
-                        ) {
+                        SpinWheel(spinWheelState = spinState) {
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
@@ -142,11 +132,13 @@ private fun WheelScreen(
                                     .padding(4.dp)
                                     .clip(CircleShape)
                                     .clickable {
-                                        uiEvent(
-                                            WheelUiEvent.PerformSpin(
-                                                uiState.spinConfigResponse.session.id
+                                        if (!spinState.isSpinning()) {
+                                            uiEvent(
+                                                WheelUiEvent.PerformSpin(
+                                                    uiState.spinConfigResponse.session.id
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                             ) {
                                 AutoResizedText(
