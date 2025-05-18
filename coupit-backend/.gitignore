@@ -47,3 +47,4 @@ out/
 **/resources/firebase-admin-config.json
 *.log
 *.pid
+firebase-admin-config.json
