@@ -1,64 +1,147 @@
 # Coupit
 
-## Project Overview
-Coupit is a customer incentive platform designed to enhance the shopping experience by rewarding customers through a gamified system. The platform integrates with POS (Point of Sale) systems to allow customers to spin a digital wheel after making a purchase, providing them with random rewards. These rewards are then stored digitally in the customer's wallet for future redemption.
+Coupit is a full-stack rewards and payment platform integrating Square authentication, a mobile app, and a backend with PostgreSQL. This repository contains all code and documentation for backend, frontend (Android/iOS), and supporting scripts.
 
-## Technology Stack
+---
 
-### Frontend (Mobile Application)
-- **KMP (Kotlin Multiplatform Mobile)**: For shared business logic.
-- **CMP (Compose Multiplatform)**: For creating a consistent, cross-platform UI experience on both Android and iOS.
+## Table of Contents
+- [Features](#features)
+- [Architecture](#architecture)
+- [System Requirements](#system-requirements)
+- [Installation](#installation)
+- [Backend Setup](#backend-setup)
+- [Frontend (Mobile App) Setup](#frontend-mobile-app-setup)
+- [Testing](#testing)
+- [Documentation](#documentation)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
 
-### Backend
-- **Spring Boot**: Framework for building robust backend services.
-- **Kotlin & Java**: Primary languages for backend development.
-- **PostgreSQL**: Relational database management system for reliable data storage.
-- **JWT Token System**: Secure token-based authentication mechanism ensuring API and data security.
-- **REST APIs**: Communication between frontend and backend services.
-- **Random Reward Generation on Server**: The reward is generated on the server side to prevent manipulation and ensure fair, secure distribution of rewards.
+---
 
-### Analytics & Dashboard
-- **Full Analytics Dashboard**: A complete working dashboard for store owners featuring real-time analytics.
-- **Detailed Purchase Stats**: Comprehensive statistics on store purchases, user engagement, and reward redemptions.
+## Features
+- Square OAuth authentication
+- Rewards management and spin wheel
+- Payment processing (mock and real)
+- QR code and Apple Wallet integration
+- Admin panel for rewards
+- PostgreSQL database with Docker
+- Android/iOS mobile app (Kotlin Multiplatform)
 
-## System Flow
+---
 
-1. **Customer Purchase:**
-    - A customer completes a purchase at a participating retail store.
+## Architecture
 
-2. **Spin Wheel Activation:**
-    - After the payment is processed, a digital spin wheel is activated on the POS system.
-    - The customer is offered the chance to spin the wheel.
+- **Backend:** Spring Boot (Kotlin), PostgreSQL, Docker, Adminer
+- **Frontend:** Android/iOS app (Kotlin Multiplatform, Jetpack Compose)
+- **Communication:** REST API
+- **Docs:** Markdown files in `/docs`
 
-3. **Server-Side Reward Determination:**
-    - Once the wheel is spun, the reward is determined on the server using a secure random generation algorithm to ensure fairness and security.
-    - The determined reward is then stored in the backend associated with the transaction.
+See [`docs/architecture.md`](docs/architecture.md) for a detailed diagram and explanation.
 
-4. **QR Code Generation:**
-    - A unique QR code is generated for the reward.
-    - The QR code is displayed on the POS system for the customer to scan.
+---
 
-5. **Reward Redemption:**
-    - The customer scans the QR code using their iPhone.
-    - Upon scanning, they are prompted to save the reward as a digital pass in their Apple Wallet.
-    - The QR code system incorporates a limited validity period to mitigate misuse.
+## System Requirements
 
-6. **Future Purchase & Reward Usage:**
-    - When the customer returns to the store, they can redeem the stored reward during subsequent purchases.
+- **Backend:**
+  - JDK 17+
+  - Docker & Docker Compose
+  - PostgreSQL 14+
+  - 4GB RAM, 10GB disk
+- **Frontend:**
+  - Android Studio (latest)
+  - Android SDK
+  - Gradle 8.12+
+  - 8GB RAM
 
-## Security Considerations
-- **Secure API Calls:** All API requests are authenticated using JWT tokens, ensuring that all interactions are secure and encrypted.
-- **JWT Token-Based Authentication:** Ensures secure and stateless authentication for both customers and store operators.
-- **QR Code Expiry:** Each QR code generated for rewards has a built-in expiry to prevent fraud and misuse.
-- **Server-Side Reward Generation:** All random reward selections are handled on the server, reducing potential client-side tampering and ensuring fairness.
+---
 
-## Scalability & Deployment
-- **Cloud-Hosted Backend:** Enables high availability and scalability to support a growing user base.
-- **CI/CD Pipelines:** For continuous integration and automated deployment, ensuring rapid and stable releases.
-- **Load Balancing:** Deployed to ensure smooth performance during high traffic periods.
+## Installation
 
-## Dashboard & Analytics
-- **Comprehensive Dashboard:** A full-featured dashboard provides real-time insights into store purchases, reward redemptions, and customer engagement.
-- **Detailed Analytics:** Enables store owners to track trends, measure campaign effectiveness, and optimize promotional strategies based on live data.
+See [`docs/installation.md`](docs/installation.md) for full details.
+
+Quick steps:
+```bash
+git clone <repo-url>
+cd coupit
+```
+
+---
+
+## Backend Setup
+
+1. **Database & Adminer:**
+   ```bash
+   cd coupit-backend
+   cat > .env << EOL
+POSTGRES_USER=coupit
+POSTGRES_PASSWORD=coupit123
+POSTGRES_DB=coupit
+EOL
+   docker-compose up -d
+   ```
+2. **Run Backend:**
+   ```bash
+   ./gradlew bootRun
+   ```
+3. **Health Check:**
+   ```bash
+   curl http://localhost:8080/health
+   ```
+
+---
+
+## Frontend (Mobile App) Setup
+
+1. **Android:**
+   ```bash
+   cd coupit-app
+   echo "sdk.dir=/path/to/your/android/sdk" > local.properties
+   ./gradlew :composeApp:installDebug
+   ```
+2. **iOS:**
+   See [`docs/ios-setup.md`](docs/ios-setup.md)
+
+---
+
+## Testing
+
+See [`docs/testing.md`](docs/testing.md) for full end-to-end testing instructions, including:
+- Square account setup
+- App login
+- Rewards creation
+- Mock payment
+- Spin wheel and QR code
+
+---
+
+## Documentation
+
+- [API Reference](docs/api.md)
+- [Architecture](docs/architecture.md)
+- [Android Setup](docs/android-setup.md)
+- [iOS Setup](docs/ios-setup.md)
+- [Deployment](docs/deployment.md)
+- [Security](docs/security.md)
+- [Troubleshooting](docs/troubleshooting.md)
+- [GitHub SSH & Push Guide](docs/github-ssh-push.md)
+
+---
+
+## Troubleshooting
+
+See [`docs/troubleshooting.md`](docs/troubleshooting.md) for solutions to common issues (build, database, authentication, etc).
+
+---
+
+## Contributing
+
+See [`docs/contributing.md`](docs/contributing.md) for guidelines.
+
+---
+
+## License
+
+[MIT](LICENSE)
 
 
